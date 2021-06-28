@@ -1,0 +1,50 @@
+{% extends "base_layout/layout.html" %}
+
+{% block title %}Create an Account{% endblock %}
+
+
+{% block content %}
+<br> 
+<br>
+<div class="container">
+    <div class="container col-lg-6">
+        <form method="POST" class="form-group bg-light" style = "border-radius:10px; padding: 20px">
+                <h1 class = "text-center" style = "margin-bottom:20px">Signup</h1>
+                {% if error_message %}
+                    <div class = "alert alert-danger">
+                        {{ error_message }}
+                    </div>
+                {% endif %}
+            <div class="container">
+                {% csrf_token %}
+                {% for fields in form %}
+                    {% if fields.name == "auth_user_id" %}
+                        <div class="form-group row" style = "margin-bottom:10px">
+                            <div class="col-sm-8">
+                                <input type="hidden" value = "3" name = "{{ fields.name }}" class="form-control" id="{{ fields.name }}" >
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="form-group row" style = "margin-bottom:10px">
+                            <label for="{{ fields.name }}" class="col-sm-3 col-form-label">{{ fields.label}} </label>
+                            <div class="col-sm-8">
+                                <input type="{{ fields.field.widget.input_type }}" name = "{{ fields.name }}" class="form-control" id="{{ fields.name }}" >
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <div class="form-group row" style = "margin-top:10px;">
+                    <label for="" class="col-sm-3 col-form-label text-end"></label>
+                    <div class="col-sm-8">
+                        <input type="submit" class="btn bg-success form-control" value = "Signup">
+                        <a class = "create-account" href="/login/">Login here</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container" style = "margin-top:130px">
+
+</div>
+{% endblock %}
