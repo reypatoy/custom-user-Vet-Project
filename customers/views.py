@@ -10,6 +10,7 @@ from .forms import SignUpForm
 
 
 def login_view(request):
+    invalid_login_error = None
     error_message = None
     form = AuthenticationForm()
 
@@ -29,19 +30,18 @@ def login_view(request):
                     return redirect(request.GET.get('next'))
 
                 else:
-                    if user.user_type == 1:
-                        return redirect('crm:admin_dashboard_view')
-
-                    if user.user_type == 2:
-                        pass
-
                     if user.user_type == 3:
-                        pass
+                        return redirect('customers:dashboard_view')
+
+                    else:
+                        invalid_login_error = "Invalid Account"
 
         else:
             error_message = form.errors
 
     context = {
+        'title': 'Login',
+        'invalid_account': invalid_login_error,
         'form': form,
         'error_message': error_message
     }
@@ -59,21 +59,35 @@ def signup_view(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('customers:signup_view')
+            return redirect('customers:dashboard_view')
         else:
             errors = form.errors
     else:
         form = SignUpForm()
 
     context = {
+        'title': 'Signup',
         'error_message': errors,
         'form': form
     }
     return render(request, "auth/signup.html", context)
 
 
+def dashboard_view(request):
+    if request.user.is_authenticated:
+        return render(request, "pages/customers_dashboard.html")
+    else:
+        return redirect('customers:login_view')
+
+
+def logout_view(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('customers:home_view')
+
+
 def home_view(request):
-    return render(request, "pages/home.html")
+    return render(request, "pages/home.html", {'title': 'Home'})
 
 
 def appointment_view(request):

@@ -18,7 +18,7 @@
             <div class="container">
                 {% csrf_token %}
                 {% for fields in form %}
-                    {% if fields.name == "auth_user_id" %}
+                    {% if fields.name == "user_type" %}
                         <div class="form-group row" style = "margin-bottom:10px">
                             <div class="col-sm-8">
                                 <input type="hidden" value = "3" name = "{{ fields.name }}" class="form-control" id="{{ fields.name }}" >
@@ -28,7 +28,7 @@
                         <div class="form-group row" style = "margin-bottom:10px">
                             <label for="{{ fields.name }}" class="col-sm-3 col-form-label">{{ fields.label}} </label>
                             <div class="col-sm-8">
-                                <input type="{{ fields.field.widget.input_type }}" name = "{{ fields.name }}" class="form-control" id="{{ fields.name }}" >
+                                <input type="{{ fields.field.widget.input_type }}" {% if fields.is_bound %} value = "{{fields.name.value}}" {% endif %} name = "{{ fields.name }}" class="form-control" id="{{ fields.name }}" >
                             </div>
                         </div>
                     {% endif %}
@@ -37,7 +37,7 @@
                     <label for="" class="col-sm-3 col-form-label text-end"></label>
                     <div class="col-sm-8">
                         <input type="submit" class="btn bg-success form-control" value = "Signup">
-                        <a class = "create-account" href="/login/">Login here</a>
+                        <a class = "create-account" href="{% url 'customers:login_view' %}">Login here</a>
                     </div>
                 </div>
             </div>

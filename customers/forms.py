@@ -4,7 +4,15 @@ from accounts.models import User
 
 
 class SignUpForm(UserCreationForm):
+    first_name = forms.CharField(max_length=50, required=True)
+    last_name = forms.CharField(max_length=50, required=True)
+    contact_number = forms.IntegerField(max_value=None, required=True)
+    address_barangay = forms.CharField(max_length=200, required=True)
+    address_municipality = forms.CharField(max_length=200, required=True)
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = (
+            'first_name', 'last_name', 'contact_number', 'address_barangay',
+            'address_municipality', 'username', 'password1', 'password2', 'user_type'
+        )
