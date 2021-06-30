@@ -7,9 +7,11 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
 from .forms import SignUpForm
+from accounts.models import User, customer
 
 
 def login_view(request):
+    users = None
     invalid_login_error = None
     error_message = None
     form = AuthenticationForm()
@@ -25,7 +27,7 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-
+                users = customer.objects.all()
                 if request.GET.get('next'):
                     return redirect(request.GET.get('next'))
 
@@ -38,25 +40,24 @@ def login_view(request):
 
         else:
             error_message = form.errors
-
     context = {
+        'users': users,
         'title': 'Login',
         'invalid_account': invalid_login_error,
         'form': form,
         'error_message': error_message
     }
-
     return render(request, "auth/login.html", context)
 
 
 def signup_view(request):
     errors = None
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = SignUpForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
+            form.save()
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('customers:dashboard_view')

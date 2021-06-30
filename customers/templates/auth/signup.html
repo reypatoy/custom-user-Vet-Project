@@ -8,15 +8,15 @@
 <br>
 <div class="container">
     <div class="container col-lg-6">
-        <form method="POST" class="form-group bg-light" style = "border-radius:10px; padding: 20px">
-                <h1 class = "text-center" style = "margin-bottom:20px">Signup</h1>
+        <form method="POST" enctype="multipart/form-data" class="form-group bg-light" style = "border-radius:10px; padding: 20px">
+            {% csrf_token %}
+            <h1 class = "text-center" style = "margin-bottom:20px">Signup</h1>
                 {% if error_message %}
                     <div class = "alert alert-danger">
                         {{ error_message }}
                     </div>
                 {% endif %}
             <div class="container">
-                {% csrf_token %}
                 {% for fields in form %}
                     {% if fields.name == "user_type" %}
                         <div class="form-group row" style = "margin-bottom:10px">
