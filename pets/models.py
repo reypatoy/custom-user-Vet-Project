@@ -11,3 +11,6 @@ class pets(models.Model):
     age = models.IntegerField()
     owner = models.ForeignKey(
         customer, verbose_name='owner', on_delete=models.SET_DEFAULT, default=3)
+
+    def __str__(self):
+        return self.pet_name

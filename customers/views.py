@@ -76,7 +76,10 @@ def signup_view(request):
 
 def dashboard_view(request):
     if request.user.is_authenticated:
-        return render(request, "pages/customers_dashboard.html")
+        if request.user.user_type == 3:
+            return render(request, "pages/customers_dashboard.html")
+        else:
+            return redirect('customers:login_view')
     else:
         return redirect('customers:login_view')
 

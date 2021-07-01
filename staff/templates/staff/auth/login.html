@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <title>{{ title }}</title>
+    <link rel="shortcut icon" type="image" href="{% static 'title_logo/title_logo.png' %}">
+    <script src="{% static 'js/layout.js' %}"></script>
+</head>
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top bg-color">
+        <div class="container">
+          <img class = "logo" style = "margin:auto" src="{% static 'Images/LOGO.png' %}" alt="BEASTFRIEND LOGO">
+        </div>
+      </nav>
+      <div class="container-fluid">
+        <br>
+        <br>
+        <div class="container">
+                 <div class="container col-lg-4">
+                   <form class = "bg-light" method="POST" style = "border-radius:10px; padding: 20px">
+                     {% csrf_token %}
+                       <h1 class = "text-center" style = "margin-bottom:20px"> Staff Login</h1>
+                       {% if error_message %}
+                           <div class = "alert alert-danger">
+                              {{ error_message }}
+                           </div>
+                       {% endif %}
+                       {% if invalid_account %}
+                         <div class = "alert alert-danger">
+                           {{ invalid_account }}
+                         </div>
+                       {% endif %}
+                       {% for fields in form %}
+                         <div class="form-group row" style = "margin-bottom:10px">
+                           <label for="Email" class="col-sm-3 col-form-label">{{ fields.label}} </label>
+                           <div class="col-sm-8">
+                             <input type = "{{ fields.field.widget.input_type }}" name = "{{ fields.name }}" class="form-control" id="username" >
+                           </div>
+                         </div>
+                       {% endfor %}
+                      
+                       
+                       <div class="form-group row" style = "margin-top:10px;">
+                         <label for="inputPassword" class="col-sm-3 col-form-label text-end"></label>
+                         <div class="col-sm-8">
+                           <input type="submit" class="btn bg-success form-control" value = "Login">
+                           <a class = "forgot-password" href="">Forgot Password?</a>
+                         </div>
+                       </div>
+                   </form>
+                 </div>
+             </div>
+             <div style = "height:280px">
+       
+             </div>
+      </div>
+</body>
+<footer>
+    <div class="simple-footer text-center">
+        Copyright &copy; EliteBuilders 2021
+    </div>
+</footer>
+</html>
