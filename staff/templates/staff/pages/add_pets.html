@@ -1,5 +1,7 @@
 {% extends 'staff/staff_base_layout/layout.html' %}
 
 {% block content %}
-    {{customers}}
+    {% for customers in customers %}
+        {{customers.address_barangay}}
+    {% endfor %}
 {% endblock %}

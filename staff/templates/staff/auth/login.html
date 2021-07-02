@@ -32,9 +32,9 @@
         <div class="container">
                  <div class="container col-lg-4">
                    <form class = "bg-light" method="POST" style = "border-radius:10px; padding: 20px">
-                     {% csrf_token %}
-                       <h1 class = "text-center" style = "margin-bottom:20px"> Staff Login</h1>
-                       {% if error_message %}
+                    
+                    <h1 class = "text-center" style = "margin-bottom:20px"> Staff Login</h1>
+                        {% if error_message %}
                            <div class = "alert alert-danger">
                               {{ error_message }}
                            </div>
@@ -44,13 +44,14 @@
                            {{ invalid_account }}
                          </div>
                        {% endif %}
+                       {% csrf_token %}
                        {% for fields in form %}
-                         <div class="form-group row" style = "margin-bottom:10px">
-                           <label for="Email" class="col-sm-3 col-form-label">{{ fields.label}} </label>
-                           <div class="col-sm-8">
-                             <input type = "{{ fields.field.widget.input_type }}" name = "{{ fields.name }}" class="form-control" id="username" >
-                           </div>
-                         </div>
+                       <div class="form-group row" style = "margin-bottom:10px">
+                          <label for="Email" class="col-sm-3 col-form-label">{{ fields.label}} </label>
+                          <div class="col-sm-8">
+                            <input type = "{{ fields.field.widget.input_type }}" name = "{{ fields.name }}" class="form-control" id="{{ fields.name }}" >
+                          </div>
+                        </div>
                        {% endfor %}
                       
                        

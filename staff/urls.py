@@ -1,15 +1,16 @@
 from django.urls import path
 from django.contrib.auth import logout, login
 
-from .views import staff_dashboard_view, staff_login_view, staff_logout_view, add_pet_view
+from . import views
 
 app_name = 'staff'
 
 
 urlpatterns = [
-    path('dashboard/', staff_dashboard_view, name='staff_dashboard_view'),
-    path('login/', staff_login_view, name='staff_login_view'),
-    path('logout/', staff_logout_view, name='staff_logout_view'),
-    path('add_pet/', add_pet_view, name='add_pet_view')
+    path('dashboard/', views.staff_dashboard_view, name='staff_dashboard_view'),
+    path('login/', views.staff_login_view, name='staff_login_view'),
+    path('logout/', views.staff_logout_view, name='staff_logout_view'),
+    path('add_pet/', views.add_pet_view, name='add_pet_view'),
+    path('add_staff/', views.add_staff_view, name='add_staff_view')
 
 ]

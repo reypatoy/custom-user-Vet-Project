@@ -26,6 +26,12 @@ class Admin(models.Model):
 
 
 class staff(models.Model):
+    username = models.CharField(
+        max_length=50, blank=True, null=True, unique=True)
+    email = models.EmailField(
+        max_length=50, blank=True, null=True, unique=True)
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
     profile_pic = models.ImageField(
         upload_to='profile_pictures', default='default_image.png')
     contact_number = models.CharField(max_length=15, blank=True, null=True)
@@ -42,6 +48,12 @@ class staff(models.Model):
 
 
 class customer(models.Model):
+    username = models.CharField(
+        max_length=50, blank=True, null=True, unique=True)
+    email = models.EmailField(
+        max_length=50, blank=True, null=True, unique=True)
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
     profile_pic = models.ImageField(
         upload_to='profile_pictures', default='default_image.png')
     contact_number = models.CharField(max_length=15, blank=True, null=True)

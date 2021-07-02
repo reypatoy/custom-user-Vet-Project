@@ -26,20 +26,19 @@ def login_view(request):
             user = authenticate(username=username, password=password)
 
             if user is not None:
-                login(request, user)
                 users = customer.objects.all()
                 if request.GET.get('next'):
                     return redirect(request.GET.get('next'))
 
                 else:
                     if user.user_type == 3:
+                        login(request, user)
                         return redirect('customers:dashboard_view')
-
                     else:
                         invalid_login_error = "Invalid Account"
 
         else:
-            error_message = form.errors
+            error_message = 'wrong'
     context = {
         'users': users,
         'title': 'Login',
