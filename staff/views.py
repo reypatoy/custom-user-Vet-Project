@@ -70,7 +70,7 @@ def add_staff_view(request):
     error_message = None
     form = add_staff_form()
     if request.method == 'POST':
-        form = add_staff_form(request.POST)
+        form = add_staff_form(request.POST, request.FILES)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             first_name = form.cleaned_data.get('first_name')
@@ -79,22 +79,21 @@ def add_staff_view(request):
             address_barangay = form.cleaned_data.get('address_barangay')
             address_municipality = form.cleaned_data.get(
                 'address_municipality')
+            profile_pic = form.cleaned_data.get('profile_pic')
             email = form.cleaned_data.get('email')
-            form.save()
-            staff_data = User.objects.get(
-                username=username)
+            User_instance = form.save()
+            current_staff = staff.objects.get(auth_user_id=User_instance)
 
-            obj = staff.objects.create(
-                first_name=first_name,
-                last_name=last_name,
-                contact_number=contact_number,
-                address_barangay=address_barangay,
-                address_municipality=address_municipality,
-                email=email,
-                auth_user_id_id=40
-            )
+            current_staff.username = username
+            current_staff.first_name = first_name
+            current_staff.last_name = last_name
+            current_staff.contact_number = contact_number
+            current_staff.address_barangay = address_barangay
+            current_staff.address_municipality = address_municipality
+            current_staff.email = email
+            current_staff.profile_pic = profile_pic
 
-            obj.save()
+            current_staff.save()
         else:
             error_message = form.errors
     context = {

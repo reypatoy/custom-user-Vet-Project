@@ -8,6 +8,9 @@ class User(AbstractUser):
     User_Type = ((1, 'Admin'), (2, 'Staff'), (3, 'Customer'))
     user_type = models.IntegerField(choices=User_Type, default=1)
 
+    # USERNAME_FIELD = 'username'
+    # REQUIRED_FIELDS = []
+
 
 class Admin(models.Model):
     profile_pic = models.ImageField(
@@ -41,7 +44,10 @@ class staff(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     auth_user_id = models.OneToOneField(
-        User, related_name='staff', on_delete=models.CASCADE)
+        User, primary_key=True, related_name='staff', on_delete=models.CASCADE)
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return f"{self.auth_user_id.first_name} {self.auth_user_id.last_name}"

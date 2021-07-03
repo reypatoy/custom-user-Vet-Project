@@ -4,7 +4,7 @@
     <div class="container">
         <h2 class = "page-header">Add staff</h2>
         <div class = "container">
-            <form action="" method="POST">
+            <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token%}
                 {% if error_message %}
                     <div class = "alert alert-danger">
@@ -26,7 +26,7 @@
                         <div class="form-group row" style = "margin-bottom:10px">
                             <label for="{{ fields.name }}" class="col-sm-3 col-form-label">{{ fields.label}} </label>
                             <div class="col-sm-8">
-                                <input type="{{ fields.field.widget.input_type }}" {% if fields.is_bound %} value = "{{fields.name.value}}" {% endif %} name = "{{ fields.name }}" class="form-control" id="{{ fields.name }}" >
+                                <input style="height: auto;" type="{{ fields.field.widget.input_type }}" {% if fields.is_bound %} value = "{{fields.name.value}}" {% endif %} name = "{{ fields.name }}" class="form-control" id="{{ fields.name }}" >
                             </div>
                         </div>
                     {% endif %}

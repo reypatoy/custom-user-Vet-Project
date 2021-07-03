@@ -56,7 +56,29 @@ def signup_view(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            form.save()
+
+            first_name = form.cleaned_data.get('first_name')
+            last_name = form.cleaned_data.get('last_name')
+            contact_number = form.cleaned_data.get('contact_number')
+            address_barangay = form.cleaned_data.get('address_barangay')
+            address_municipality = form.cleaned_data.get(
+                'address_municipality')
+            #profile_pic = form.cleaned_data.get('profile_pic')
+            email = form.cleaned_data.get('email')
+            User_instance = form.save()
+            current_customer = customer.objects.get(auth_user_id=User_instance)
+
+            current_customer.username = username
+            current_customer.first_name = first_name
+            current_customer.last_name = last_name
+            current_customer.contact_number = contact_number
+            current_customer.address_barangay = address_barangay
+            current_customer.address_municipality = address_municipality
+            current_customer.email = email
+            #current_customer.profile_pic = profile_pic
+
+            current_customer.save()
+
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('customers:dashboard_view')
