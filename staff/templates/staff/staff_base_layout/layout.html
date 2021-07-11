@@ -1,5 +1,4 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -44,7 +43,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="{% url 'staff:staff_dashboard_view' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Staff Dashboard</span></a>
             </li>
@@ -66,7 +65,7 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="buttons.html">Pets List</a>
+                        <a class="collapse-item" href="{% url 'staff:pets_list_view' %}">Pets List</a>
                         <a class="collapse-item" href="{% url 'staff:add_pet_view' %}">Add Pets</a>
                         <a class="collapse-item" href="cards.html">Cards</a>
                         
@@ -331,9 +330,9 @@
                                 <li class="nav-item dropdown no-arrow">
                                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                        <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{login_user}}</span>
                                         <img class="img-profile rounded-circle"
-                                            src="img/undraw_profile.svg">
+                                            src="{% defualt.png %">
                                     </a>
                                     <!-- Dropdown - User Information -->
                                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

@@ -1,22 +1,27 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
+from django.views.generic import CreateView, UpdateView, ListView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Q
 
-
-from pets.forms import pets_form
 from accounts.models import User, customer, staff
 from .forms import add_staff_form
+from pets.models import pets
 # Create your views here.
 
 
 def staff_dashboard_view(request):
-    # if request.user.is_authenticated:
-    #     if request.user.user_type == 2:
-    return render(request, "staff/pages/staff_dashboard.html", {})
-    #     else:
-    #         return redirect('staff:staff_login_view')
-    # else:
-    #     return redirect('staff:staff_login_view')
+    login_user = None
+    if request.user.is_authenticated:
+        if request.user.user_type == 2:
+            login_user = request.user.username
+            return render(request, "staff/pages/staff_dashboard.html", {'login_user': login_user})
+        else:
+            logout(request)
+            return redirect('staff:staff_login_view')
+    else:
+        return redirect('staff:staff_login_view')
 
 
 def staff_login_view(request):
@@ -45,7 +50,7 @@ def staff_login_view(request):
                         invalid_login_error = "Invalid Account"
 
         else:
-            error_message = 'hello'
+            error_message = form.errors
     context = {
         'title': 'Login',
         'invalid_account': invalid_login_error,
@@ -60,9 +65,35 @@ def staff_logout_view(request):
     return redirect("staff:staff_login_view")
 
 
-def add_pet_view(request):
-    customers = customer.objects.all()
-    return render(request, "staff/pages/add_pets.html", {'customers': customers})
+class add_pet_view(SuccessMessageMixin, CreateView):
+    model = pets
+    success_message = "Pet Added Successfully!!!"
+    fields = "__all__"
+    template_name = "staff/pages/add_pets.html"
+
+
+class pets_list_view(ListView):
+    model = pets
+    template_name = "staff/pages/pets_list.html"
+    paginate_by = 5
+
+    def get_queryset(self):
+        filter = self.request.GET.get("filter", "")
+        order_by = self.request.GET.get("orderby", "id")
+        if filter != "":
+            cat = pets.objects.filter(Q(pet_name__contains=filter) | Q(
+                breed__contains=filter) | Q(owner__contains=filter)).order_by(order_by)
+        else:
+            cat = pets.objects.all().order_by(order_by)
+
+        return cat
+
+    def get_context_data(self, **kwargs):
+        context = super(pets_list_view, self).get_context_data(**kwargs)
+        context["filter"] = self.request.GET.get("filter", "")
+        context["orderby"] = self.request.GET.get("orderby", "id")
+        context["all_table_fields"] = pets._meta.get_fields()
+        return context
 
 
 def add_staff_view(request):
@@ -91,12 +122,14 @@ def add_staff_view(request):
             current_staff.address_barangay = address_barangay
             current_staff.address_municipality = address_municipality
             current_staff.email = email
+            current_staff.added_by = request.user.username
             current_staff.profile_pic = profile_pic
 
             current_staff.save()
         else:
             error_message = form.errors
     context = {
+        'login_user': request.user.username,
         'staff': staff_data,
         'error_message': error_message,
         'form': form

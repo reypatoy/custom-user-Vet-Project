@@ -63,7 +63,7 @@ def signup_view(request):
             address_barangay = form.cleaned_data.get('address_barangay')
             address_municipality = form.cleaned_data.get(
                 'address_municipality')
-            #profile_pic = form.cleaned_data.get('profile_pic')
+            profile_pic = form.cleaned_data.get('profile_pic')
             email = form.cleaned_data.get('email')
             User_instance = form.save()
             current_customer = customer.objects.get(auth_user_id=User_instance)
@@ -75,7 +75,7 @@ def signup_view(request):
             current_customer.address_barangay = address_barangay
             current_customer.address_municipality = address_municipality
             current_customer.email = email
-            #current_customer.profile_pic = profile_pic
+            current_customer.profile_pic = profile_pic
 
             current_customer.save()
 

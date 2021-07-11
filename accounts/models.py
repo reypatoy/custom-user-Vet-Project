@@ -14,7 +14,7 @@ class User(AbstractUser):
 
 class Admin(models.Model):
     profile_pic = models.ImageField(
-        upload_to='profile_pictures', default='default_image.png')
+        upload_to='admin_profile_pictures', default='default_image.png')
     contact_number = models.CharField(max_length=15, blank=True, null=True)
     address_barangay = models.CharField(max_length=100, blank=True, null=True)
     address_municipality = models.CharField(
@@ -36,18 +36,16 @@ class staff(models.Model):
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     profile_pic = models.ImageField(
-        upload_to='profile_pictures', default='default_image.png')
+        upload_to='staff_profile_pictures', default='default_image.png')
     contact_number = models.CharField(max_length=15, blank=True, null=True)
     address_barangay = models.CharField(max_length=100, blank=True, null=True)
     address_municipality = models.CharField(
         max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+    added_by = models.CharField(max_length=100, blank=True, null=True)
     auth_user_id = models.OneToOneField(
         User, primary_key=True, related_name='staff', on_delete=models.CASCADE)
-
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = []
 
     def __str__(self):
         return f"{self.auth_user_id.first_name} {self.auth_user_id.last_name}"
@@ -61,7 +59,7 @@ class customer(models.Model):
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     profile_pic = models.ImageField(
-        upload_to='profile_pictures', default='default_image.png')
+        upload_to='customer_profile_pictures', default='default_image.png')
     contact_number = models.CharField(max_length=15, blank=True, null=True)
     address_barangay = models.CharField(max_length=100, blank=True, null=True)
     address_municipality = models.CharField(
