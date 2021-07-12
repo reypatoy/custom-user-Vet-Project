@@ -1,14 +1,37 @@
 {% extends 'staff/staff_base_layout/layout.html' %}
 {% block content %}
 <div class="container">
-        <h2 class = "page-header" style = "padding: 20px;">Pets List</h2>
+  <div class="row">
+    <div class="col-md-5">
+      <h2 class = "page-header" style = "padding: 20px;">Pets List</h2>
+    </div>
+    <div class="col-md-3" style="padding: 10px;">
+      <div class="sort-element">
+        <h4>Sort By</h4>
+          <a href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby=id"style="margin-top: 25px;">Date Added</a> <b>&nbsp;|&nbsp;</b>
+          <a href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby=owner"style="margin-top: 25px;">Owner</a><b>&nbsp;|&nbsp;</b>
+          <a href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby=breed"style="margin-top: 25px;">Breed</a>
+      </div>  
+  </div>
+    <div class="col-md-4" >
+        <div class="search-element">
+          <form action="" method="GET">
+            <button style="float:right; margin-top: 25px;" class="btn btn-primary"  type="submit">Search</button>
+            <input class="form-control" name = "filter" type="search" placeholder="Search" aria-label="Search" data-width="250" style="width: 250px;margin-top: 25px; float:right"> 
+          </form>
+        </div>  
+    </div>
+    </div>
+  </div>
+  <div class="container">
         <div class="row">
+          {% if pets_list %}
             {% for pet in pets_list %}
             <div class="col-12 col-md-4 col-lg-4" style = "margin-bottom: 10px; padding: 5px;">
                 <article class="article article-style-c">
                   <div class="article-header">
                     <div class="article-image" data-background="/media/{{pet.pet_image}}" style="background-image: url(&quot;assets/img/news/img13.jpg&quot;);">
-                        <a href="/media/{{pet.pet_image}}"target=" _"><img class = "img img-fluid" style = "height: 250px; width: 400px;" src="/media/{{pet.pet_image}}" alt=""></a>
+                        <a href="/media/{{pet.pet_image}}"><img class = "img img-fluid" style = "height: 250px; width: 400px;" src="/media/{{pet.pet_image}}" alt=""></a>
                     </div>
                   </div>
                   <div class="article-details">
@@ -28,12 +51,41 @@
                         <div class="article-cta" style = "float: right; margin-right: 30px;">
                             <a href="#">Edit <i class="fas fa-chevron-right"></i></a>
                         </div>
+                        <div class="article-cta" style = "float: right; margin-right: 30px;">
+                          <a href="#">Add Prescriptions</a>
+                      </div>
                       </div>
                     </div>
                   </div>
                 </article>
               </div>
             {% endfor %}
+          {% else %}
+          <div class="col-md-12" style="height: 500px;">
+              <h1 class = "text-center">No Result</h1>
+          </div>
+          {% endif %}
+        </div>
+        <div class="row">
+          <div class="card-body">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                {% if page_obj.has_previous%}
+                  <li class="page-item"><a class="page-link" href="{% url 'staff:pets_list_view' %}?filter={{filter}}&ordeyby={{orderby}}&page={{page_obj.previous_page_number}}">Previous</a></li>
+                {% else %}
+                  <li class="page-item disabled" ><a class="page-link" href="">Previous</a></li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                  <li class="page-item"><a class="page-link" href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby={{orderby}}&page={{i}}">{{i}}</a></li>
+                {% endfor %}
+                {% if page_obj.has_next %}
+                  <li class="page-item"><a class="page-link" href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby={{orderby}}&page={{page_obj.next_page_number}}">Next</a></li>
+                {% else %}
+                  <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
         </div>
     </div>
     <script>

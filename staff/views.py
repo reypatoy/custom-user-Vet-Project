@@ -75,9 +75,10 @@ class add_pet_view(SuccessMessageMixin, CreateView):
 class pets_list_view(ListView):
     model = pets
     template_name = "staff/pages/pets_list.html"
-    paginate_by = 5
+    paginate_by = 6
 
     def get_queryset(self):
+        result = None
         filter = self.request.GET.get("filter", "")
         order_by = self.request.GET.get("orderby", "id")
         if filter != "":
@@ -85,7 +86,6 @@ class pets_list_view(ListView):
                 breed__contains=filter) | Q(owner__contains=filter)).order_by(order_by)
         else:
             cat = pets.objects.all().order_by(order_by)
-
         return cat
 
     def get_context_data(self, **kwargs):
@@ -135,3 +135,26 @@ def add_staff_view(request):
         'form': form
     }
     return render(request, "staff/pages/add_staff.html", context)
+
+
+class staff_list_view(ListView):
+    model = staff
+    template_name = "staff/pages/staff_list.html"
+    paginate_by = 6
+
+    def get_queryset(self):
+        filter = self.request.GET.get("filter", "")
+        order_by = self.request.GET.get("orderby", "auth_user_id_id")
+        if filter is not None:
+            cat = staff.objects.filter(Q(first_name__contains=filter) | Q(
+                last_name__contains=filter)).order_by(order_by)
+        else:
+            cat = staff.objects.all().order_by(order_by)
+        return cat
+
+    def get_context_data(self, **kwargs):
+        context = super(staff_list_view, self).get_context_data(**kwargs)
+        context["filter"] = self.request.GET.get("filter", "")
+        context["orderby"] = self.request.GET.get("orderby", "id")
+        context["all_table_fields"] = staff._meta.get_fields()
+        return context
