@@ -11,9 +11,6 @@
                         {{ error_message }}
                     </div>
                 {% endif %}
-                {% for staff in staff %}
-                <h2> hi {{staff}}</h2>
-                    {% endfor %}
                 {% for fields in form %}
                     {% if fields.name == 'user_type' %}
                         <div class="form-group row" style = "margin-bottom:10px">

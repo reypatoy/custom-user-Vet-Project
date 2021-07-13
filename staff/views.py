@@ -1,11 +1,15 @@
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import CreateView, UpdateView, ListView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
+from django.core.files.storage import FileSystemStorage
+from django.contrib import messages
+from django.urls import reverse
 
-from accounts.models import User, customer, staff
+from accounts.models import User, customer, staff as staff_user
 from .forms import add_staff_form
 from pets.models import pets
 # Create your views here.
@@ -113,7 +117,7 @@ def add_staff_view(request):
             profile_pic = form.cleaned_data.get('profile_pic')
             email = form.cleaned_data.get('email')
             User_instance = form.save()
-            current_staff = staff.objects.get(auth_user_id=User_instance)
+            current_staff = staff_user.objects.get(auth_user_id=User_instance)
 
             current_staff.username = username
             current_staff.first_name = first_name
@@ -138,7 +142,7 @@ def add_staff_view(request):
 
 
 class staff_list_view(ListView):
-    model = staff
+    model = staff_user
     template_name = "staff/pages/staff_list.html"
     paginate_by = 6
 
@@ -146,15 +150,51 @@ class staff_list_view(ListView):
         filter = self.request.GET.get("filter", "")
         order_by = self.request.GET.get("orderby", "auth_user_id_id")
         if filter is not None:
-            cat = staff.objects.filter(Q(first_name__contains=filter) | Q(
+            cat = staff_user.objects.filter(Q(first_name__contains=filter) | Q(
                 last_name__contains=filter)).order_by(order_by)
         else:
-            cat = staff.objects.all().order_by(order_by)
+            cat = staff_user.objects.all().order_by(order_by)
         return cat
 
     def get_context_data(self, **kwargs):
         context = super(staff_list_view, self).get_context_data(**kwargs)
         context["filter"] = self.request.GET.get("filter", "")
         context["orderby"] = self.request.GET.get("orderby", "id")
-        context["all_table_fields"] = staff._meta.get_fields()
+        context["all_table_fields"] = staff_user._meta.get_fields()
         return context
+
+
+class staff_update_view(UpdateView):
+    model = User
+    template_name = "staff/pages/staff_update.html"
+    fields = ["first_name", "last_name", "username", "password", "password"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        model = staff_user.objects.get(auth_user_id=self.object.pk)
+        context["staff"] = model
+        return context
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.set_password(form.cleaned_data["password"])
+        user.save()
+
+        staff = staff_user.objects.get(auth_user_id=user.id)
+        if self.request.FILES.get("profile_pic", False):
+            profile_pic = self.request.FILES["profile_pic"]
+            fs = FileSystemStorage(location='/media/staff_profile_pictures/')
+            file_name = fs.save(profile_pic.name, profile_pic)
+            profile_pic_url = fs.url(file_name)
+            staff.profile_pic = profile_pic_url
+        staff.username = self.request.POST.get("username")
+        staff.email = self.request.POST.get("email")
+        staff.first_name = self.request.POST.get("first_name")
+        staff.last_name = self.request.POST.get("last_name")
+        staff.contact_number = self.request.POST.get("contact_number")
+        staff.address_barangay = self.request.POST.get("address_barangay")
+        staff.address_municipality = self.request.POST.get(
+            "address_municipality")
+        staff.save()
+        messages.success(self.request, "Staff Updated Successfully!!!")
+        return HttpResponseRedirect(reverse("staff:staff_list_view"))
