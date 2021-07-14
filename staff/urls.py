@@ -16,4 +16,9 @@ urlpatterns = [
     path('staff_list/', views.staff_list_view.as_view(), name="staff_list_view"),
     path('staff_update/<slug:pk>', views.staff_update_view.as_view(),
          name="staff_update_view"),
+    path('staff_profile/', views.staff_profile_view, name="staff_profile_view"),
+    path('customers_list', views.customers_list_view.as_view(),
+         name="customers_list_view"),
+    path('customers_profile/', views.customers_profile_view,
+         name="customers_profile_view"),
 ]

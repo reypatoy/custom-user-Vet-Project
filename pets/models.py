@@ -14,7 +14,7 @@ class pets(models.Model):
     owner = models.CharField(max_length=100, blank=True, null=True)
     added_by = models.CharField(max_length=100, blank=True, null=True)
     owner_id = models.ForeignKey(
-        customer, verbose_name='Owner Id', on_delete=models.SET_NULL, null=True)
+        customer, related_name="pets", on_delete=models.SET_NULL, null=True)
     added_at = models.DateField(auto_now_add=True, null=True)
 
     def __str__(self):

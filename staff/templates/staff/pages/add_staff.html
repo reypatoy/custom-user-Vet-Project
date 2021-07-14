@@ -11,6 +11,11 @@
                         {{ error_message }}
                     </div>
                 {% endif %}
+                {% if success_message %}
+                    <div class = "alert alert-success">
+                        {{ success_message }}
+                    </div>
+                {% endif %}
                 {% for fields in form %}
                     {% if fields.name == 'user_type' %}
                         <div class="form-group row" style = "margin-bottom:10px">

@@ -3,14 +3,14 @@
 <div class="container">
   <div class="row">
     <div class="col-md-5">
-      <h2 class = "page-header" style = "padding: 20px;">staff List</h2>
+      <h2 class = "page-header" style = "padding: 20px;">Customers List</h2>
     </div>
     <div class="col-md-3" style="padding: 10px;">
       <div class="sort-element">
         <h4>Sort By</h4>
-          <a href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby=id"style="margin-top: 25px;">Date Added</a> <b>&nbsp;|&nbsp;</b>
-          <a href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby=owner"style="margin-top: 25px;">Owner</a><b>&nbsp;|&nbsp;</b>
-          <a href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby=breed"style="margin-top: 25px;">Breed</a>
+          <a href="{% url 'staff:customers_list_view' %}?filter={{filter}}&orderby=first_name"style="margin-top: 25px;">First Name</a> <b>&nbsp;|&nbsp;</b>
+          <a href="{% url 'staff:customers_list_view' %}?filter={{filter}}&orderby=last_name"style="margin-top: 25px;">Last Name</a><b>&nbsp;|&nbsp;</b>
+          <a href="{% url 'staff:customers_list_view' %}?filter={{filter}}&orderby=address_barangay"style="margin-top: 25px;">Barangay</a>
       </div>  
   </div>
     <div class="col-md-4" >
@@ -35,39 +35,39 @@
                   {% endfor %}
             {% endif %}
             
-            {% if staff_list %}
+            {% if customer_list %}
             <table class="table manage-candidates-top mb-0 table-striped">
               <thead>
                 <tr>
-                  <th>Staff Name</th>
+                  <th>Customer Name</th>
                   <th class="text-center">Contact Number</th>
                   <th class="action text-right">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {% for staff in staff_list %}
+                {% for customer in customer_list %}
                   <tr class="candidates-list">
                     <td class="title">
                       <div class="thumb">
-                        <a href="/media/{{staff.profile_pic}}"><img class="img-fluid" style="height: 70px; width: 70px; border-radius: 50%;" src="/media/{{staff.profile_pic}}" alt=""></a>
+                        <a href="/media/{{customer.profile_pic}}"><img class="img-fluid" style="height: 70px; width: 70px; border-radius: 50%;" src="/media/{{customer.profile_pic}}" alt=""></a>
                       </div>
                       <div class="candidate-list-details">
                         <div class="candidate-list-info">
                           <div class="candidate-list-title">
-                            <h5 class="mb-0"><a href="{% url 'staff:staff_profile_view' %}?id={{ staff.auth_user_id.id }}">{{staff.auth_user_id.first_name}} {{staff.auth_user_id.last_name}}</a></h5>
+                            <h5 class="mb-0"><a href="{% url 'staff:customers_profile_view' %}?id={{customer.id}}">{{customer.auth_user_id.first_name}} {{customer.auth_user_id.last_name}}</a></h5>
                           </div>
                         </div>
                       </div>
                     </td>
                     <td class="candidate-list-favourite-time text-center">
                       <div style="margin-top:30px">
-                        <span class="candidate-list-time order-1" >{{staff.contact_number}}</span>
+                        <span class="candidate-list-time order-1" >{{customer.contact_number}}</span>
                       </div>
                     </td>
                     <td>
                       <ul class="list-unstyled mb-0 d-flex justify-content-end" style="margin-top:30px">
-                        <li><a href="{% url 'staff:staff_profile_view' %}?id={{ staff.auth_user_id.id }}" class="text-primary" style="margin-right:10px" data-toggle="tooltip" title="" data-original-title="view"><i class="far fa-eye"></i></a></li>
-                        <li><a href="{% url 'staff:staff_update_view' staff.auth_user_id.id %}" class="text-info"  data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a></li>
+                        <li><a href="{% url 'staff:customers_profile_view' %}?id={{customer.id}}" class="text-primary" style="margin-right:10px" data-toggle="tooltip" title="" data-original-title="view"><i class="far fa-eye"></i></a></li>
+                        <li><a href="" class="text-info"  data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-pencil-alt"></i></a></li>
                       </ul>
                     </td>
                   </tr>

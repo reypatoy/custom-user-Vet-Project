@@ -9,21 +9,20 @@ from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.urls import reverse
 
-from accounts.models import User, customer, staff as staff_user
+from accounts.models import User, customer as customer_user, staff as staff_user
 from .forms import add_staff_form
 from pets.models import pets
 # Create your views here.
 
 
 def staff_dashboard_view(request):
-    login_user = None
     if request.user.is_authenticated:
-        if request.user.user_type == 2:
-            login_user = request.user.username
-            return render(request, "staff/pages/staff_dashboard.html", {'login_user': login_user})
-        else:
+        if request.user.user_type == 3:
             logout(request)
             return redirect('staff:staff_login_view')
+
+        else:
+            return render(request, "staff/pages/staff_dashboard.html", {})
     else:
         return redirect('staff:staff_login_view')
 
@@ -43,15 +42,17 @@ def staff_login_view(request):
             user = authenticate(username=username, password=password)
 
             if user is not None:
+
                 if request.GET.get('next'):
                     return redirect(request.GET.get('next'))
 
                 else:
-                    if user.user_type == 2:
+                    if user.user_type == 3:
+                        invalid_login_error = "Invalid Account"
+
+                    else:
                         login(request, user)
                         return redirect('staff:staff_dashboard_view')
-                    else:
-                        invalid_login_error = "Invalid Account"
 
         else:
             error_message = form.errors
@@ -87,7 +88,7 @@ class pets_list_view(ListView):
         order_by = self.request.GET.get("orderby", "id")
         if filter != "":
             cat = pets.objects.filter(Q(pet_name__contains=filter) | Q(
-                breed__contains=filter) | Q(owner__contains=filter)).order_by(order_by)
+                breed__contains=filter) | Q(owner__contains=filter) | Q(owner_id=filter)).order_by(order_by)
         else:
             cat = pets.objects.all().order_by(order_by)
         return cat
@@ -101,6 +102,7 @@ class pets_list_view(ListView):
 
 
 def add_staff_view(request):
+    success_message = None
     staff_data = None
     error_message = None
     form = add_staff_form()
@@ -130,9 +132,11 @@ def add_staff_view(request):
             current_staff.profile_pic = profile_pic
 
             current_staff.save()
+            success_message = "Staff Added Successfully!!!"
         else:
             error_message = form.errors
     context = {
+        'success_message': success_message,
         'login_user': request.user.username,
         'staff': staff_data,
         'error_message': error_message,
@@ -183,10 +187,10 @@ class staff_update_view(UpdateView):
         staff = staff_user.objects.get(auth_user_id=user.id)
         if self.request.FILES.get("profile_pic", False):
             profile_pic = self.request.FILES["profile_pic"]
-            fs = FileSystemStorage(location='/media/staff_profile_pictures/')
-            file_name = fs.save(profile_pic.name, profile_pic)
-            profile_pic_url = fs.url(file_name)
-            staff.profile_pic = profile_pic_url
+            # fs = FileSystemStorage(location='/media/staff_profile_pictures/')
+            # file_name = fs.save(profile_pic.name, profile_pic)
+            # profile_pic_url = fs.url(file_name)
+            staff.profile_pic = profile_pic
         staff.username = self.request.POST.get("username")
         staff.email = self.request.POST.get("email")
         staff.first_name = self.request.POST.get("first_name")
@@ -198,3 +202,49 @@ class staff_update_view(UpdateView):
         staff.save()
         messages.success(self.request, "Staff Updated Successfully!!!")
         return HttpResponseRedirect(reverse("staff:staff_list_view"))
+
+
+def staff_profile_view(request):
+    id = request.GET.get("id")
+    model = staff_user.objects.get(auth_user_id=id)
+    context = {
+        'staff': model
+    }
+    return render(request, "staff/pages/staff_profiles.html", context)
+
+
+class customers_list_view(ListView):
+    model = customer_user
+    template_name = "staff/pages/customers_list.html"
+    paginate_by = 6
+
+    def get_queryset(self):
+        filter = self.request.GET.get("filter", "")
+        order_by = self.request.GET.get("orderby", "id")
+        if filter != "":
+            cat = customer_user.objects.filter(
+                Q(first_name__contains=filter), Q(last_name__contains=filter),
+                Q(address_barangay__contains=filter),
+                Q(address_municipality__contains=filter)).order_by(order_by)
+        else:
+            cat = customer_user.objects.all().order_by(order_by)
+        return cat
+
+    def get_context_data(self, **kwargs):
+        context = super(customers_list_view, self).get_context_data(**kwargs)
+        context["filter"] = self.request.GET.get("filter", "")
+        context["orderby"] = self.request.GET.get("orderby", "id")
+        context["all_table_fields"] = customer_user._meta.get_fields()
+        return context
+
+
+def customers_profile_view(request):
+    id = request.GET.get("id")
+    context = None
+    customer = customer_user.objects.get(id=id)
+    pets_count = pets.objects.filter(owner_id=customer.id).count()
+    context = {
+        'customer': customer,
+        'pets_count': pets_count
+    }
+    return render(request, "staff/pages/customers_profile.html", context)
