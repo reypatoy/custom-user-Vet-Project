@@ -21,4 +21,9 @@ urlpatterns = [
          name="customers_list_view"),
     path('customers_profile/', views.customers_profile_view,
          name="customers_profile_view"),
+    path('add_pet_for_customer/<slug:pk>', views.add_pet_specific_customer_view.as_view(),
+         name="add_pet_specific_customer_view"),
+    path('pet_update/<slug:pk>', views.pet_update_view.as_view(),
+         name="pet_update_view"),
+
 ]

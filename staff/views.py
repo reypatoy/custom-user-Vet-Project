@@ -77,18 +77,41 @@ class add_pet_view(SuccessMessageMixin, CreateView):
     template_name = "staff/pages/add_pets.html"
 
 
+class add_pet_specific_customer_view(CreateView):
+    model = pets
+    fields = ['pet_image', 'pet_name', 'breed', 'age', 'owner', 'added_by']
+    template_name = "staff/pages/add_pet_specific_customer.html"
+
+    def form_valid(self, form):
+        customer = customer_user.objects.get(id=self.kwargs['pk'])
+        pet = form.save(commit=False)
+        pet.owner_id = customer
+        pet.save()
+        return redirect("staff:customers_list_view")
+
+
+class pet_update_view(SuccessMessageMixin, UpdateView):
+    model = pets
+    template_name = "staff/pages/pet_update.html"
+    success_message = "Pet Updated Successfully!!!"
+    fields = "__all__"
+
+
 class pets_list_view(ListView):
     model = pets
     template_name = "staff/pages/pets_list.html"
     paginate_by = 6
 
     def get_queryset(self):
-        result = None
         filter = self.request.GET.get("filter", "")
         order_by = self.request.GET.get("orderby", "id")
         if filter != "":
-            cat = pets.objects.filter(Q(pet_name__contains=filter) | Q(
-                breed__contains=filter) | Q(owner__contains=filter) | Q(owner_id=filter)).order_by(order_by)
+            if filter.isnumeric():
+                cat = pets.objects.filter(
+                    Q(owner_id=filter)).order_by(order_by)
+            else:
+                cat = pets.objects.filter(Q(pet_name__contains=filter) | Q(
+                    breed__contains=filter) | Q(owner__contains=filter)).order_by(order_by)
         else:
             cat = pets.objects.all().order_by(order_by)
         return cat

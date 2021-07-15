@@ -17,12 +17,23 @@
         <div class="search-element">
           <form action="" method="GET">
             <button style="float:right; margin-top: 25px;" class="btn btn-primary"  type="submit">Search</button>
-            <input class="form-control" name = "filter" type="search" placeholder="Search" aria-label="Search" data-width="250" style="width: 250px;margin-top: 25px; float:right"> 
+            <input class="form-control"  name = "filter" id = "filter" type="text" placeholder="Search" aria-label="Search" data-width="250" style="width: 250px;margin-top: 25px; float:right"> 
           </form>
         </div>  
     </div>
     </div>
   </div>
+  {% if messages %}
+      {% for message in messages %}
+          {% if message.tags == "success" %}
+          <div class="container">
+              <div class="alert alert-success">
+                {{message}}
+              </div>
+            </div>
+          {% endif %}
+      {% endfor %}
+  {% endif %}
   <div class="container">
         <div class="row">
           {% if pets_list %}
@@ -45,11 +56,11 @@
                       <a href="/media/{{pet.owner_id.profile_pic}}" ><img class = "img img-fluid" style="height: 60px; width: 60px; border-radius: 50%;" alt="image" src="/media/{{pet.owner_id.profile_pic}}"></a>
                       <div class="article-user-details">
                         <div class="user-detail-name">
-                          <a href="{% url 'staff:customers_profile_view' %}?id={{pet.owner_id.id}}">{{pet.owner}}</a>
+                          <a href="{% url 'staff:customers_profile_view' %}?id={{pet.owner_id.id}}">{{pet.owner_id}}</a>
                         </div>
                         <div style = "float: left;" class="text-job">Owner</div>
                         <div class="article-cta" style = "float: right; margin-right: 30px;">
-                            <a href="#">Edit <i class="fas fa-chevron-right"></i></a>
+                            <a href="{% url 'staff:pet_update_view' pet.id %}">Edit <i class="fas fa-chevron-right"></i></a>
                         </div>
                         <div class="article-cta" style = "float: right; margin-right: 30px;">
                           <a href="#">Add Prescriptions</a>
@@ -88,8 +99,15 @@
           </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
     <script>
-  
+        // $(document).ready(function(){
+        //   $('#filter').keyup(function(){
+
+        //   })
+        // })
     </script>
 
 {% endblock %}

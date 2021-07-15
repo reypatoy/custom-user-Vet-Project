@@ -21,4 +21,4 @@ class pets(models.Model):
         return self.pet_name
 
     def get_absolute_url(self):
-        return reverse("staff:add_pet_view")
+        return reverse("staff:pets_list_view")
