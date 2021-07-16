@@ -60,10 +60,29 @@
                         </div>
                         <div style = "float: left;" class="text-job">Owner</div>
                         <div class="article-cta" style = "float: right; margin-right: 30px;">
-                            <a href="{% url 'staff:pet_update_view' pet.id %}">Edit <i class="fas fa-chevron-right"></i></a>
-                        </div>
-                        <div class="article-cta" style = "float: right; margin-right: 30px;">
-                          <a href="#">Add Prescriptions</a>
+
+                          <!-- <div class="dropdown d-inline">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Actions
+                            </button>
+                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
+                              <a class="dropdown-item" href="{% url 'staff:pet_update_view' pet.id %}">Update</a>
+                              <a class="dropdown-item" href="#">Prescriptions</a>
+                              <a class="dropdown-item" href="#">Check Up</a>
+                            </div>
+                          </div> -->
+
+                          <div class="btn-group mb-2">
+                            <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Action
+                            </button>
+                            <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -176px, 0px); top: 0px; left: 0px; will-change: transform;">
+                              <a class="dropdown-item" href="{% url 'staff:pet_update_view' pet.id %}"><i class="far fa-edit"></i>  Update</a>
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#"><i class="fas fa-diagnoses"></i> Check Up</a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-prescription"></i> Prescriptions</a>
+                            </div>
+                          </div>
                       </div>
                       </div>
                     </div>

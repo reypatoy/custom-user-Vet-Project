@@ -1,3 +1,7 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from pets.models import pets
+from .forms import add_staff_form
+from accounts.models import User, customer as customer_user, staff as staff_user
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
@@ -8,16 +12,23 @@ from django.db.models import Q
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.urls import reverse
+from django.contrib.auth.views import redirect_to_login
 
-from accounts.models import User, customer as customer_user, staff as staff_user
-from .forms import add_staff_form
-from pets.models import pets
 # Create your views here.
+
+
+class isUserLogin(PermissionRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        if (not self.request.user.is_authenticated):
+            return redirect('staff:staff_login_view')
+        if (not self.request.user.user_type == 2):
+            return redirect('staff:staff_login_view')
+        return super(isUserLogin, self).dispatch(request, *args, **kwargs)
 
 
 def staff_dashboard_view(request):
     if request.user.is_authenticated:
-        if request.user.user_type == 3:
+        if request.user.user_type != 2:
             logout(request)
             return redirect('staff:staff_login_view')
 
@@ -47,7 +58,7 @@ def staff_login_view(request):
                     return redirect(request.GET.get('next'))
 
                 else:
-                    if user.user_type == 3:
+                    if user.user_type != 2:
                         invalid_login_error = "Invalid Account"
 
                     else:
@@ -70,14 +81,14 @@ def staff_logout_view(request):
     return redirect("staff:staff_login_view")
 
 
-class add_pet_view(SuccessMessageMixin, CreateView):
+class add_pet_view(isUserLogin, SuccessMessageMixin, CreateView):
     model = pets
     success_message = "Pet Added Successfully!!!"
     fields = "__all__"
     template_name = "staff/pages/add_pets.html"
 
 
-class add_pet_specific_customer_view(CreateView):
+class add_pet_specific_customer_view(isUserLogin, CreateView):
     model = pets
     fields = ['pet_image', 'pet_name', 'breed', 'age', 'owner', 'added_by']
     template_name = "staff/pages/add_pet_specific_customer.html"
@@ -90,14 +101,14 @@ class add_pet_specific_customer_view(CreateView):
         return redirect("staff:customers_list_view")
 
 
-class pet_update_view(SuccessMessageMixin, UpdateView):
+class pet_update_view(isUserLogin, SuccessMessageMixin, UpdateView):
     model = pets
     template_name = "staff/pages/pet_update.html"
     success_message = "Pet Updated Successfully!!!"
     fields = "__all__"
 
 
-class pets_list_view(ListView):
+class pets_list_view(isUserLogin, ListView):
     model = pets
     template_name = "staff/pages/pets_list.html"
     paginate_by = 6
@@ -168,7 +179,7 @@ def add_staff_view(request):
     return render(request, "staff/pages/add_staff.html", context)
 
 
-class staff_list_view(ListView):
+class staff_list_view(isUserLogin, ListView):
     model = staff_user
     template_name = "staff/pages/staff_list.html"
     paginate_by = 6
@@ -191,7 +202,7 @@ class staff_list_view(ListView):
         return context
 
 
-class staff_update_view(UpdateView):
+class staff_update_view(isUserLogin, UpdateView):
     model = User
     template_name = "staff/pages/staff_update.html"
     fields = ["first_name", "last_name", "username", "password", "password"]
