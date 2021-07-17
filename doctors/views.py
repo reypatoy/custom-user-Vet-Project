@@ -32,7 +32,7 @@ def doctors_login_view(request):
                     if request.GET.get('next'):
                         return redirect(request.GET.get('next'))
                     else:
-                        return redirect("doctors:doctors_dashboard")
+                        return redirect("doctors:doctors_dashboard_view")
                 else:
                     status = "Invalid Account!!!"
         else:
@@ -43,3 +43,7 @@ def doctors_login_view(request):
         'form': form
     }
     return render(request, "doctors/auth/login.html", context)
+
+
+def doctors_dashboard_view(request):
+    return render(request, "doctors/pages/doctors_dashboard.html", {})

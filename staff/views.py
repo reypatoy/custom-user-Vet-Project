@@ -12,7 +12,6 @@ from django.db.models import Q
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.urls import reverse
-from django.contrib.auth.views import redirect_to_login
 
 # Create your views here.
 
@@ -136,47 +135,55 @@ class pets_list_view(isUserLogin, ListView):
 
 
 def add_staff_view(request):
-    success_message = None
-    staff_data = None
-    error_message = None
-    form = add_staff_form()
-    if request.method == 'POST':
-        form = add_staff_form(request.POST, request.FILES)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            first_name = form.cleaned_data.get('first_name')
-            last_name = form.cleaned_data.get('last_name')
-            contact_number = form.cleaned_data.get('contact_number')
-            address_barangay = form.cleaned_data.get('address_barangay')
-            address_municipality = form.cleaned_data.get(
-                'address_municipality')
-            profile_pic = form.cleaned_data.get('profile_pic')
-            email = form.cleaned_data.get('email')
-            User_instance = form.save()
-            current_staff = staff_user.objects.get(auth_user_id=User_instance)
+    if request.user.is_authenticated:
+        if request.user.user_type == 2:
+            success_message = None
+            staff_data = None
+            error_message = None
+            form = add_staff_form()
+            if request.method == 'POST':
+                form = add_staff_form(request.POST, request.FILES)
+                if form.is_valid():
+                    username = form.cleaned_data.get('username')
+                    first_name = form.cleaned_data.get('first_name')
+                    last_name = form.cleaned_data.get('last_name')
+                    contact_number = form.cleaned_data.get('contact_number')
+                    address_barangay = form.cleaned_data.get(
+                        'address_barangay')
+                    address_municipality = form.cleaned_data.get(
+                        'address_municipality')
+                    profile_pic = form.cleaned_data.get('profile_pic')
+                    email = form.cleaned_data.get('email')
+                    User_instance = form.save()
+                    current_staff = staff_user.objects.get(
+                        auth_user_id=User_instance)
 
-            current_staff.username = username
-            current_staff.first_name = first_name
-            current_staff.last_name = last_name
-            current_staff.contact_number = contact_number
-            current_staff.address_barangay = address_barangay
-            current_staff.address_municipality = address_municipality
-            current_staff.email = email
-            current_staff.added_by = request.user.username
-            current_staff.profile_pic = profile_pic
+                    current_staff.username = username
+                    current_staff.first_name = first_name
+                    current_staff.last_name = last_name
+                    current_staff.contact_number = contact_number
+                    current_staff.address_barangay = address_barangay
+                    current_staff.address_municipality = address_municipality
+                    current_staff.email = email
+                    current_staff.added_by = request.user.username
+                    current_staff.profile_pic = profile_pic
 
-            current_staff.save()
-            success_message = "Staff Added Successfully!!!"
+                    current_staff.save()
+                    success_message = "Staff Added Successfully!!!"
+                else:
+                    error_message = form.errors
+            context = {
+                'success_message': success_message,
+                'login_user': request.user.username,
+                'staff': staff_data,
+                'error_message': error_message,
+                'form': form
+            }
+            return render(request, "staff/pages/add_staff.html", context)
         else:
-            error_message = form.errors
-    context = {
-        'success_message': success_message,
-        'login_user': request.user.username,
-        'staff': staff_data,
-        'error_message': error_message,
-        'form': form
-    }
-    return render(request, "staff/pages/add_staff.html", context)
+            return redirect("staff:staff_login_view")
+    else:
+        return redirect("staff:staff_login_view")
 
 
 class staff_list_view(isUserLogin, ListView):
@@ -239,15 +246,21 @@ class staff_update_view(isUserLogin, UpdateView):
 
 
 def staff_profile_view(request):
-    id = request.GET.get("id")
-    model = staff_user.objects.get(auth_user_id=id)
-    context = {
-        'staff': model
-    }
-    return render(request, "staff/pages/staff_profiles.html", context)
+    if request.user.is_authenticated:
+        if request.user.user_type == 2:
+            id = request.GET.get("id")
+            model = staff_user.objects.get(auth_user_id=id)
+            context = {
+                'staff': model
+            }
+            return render(request, "staff/pages/staff_profiles.html", context)
+        else:
+            return redirect("staff:staff_login_view")
+    else:
+        return redirect("staff:staff_login_view")
 
 
-class customers_list_view(ListView):
+class customers_list_view(isUserLogin, ListView):
     model = customer_user
     template_name = "staff/pages/customers_list.html"
     paginate_by = 6
@@ -273,12 +286,18 @@ class customers_list_view(ListView):
 
 
 def customers_profile_view(request):
-    id = request.GET.get("id")
-    context = None
-    customer = customer_user.objects.get(id=id)
-    pets_count = pets.objects.filter(owner_id=customer.id).count()
-    context = {
-        'customer': customer,
-        'pets_count': pets_count
-    }
-    return render(request, "staff/pages/customers_profile.html", context)
+    if request.user.is_authenticated:
+        if request.user.user_type == 2:
+            id = request.GET.get("id")
+            context = None
+            customer = customer_user.objects.get(id=id)
+            pets_count = pets.objects.filter(owner_id=customer.id).count()
+            context = {
+                'customer': customer,
+                'pets_count': pets_count
+            }
+            return render(request, "staff/pages/customers_profile.html", context)
+        else:
+            return redirect("staff:staff_login_view")
+    else:
+        return redirect("staff:staff_login_view")
