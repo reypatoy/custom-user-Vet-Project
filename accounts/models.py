@@ -21,6 +21,7 @@ class Admin(models.Model):
         max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+    added_by = models.CharField(max_length=100, blank=True, null=True)
     auth_user_id = models.OneToOneField(
         User, related_name='admin', on_delete=models.CASCADE)
 

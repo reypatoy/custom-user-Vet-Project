@@ -65,7 +65,7 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="{% url 'staff:pets_list_view' %}">Pets List</a>
+                        <a class="collapse-item" href="{% url 'doctors:pets_list_view' %}">Pets List</a>
                         <a class="collapse-item" href="{% url 'staff:add_pet_view' %}">Add Pets</a>
                         <a class="collapse-item" href="cards.html">Cards</a>
                         
@@ -173,7 +173,7 @@
                     <div id="content">
         
                         <!-- Topbar -->
-                        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                        <nav id = "nav_top" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
         
                             <!-- Sidebar Toggle (Topbar) -->
                             <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
@@ -401,7 +401,7 @@
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
           <div class="modal-footer">
               <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-              <a class="btn btn-primary" href="{% url 'staff:staff_logout_view' %}">Logout</a>
+              <a class="btn btn-primary" href="{% url 'doctors:doctors_logout_view' %}">Logout</a>
           </div>
       </div>
   </div>
@@ -423,6 +423,18 @@
 <!-- Page level custom scripts -->
 <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
 <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+<script>
+    // document.addEventListener("DOMContentLoaded",function(){
+    //     window.addEventListener('scroll',function(){
+    //         if(window.scrollY > 50){
+    //             document.querySelector('#nav_top').classList.add("fixed-top");
+               
+    //         }else{
+    //             document.querySelector('#nav_top').classList.remove("fixed-top");
+    //         }
+    //     })
+    // })
+</script>
 
 </body>
 

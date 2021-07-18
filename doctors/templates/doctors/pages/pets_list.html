@@ -1,0 +1,132 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-5">
+      <h2 class = "page-header" style = "padding: 20px;">Pets List</h2>
+    </div>
+    <div class="col-md-3" style="padding: 10px;">
+      <div class="sort-element">
+        <h4>Sort By</h4>
+          <a href="{% url 'doctors:pets_list_view' %}?filter={{filter}}&orderby=id"style="margin-top: 25px;">Date Added</a> <b>&nbsp;|&nbsp;</b>
+          <a href="{% url 'doctors:pets_list_view' %}?filter={{filter}}&orderby=owner"style="margin-top: 25px;">Owner</a><b>&nbsp;|&nbsp;</b>
+          <a href="{% url 'doctors:pets_list_view' %}?filter={{filter}}&orderby=breed"style="margin-top: 25px;">Breed</a>
+      </div>  
+  </div>
+    <div class="col-md-4" >
+        <div class="search-element">
+          <form action="" method="GET">
+            <button style="float:right; margin-top: 25px;" class="btn btn-primary"  type="submit">Search</button>
+            <input class="form-control"  name = "filter" id = "filter" type="text" placeholder="Search" aria-label="Search" data-width="250" style="width: 250px;margin-top: 25px; float:right"> 
+          </form>
+        </div>  
+    </div>
+    </div>
+  </div>
+  {% if messages %}
+      {% for message in messages %}
+          {% if message.tags == "success" %}
+          <div class="container">
+              <div class="alert alert-success">
+                {{message}}
+              </div>
+            </div>
+          {% endif %}
+      {% endfor %}
+  {% endif %}
+  <div class="container">
+        <div class="row">
+          {% if pets_list %}
+            {% for pet in pets_list %}
+            <div class="col-12 col-md-4 col-lg-4" style = "margin-bottom: 10px; padding: 5px;">
+                <article class="article article-style-c">
+                  <div class="article-header">
+                    <div class="article-image" data-background="/media/{{pet.pet_image}}" style="background-image: url(&quot;assets/img/news/img13.jpg&quot;);">
+                        <a href="/media/{{pet.pet_image}}"><img class = "img img-fluid" style = "height: 250px; width: 400px;" src="/media/{{pet.pet_image}}" alt=""></a>
+                    </div>
+                  </div>
+                  <div class="article-details">
+                    <div class="article-category">Added At {{pet.added_at}}<div class="bullet"></div>{{pet.age}} Years Old</div>
+                    <div class="article-title">
+                      <h2>Name : {{pet.pet_name}}</h2>
+                    </div>
+                    <p>Breed : {{pet.breed}}</p>
+                    <p>Added by : {{pet.added_by}}</p>
+                    <div class="article-user">
+                      <a href="/media/{{pet.owner_id.profile_pic}}" ><img class = "img img-fluid" style="height: 60px; width: 60px; border-radius: 50%;" alt="image" src="/media/{{pet.owner_id.profile_pic}}"></a>
+                      <div class="article-user-details">
+                        <div class="user-detail-name">
+                          <a href="">{{pet.owner_id}}</a>
+                         
+                        </div>
+                        <div style = "float: left;" class="text-job">Owner</div>
+                        <div class="article-cta" style = "float: right; margin-right: 30px;">
+
+                          <!-- <div class="dropdown d-inline">
+                            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              Actions
+                            </button>
+                            <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 28px, 0px); top: 0px; left: 0px; will-change: transform;">
+                              <a class="dropdown-item" href="{% url 'staff:pet_update_view' pet.id %}">Update</a>
+                              <a class="dropdown-item" href="#">Prescriptions</a>
+                              <a class="dropdown-item" href="#">Check Up</a>
+                            </div>
+                          </div> -->
+
+                          <div class="btn-group mb-2">
+                            <button class="btn btn-dark btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Action
+                            </button>
+                            <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -176px, 0px); top: 0px; left: 0px; will-change: transform;">
+                              <a class="dropdown-item" href=""><i class="far fa-edit"></i>  Update</a>
+                             
+                              <div class="dropdown-divider"></div>
+                              <a class="dropdown-item" href="#"><i class="fas fa-diagnoses"></i> Check Up</a>
+                              <a class="dropdown-item" href="#"><i class="fas fa-prescription"></i> Prescriptions</a>
+                            </div>
+                          </div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            {% endfor %}
+          {% else %}
+          <div class="col-md-12" style="height: 500px;">
+              <h1 class = "text-center">No Result</h1>
+          </div>
+          {% endif %}
+        </div>
+        <div class="row">
+          <div class="card-body">
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                {% if page_obj.has_previous%}
+                  <li class="page-item"><a class="page-link" href="{% url 'doctors:pets_list_view' %}?filter={{filter}}&ordeyby={{orderby}}&page={{page_obj.previous_page_number}}">Previous</a></li>
+                {% else %}
+                  <li class="page-item disabled" ><a class="page-link" href="">Previous</a></li>
+                {% endif %}
+                  <li class="page-item disabled"><a class="page-link" href="">Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</a></li>
+                {% if page_obj.has_next %}
+                  <li class="page-item"><a class="page-link" href="{% url 'doctors:pets_list_view' %}?filter={{filter}}&orderby={{orderby}}&page={{page_obj.next_page_number}}">Next</a></li>
+                {% else %}
+                  <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
+                {% endif %}
+              </ul>
+            </nav>
+          </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script>
+        // $(document).ready(function(){
+        //   $('#filter').keyup(function(){
+
+        //   })
+        // })
+    </script>
+
+{% endblock %}

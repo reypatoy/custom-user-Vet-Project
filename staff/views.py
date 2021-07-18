@@ -16,13 +16,13 @@ from django.urls import reverse
 # Create your views here.
 
 
-class isUserLogin(PermissionRequiredMixin):
+class checkPremiumGroupMixin:
     def dispatch(self, request, *args, **kwargs):
-        if (not self.request.user.is_authenticated):
-            return redirect('staff:staff_login_view')
-        if (not self.request.user.user_type == 2):
-            return redirect('staff:staff_login_view')
-        return super(isUserLogin, self).dispatch(request, *args, **kwargs)
+        if request.user.groups.filter(name="staff_group").exists():
+
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect("staff:staff_login_view")
 
 
 def staff_dashboard_view(request):
@@ -80,14 +80,14 @@ def staff_logout_view(request):
     return redirect("staff:staff_login_view")
 
 
-class add_pet_view(isUserLogin, SuccessMessageMixin, CreateView):
+class add_pet_view(checkPremiumGroupMixin, SuccessMessageMixin, CreateView):
     model = pets
     success_message = "Pet Added Successfully!!!"
     fields = "__all__"
     template_name = "staff/pages/add_pets.html"
 
 
-class add_pet_specific_customer_view(isUserLogin, CreateView):
+class add_pet_specific_customer_view(checkPremiumGroupMixin, CreateView):
     model = pets
     fields = ['pet_image', 'pet_name', 'breed', 'age', 'owner', 'added_by']
     template_name = "staff/pages/add_pet_specific_customer.html"
@@ -100,14 +100,14 @@ class add_pet_specific_customer_view(isUserLogin, CreateView):
         return redirect("staff:customers_list_view")
 
 
-class pet_update_view(isUserLogin, SuccessMessageMixin, UpdateView):
+class pet_update_view(checkPremiumGroupMixin, SuccessMessageMixin, UpdateView):
     model = pets
     template_name = "staff/pages/pet_update.html"
     success_message = "Pet Updated Successfully!!!"
     fields = "__all__"
 
 
-class pets_list_view(isUserLogin, ListView):
+class pets_list_view(checkPremiumGroupMixin, ListView):
     model = pets
     template_name = "staff/pages/pets_list.html"
     paginate_by = 6
@@ -169,6 +169,7 @@ def add_staff_view(request):
                     current_staff.profile_pic = profile_pic
 
                     current_staff.save()
+                    User_instance.groups.add(1)
                     success_message = "Staff Added Successfully!!!"
                 else:
                     error_message = form.errors
@@ -186,7 +187,7 @@ def add_staff_view(request):
         return redirect("staff:staff_login_view")
 
 
-class staff_list_view(isUserLogin, ListView):
+class staff_list_view(checkPremiumGroupMixin, ListView):
     model = staff_user
     template_name = "staff/pages/staff_list.html"
     paginate_by = 6
@@ -209,7 +210,7 @@ class staff_list_view(isUserLogin, ListView):
         return context
 
 
-class staff_update_view(isUserLogin, UpdateView):
+class staff_update_view(checkPremiumGroupMixin, UpdateView):
     model = User
     template_name = "staff/pages/staff_update.html"
     fields = ["first_name", "last_name", "username", "password", "password"]
@@ -260,7 +261,7 @@ def staff_profile_view(request):
         return redirect("staff:staff_login_view")
 
 
-class customers_list_view(isUserLogin, ListView):
+class customers_list_view(checkPremiumGroupMixin, ListView):
     model = customer_user
     template_name = "staff/pages/customers_list.html"
     paginate_by = 6
