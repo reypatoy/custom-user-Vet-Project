@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from pets.models import pets
 from .forms import add_staff_form
-from accounts.models import User, customer as customer_user, staff as staff_user
+from accounts.models import User as custom_user, customer as customer_user, staff as staff_user
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
@@ -211,7 +211,7 @@ class staff_list_view(checkPremiumGroupMixin, ListView):
 
 
 class staff_update_view(checkPremiumGroupMixin, UpdateView):
-    model = User
+    model = custom_user
     template_name = "staff/pages/staff_update.html"
     fields = ["first_name", "last_name", "username", "password", "password"]
 
@@ -302,3 +302,32 @@ def customers_profile_view(request):
             return redirect("staff:staff_login_view")
     else:
         return redirect("staff:staff_login_view")
+
+
+class add_customer_view(SuccessMessageMixin, CreateView):
+    model = custom_user
+    fields = ["first_name", "last_name", "email", "username", "password"]
+    template_name = "staff/pages/add_customer.html"
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.user_type = 3
+        user.set_password(form.cleaned_data["password"])
+        user.save()
+
+        profile_pic = self.request.FILES["profile_pic"]
+        address_barangay = self.request.POST.get("address_barangay")
+        address_municipality = self.request.POST.get("address_municipality")
+        contact_number = self.request.POST.get("contact_number")
+        user.customer.first_name = user.first_name
+        user.customer.last_name = user.last_name
+        user.customer.email = user.email
+        user.customer.username = user.username
+        user.customer.profile_pic = profile_pic
+        user.customer.address_barangay = address_barangay
+        user.customer.address_municipality = address_municipality
+        user.customer.contact_number = contact_number
+        user.customer.added_by = self.request.user.username
+        user.save()
+        messages.success(self.request, "Customer Added Successfully!!!")
+        return redirect("staff:customers_list_view")

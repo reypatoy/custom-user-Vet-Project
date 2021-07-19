@@ -65,6 +65,7 @@ class customer(models.Model):
     address_barangay = models.CharField(max_length=100, blank=True, null=True)
     address_municipality = models.CharField(
         max_length=100, blank=True, null=True)
+    added_by = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     auth_user_id = models.OneToOneField(

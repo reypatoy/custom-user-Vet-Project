@@ -12,9 +12,12 @@ from pets.models import pets
 
 # Create your views here.
 
-# class CheckGroupPermissionMixin:
-#     def dispatch(self, request, *args, **kwargs):
-#         if request.user.groups.filter(name="")
+class CheckGroupPermissionMixin:
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.groups.filter(name="doctors_group"):
+            return super().dispatch(request, *args, **kwargs)
+        else:
+            return redirect("doctors:doctors_login_view")
 
 
 def doctors_login_view(request):
@@ -61,7 +64,7 @@ def doctors_logout_view(request):
     return redirect("doctors:doctors_login_view")
 
 
-class pets_list_view(ListView):
+class pets_list_view(CheckGroupPermissionMixin, ListView):
     model = pets
     template_name = "doctors/pages/pets_list.html"
     paginate_by = 6
