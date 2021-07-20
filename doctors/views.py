@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView
 from django.db.models import Q
 
-
+from accounts.models import customer
 from pets.models import pets
 
 
@@ -85,3 +85,13 @@ class pets_list_view(CheckGroupPermissionMixin, ListView):
         context["orderby"] = self.request.GET.get("orderby", "id")
         context["all_table_fields"] = pets._meta.get_fields()
         return context
+
+
+class add_pet_view(CheckGroupPermissionMixin, CreateView):
+    model = pets
+    template_name = "doctors/pages/add_pet.html"
+    fields = "__all__"
+
+    def form_valid(self, form):
+        form.save()
+        return redirect("doctors:pets_list_view")

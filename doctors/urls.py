@@ -11,4 +11,5 @@ urlpatterns = [
          name="doctors_dashboard_view"),
     path('doctors_logout/', views.doctors_logout_view, name="doctors_logout_view"),
     path('pets_list/', views.pets_list_view.as_view(), name="pets_list_view"),
+    path('add_pet/', views.add_pet_view.as_view(), name="add_pet_view"),
 ]
