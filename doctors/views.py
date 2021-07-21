@@ -95,3 +95,14 @@ class add_pet_view(CheckGroupPermissionMixin, CreateView):
     def form_valid(self, form):
         form.save()
         return redirect("doctors:pets_list_view")
+
+
+class update_pet(CheckGroupPermissionMixin, UpdateView):
+    model = pets
+    template_name = "doctors/pages/pet_update.html"
+    success_message = "Pet Updated Successfully!!!"
+    fields = "__all__"
+
+    def form_valid(self, form):
+        form.save()
+        return redirect("doctors:pets_list_view")

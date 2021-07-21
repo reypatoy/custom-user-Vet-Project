@@ -1,0 +1,42 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% block content %}
+    <div class="container">
+        <h2 class = "page-header">Update Pet</h2>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% for fields in form %}
+                    <div class="form-group"> 
+                        {% if fields.errors %}
+                            <div class="alert alert-danger">
+                                {{fields.errors}}
+                            </div>
+                        {% endif %}
+                        <label>{{fields.label}}</label>
+                        {% if fields.field.widget.input_type != "select"  and fields.name != "added_by" and fields.name != "pet_image" %}
+                            <input type="{{fields.field.widget.input_type}}" value = "{{fields.value}}" id = "{{fields.name}}" name = "{{fields.name}}" class="form-control" required>
+                        {% endif %}
+                        {% if fields.name == "pet_image" %}
+                           <br> <img class = "img-fluid" style = "padding: 10px; height: 200px; width: 200px;" src="/media/{{fields.value}}" alt="">
+                            <input type="{{fields.field.widget.input_type}}" value = "{{fields.value}}" id = "{{fields.name}}" name = "{{fields.name}}" style = "height: 45px;" class="form-control">
+                        {% endif %}
+                        {% if fields.field.widget.input_type == "select" %}
+                            <select name="{{fields.name}}" id="{{fields.name}}">
+                                {% for id,value in fields.field.choices %}
+                                    <option value="{{id}}" {% if id == fields.value %}selected{% endif %}>{{value}}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                        {% if fields.name == "added_by" %}
+                            <input type="{{fields.field.widget.input_type}}" value = "{{fields.value}}" id = "{{fields.name}}" name = "{{fields.name}}" required class="form-control">
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button class = "btn btn-primary btn-block" type = "submit">Update</button>
+            </form>
+          </div>
+    </div>
+    <script>
+  
+    </script>
+{% endblock %}

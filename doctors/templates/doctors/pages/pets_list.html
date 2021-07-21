@@ -78,7 +78,7 @@
                             Action
                             </button>
                             <div class="dropdown-menu" x-placement="top-start" style="position: absolute; transform: translate3d(0px, -176px, 0px); top: 0px; left: 0px; will-change: transform;">
-                              <a class="dropdown-item" href=""><i class="far fa-edit"></i>  Update</a>
+                              <a class="dropdown-item" href="{% url 'doctors:update_pet' pet.id %}"><i class="far fa-edit"></i>  Update</a>
                              
                               <div class="dropdown-divider"></div>
                               <a class="dropdown-item" href="#"><i class="fas fa-diagnoses"></i> Check Up</a>
