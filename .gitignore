@@ -3,3 +3,4 @@ Veterinary_Project/settings.py
 *.cfg
 media
 static
+.vscode

@@ -1,7 +1,11 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from pets.models import pets
 from .forms import add_staff_form
-from accounts.models import User as custom_user, customer as customer_user, staff as staff_user
+from accounts.models import (
+    User as custom_user,
+    customer as customer_user,
+    staff as staff_user,
+)
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
@@ -22,19 +26,19 @@ class checkPremiumGroupMixin:
 
             return super().dispatch(request, *args, **kwargs)
         else:
-            return redirect("staff:staff_login_view")
+            return redirect("/%s?next=%s" % ("staff/login/", request.path))
 
 
 def staff_dashboard_view(request):
     if request.user.is_authenticated:
         if request.user.user_type != 2:
             logout(request)
-            return redirect('staff:staff_login_view')
+            return redirect("/%s?next=%s" % ("staff/login/", request.path))
 
         else:
             return render(request, "staff/pages/staff_dashboard.html", {})
     else:
-        return redirect('staff:staff_login_view')
+        return redirect("/%s?next=%s" % ("staff/login/", request.path))
 
 
 def staff_login_view(request):
@@ -42,35 +46,35 @@ def staff_login_view(request):
     error_message = None
     form = AuthenticationForm()
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
 
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password")
 
             user = authenticate(username=username, password=password)
 
             if user is not None:
 
-                if request.GET.get('next'):
-                    return redirect(request.GET.get('next'))
-
-                else:
-                    if user.user_type != 2:
-                        invalid_login_error = "Invalid Account"
+                if user.user_type == 2:
+                    login(request, user)
+                    if request.GET.get("next"):
+                        return redirect(request.GET.get("next"))
 
                     else:
-                        login(request, user)
-                        return redirect('staff:staff_dashboard_view')
+                        return redirect("staff:staff_dashboard_view")
+
+                else:
+                    invalid_login_error = "Invalid Account"
 
         else:
             error_message = form.errors
     context = {
-        'title': 'Login',
-        'invalid_account': invalid_login_error,
-        'form': form,
-        'error_message': error_message
+        "title": "Login",
+        "invalid_account": invalid_login_error,
+        "form": form,
+        "error_message": error_message,
     }
     return render(request, "staff/auth/login.html", context)
 
@@ -89,11 +93,11 @@ class add_pet_view(checkPremiumGroupMixin, SuccessMessageMixin, CreateView):
 
 class add_pet_specific_customer_view(checkPremiumGroupMixin, CreateView):
     model = pets
-    fields = ['pet_image', 'pet_name', 'breed', 'age', 'owner', 'added_by']
+    fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by"]
     template_name = "staff/pages/add_pet_specific_customer.html"
 
     def form_valid(self, form):
-        customer = customer_user.objects.get(id=self.kwargs['pk'])
+        customer = customer_user.objects.get(id=self.kwargs["pk"])
         pet = form.save(commit=False)
         pet.owner_id = customer
         pet.save()
@@ -117,11 +121,13 @@ class pets_list_view(checkPremiumGroupMixin, ListView):
         order_by = self.request.GET.get("orderby", "id")
         if filter != "":
             if filter.isnumeric():
-                cat = pets.objects.filter(
-                    Q(owner_id=filter)).order_by(order_by)
+                cat = pets.objects.filter(Q(owner_id=filter)).order_by(order_by)
             else:
-                cat = pets.objects.filter(Q(pet_name__contains=filter) | Q(
-                    breed__contains=filter) | Q(owner__contains=filter)).order_by(order_by)
+                cat = pets.objects.filter(
+                    Q(pet_name__contains=filter)
+                    | Q(breed__contains=filter)
+                    | Q(owner__contains=filter)
+                ).order_by(order_by)
         else:
             cat = pets.objects.all().order_by(order_by)
         return cat
@@ -141,22 +147,19 @@ def add_staff_view(request):
             staff_data = None
             error_message = None
             form = add_staff_form()
-            if request.method == 'POST':
+            if request.method == "POST":
                 form = add_staff_form(request.POST, request.FILES)
                 if form.is_valid():
-                    username = form.cleaned_data.get('username')
-                    first_name = form.cleaned_data.get('first_name')
-                    last_name = form.cleaned_data.get('last_name')
-                    contact_number = form.cleaned_data.get('contact_number')
-                    address_barangay = form.cleaned_data.get(
-                        'address_barangay')
-                    address_municipality = form.cleaned_data.get(
-                        'address_municipality')
-                    profile_pic = form.cleaned_data.get('profile_pic')
-                    email = form.cleaned_data.get('email')
+                    username = form.cleaned_data.get("username")
+                    first_name = form.cleaned_data.get("first_name")
+                    last_name = form.cleaned_data.get("last_name")
+                    contact_number = form.cleaned_data.get("contact_number")
+                    address_barangay = form.cleaned_data.get("address_barangay")
+                    address_municipality = form.cleaned_data.get("address_municipality")
+                    profile_pic = form.cleaned_data.get("profile_pic")
+                    email = form.cleaned_data.get("email")
                     User_instance = form.save()
-                    current_staff = staff_user.objects.get(
-                        auth_user_id=User_instance)
+                    current_staff = staff_user.objects.get(auth_user_id=User_instance)
 
                     current_staff.username = username
                     current_staff.first_name = first_name
@@ -174,17 +177,17 @@ def add_staff_view(request):
                 else:
                     error_message = form.errors
             context = {
-                'success_message': success_message,
-                'login_user': request.user.username,
-                'staff': staff_data,
-                'error_message': error_message,
-                'form': form
+                "success_message": success_message,
+                "login_user": request.user.username,
+                "staff": staff_data,
+                "error_message": error_message,
+                "form": form,
             }
             return render(request, "staff/pages/add_staff.html", context)
         else:
             return redirect("staff:staff_login_view")
     else:
-        return redirect("staff:staff_login_view")
+        return redirect("/%s?next=%s" % ("staff/login/", request.path))
 
 
 class staff_list_view(checkPremiumGroupMixin, ListView):
@@ -196,8 +199,9 @@ class staff_list_view(checkPremiumGroupMixin, ListView):
         filter = self.request.GET.get("filter", "")
         order_by = self.request.GET.get("orderby", "auth_user_id_id")
         if filter is not None:
-            cat = staff_user.objects.filter(Q(first_name__contains=filter) | Q(
-                last_name__contains=filter)).order_by(order_by)
+            cat = staff_user.objects.filter(
+                Q(first_name__contains=filter) | Q(last_name__contains=filter)
+            ).order_by(order_by)
         else:
             cat = staff_user.objects.all().order_by(order_by)
         return cat
@@ -239,8 +243,7 @@ class staff_update_view(checkPremiumGroupMixin, UpdateView):
         staff.last_name = self.request.POST.get("last_name")
         staff.contact_number = self.request.POST.get("contact_number")
         staff.address_barangay = self.request.POST.get("address_barangay")
-        staff.address_municipality = self.request.POST.get(
-            "address_municipality")
+        staff.address_municipality = self.request.POST.get("address_municipality")
         staff.save()
         messages.success(self.request, "Staff Updated Successfully!!!")
         return HttpResponseRedirect(reverse("staff:staff_list_view"))
@@ -251,14 +254,12 @@ def staff_profile_view(request):
         if request.user.user_type == 2:
             id = request.GET.get("id")
             model = staff_user.objects.get(auth_user_id=id)
-            context = {
-                'staff': model
-            }
+            context = {"staff": model}
             return render(request, "staff/pages/staff_profiles.html", context)
         else:
             return redirect("staff:staff_login_view")
     else:
-        return redirect("staff:staff_login_view")
+        return redirect("/%s?next=%s" % ("staff/login/", request.path))
 
 
 class customers_list_view(checkPremiumGroupMixin, ListView):
@@ -271,9 +272,11 @@ class customers_list_view(checkPremiumGroupMixin, ListView):
         order_by = self.request.GET.get("orderby", "id")
         if filter != "":
             cat = customer_user.objects.filter(
-                Q(first_name__contains=filter), Q(last_name__contains=filter),
-                Q(address_barangay__contains=filter),
-                Q(address_municipality__contains=filter)).order_by(order_by)
+                Q(first_name__contains=filter)
+                | Q(last_name__contains=filter)
+                | Q(address_barangay__contains=filter)
+                | Q(address_municipality__contains=filter)
+            ).order_by(order_by)
         else:
             cat = customer_user.objects.all().order_by(order_by)
         return cat
@@ -293,15 +296,12 @@ def customers_profile_view(request):
             context = None
             customer = customer_user.objects.get(id=id)
             pets_count = pets.objects.filter(owner_id=customer.id).count()
-            context = {
-                'customer': customer,
-                'pets_count': pets_count
-            }
+            context = {"customer": customer, "pets_count": pets_count}
             return render(request, "staff/pages/customers_profile.html", context)
         else:
-            return redirect("staff:staff_login_view")
+            return redirect("/%s?next=%s" % ("staff/login/", request.path))
     else:
-        return redirect("staff:staff_login_view")
+        return redirect("/%s?next=%s" % ("staff/login/", request.path))
 
 
 class add_customer_view(SuccessMessageMixin, CreateView):

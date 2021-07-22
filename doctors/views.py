@@ -1,3 +1,4 @@
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -5,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView
 from django.db.models import Q
+from django.urls import reverse
 
 from accounts.models import customer
 from pets.models import pets
@@ -12,19 +14,20 @@ from pets.models import pets
 
 # Create your views here.
 
+
 class CheckGroupPermissionMixin:
     def dispatch(self, request, *args, **kwargs):
         if request.user.groups.filter(name="doctors_group"):
             return super().dispatch(request, *args, **kwargs)
         else:
-            return redirect("doctors:doctors_login_view")
+            return redirect("/%s?next=%s" % ("doctors/login/", request.path))
 
 
 def doctors_login_view(request):
     status = None
     context = None
     form = AuthenticationForm()
-    if request.method == 'POST':
+    if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get("username")
@@ -33,8 +36,8 @@ def doctors_login_view(request):
             if user is not None:
                 if user.user_type == 1:
                     login(request, user)
-                    if request.GET.get('next'):
-                        return redirect(request.GET.get('next'))
+                    if request.GET.get("next"):
+                        return redirect(request.GET.get("next"))
                     else:
                         return redirect("doctors:doctors_dashboard_view")
                 else:
@@ -42,10 +45,7 @@ def doctors_login_view(request):
         else:
             status = form.errors
             form = AuthenticationForm()
-    context = {
-        'status': status,
-        'form': form
-    }
+    context = {"status": status, "form": form}
     return render(request, "doctors/auth/login.html", context)
 
 
@@ -56,7 +56,8 @@ def doctors_dashboard_view(request):
         else:
             return redirect("doctors:doctors_login_view")
     else:
-        return redirect("doctors:doctors_login_view")
+        return redirect("/%s?next=%s" % ("doctors/login/", request.path))
+        # return HttpResponseRedirect("doctors:doctors_login_view")
 
 
 def doctors_logout_view(request):
@@ -73,8 +74,11 @@ class pets_list_view(CheckGroupPermissionMixin, ListView):
         filter = self.request.GET.get("filter", "")
         order_by = self.request.GET.get("orderby", "id")
         if filter != "":
-            cat = pets.objects.filter(Q(pet_name__contains=filter) | Q(
-                breed__contains=filter) | Q(owner__contains=filter)).order_by(order_by)
+            cat = pets.objects.filter(
+                Q(pet_name__contains=filter)
+                | Q(breed__contains=filter)
+                | Q(owner__contains=filter)
+            ).order_by(order_by)
         else:
             cat = pets.objects.all().order_by(order_by)
         return cat
@@ -106,3 +110,30 @@ class update_pet(CheckGroupPermissionMixin, UpdateView):
     def form_valid(self, form):
         form.save()
         return redirect("doctors:pets_list_view")
+
+
+class customers_list(CheckGroupPermissionMixin, ListView):
+    model = customer
+    template_name = "doctors/pages/customers_list.html"
+    paginate_by = 6
+
+    def get_queryset(self):
+        filter = self.request.GET.get("filter", "")
+        order_by = self.request.GET.get("orderby", "id")
+        if filter != "":
+            cat = customer.objects.filter(
+                Q(first_name__contains=filter)
+                | Q(last_name__contains=filter)
+                | Q(address_barangay__contains=filter)
+                | Q(address_municipality__contains=filter)
+            ).order_by(order_by)
+        else:
+            cat = customer.objects.all().order_by(order_by)
+        return cat
+
+    def get_context_data(self, **kwargs):
+        context = super(customers_list, self).get_context_data(**kwargs)
+        context["filter"] = self.request.GET.get("filter", "")
+        context["orderby"] = self.request.GET.get("orderby", "id")
+        context["all_table_fields"] = customer._meta.get_fields()
+        return context
