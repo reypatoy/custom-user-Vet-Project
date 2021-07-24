@@ -1,0 +1,32 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% block content %}
+<div class="row">
+<div class="col-lg-4">
+    <div class="text-center card-box">
+        <div class="member-card pt-2 pb-2">
+            <a href="/media/{{customer.profile_pic}}"><div class="thumb-lg member-thumb mx-auto"><img src="/media/{{customer.profile_pic}}" class="rounded-circle img-thumbnail img-fluid" alt="profile-image"></div></a>
+            <div class="">
+                
+                <h4>{{customer.username}}</h4>
+
+                <p class="text-muted">{{customer.email}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-8" style = "height: 600px;">
+    <div class = "container-fluid" style = "position:absolute">
+        <table class = "table table-striped">
+            <tr style="background-color:#D4E6F1;"><th colspan="2"><h2> Customer Details</h2></th></tr>
+            <tr style = "font-size:25px;"><td>First Name :</td><td>{{customer.first_name}}</td></tr>
+            <tr style = "font-size:25px;"><td>Last Name :</td><td>{{customer.last_name}}</td></tr>
+            <tr style = "font-size:25px;"><td>Contact Number :</td><td>{{customer.contact_number}}</td></tr>
+            <tr style = "font-size:25px;"><td>Adress Barangay :</td><td>{{customer.address_barangay}}</td></tr>
+            <tr style = "font-size:25px;"><td>Adress Municipality :</td><td>{{customer.address_municipality}}</td></tr>
+            <tr style = "font-size:25px;"><td>Pets Owned :</td><td><a href="{% url 'staff:pets_list_view' %}?filter={{customer.id}}">{{pets_count}}</a></td></tr>
+            <tr style = "font-size:25px;"><td>Added by :</td><td>{{customer.added_by}}</td></tr>
+        </table>
+    </div>
+</div>
+</div>
+{% endblock %}

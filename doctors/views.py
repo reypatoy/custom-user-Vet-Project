@@ -166,3 +166,11 @@ class add_customer_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateVi
         user.save()
         messages.success(self.request, "Customer added successfully!!!")
         return redirect("doctors:customers_list_view")
+
+
+def customer_profile_view(request):
+    id = request.GET.get("id")
+    customer_profile = customer_user.objects.get(id=id)
+    pets_count = pets.objects.filter(owner_id=id).count()
+    context = {"customer": customer_profile, "pets_count": pets_count}
+    return render(request, "doctors/pages/customer_profile.html", context)

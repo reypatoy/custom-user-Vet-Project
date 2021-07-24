@@ -52,7 +52,7 @@ class staff(models.Model):
         return f"{self.auth_user_id.first_name} {self.auth_user_id.last_name}"
 
 
-class customer(models.Model):
+class customer(models.Model): 
     username = models.CharField(
         max_length=50, blank=True, null=True, unique=True)
     email = models.EmailField(
