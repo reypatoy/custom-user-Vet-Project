@@ -67,7 +67,7 @@
                     <td>
                       <ul class="list-unstyled mb-0 d-flex justify-content-end" style="margin-top:30px">
                         <li><a href="{% url 'doctors:customer_profile_view' %}?id={{customer.id}}" class="text-primary" style="margin-right:10px" data-toggle="tooltip" title="" data-original-title="view"><i class="far fa-eye"></i></a></li>
-                        <li><a href="{% url 'staff:add_pet_specific_customer_view' customer.id  %}" class="text-info"  data-toggle="tooltip" title="" data-original-title="Edit"><i class="fas fa-plus"></i></a></li>
+                        <li><a href="{% url 'doctors:add_pet_specific_customer_view' customer.id  %}" class="text-info"  data-toggle="tooltip" title="" data-original-title="Add"><i class="fas fa-plus"></i></a></li>
                     </ul>
                     </td>
                   </tr>

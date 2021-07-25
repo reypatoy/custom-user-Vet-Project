@@ -25,6 +25,7 @@
             <tr style = "font-size:25px;"><td>Adress Municipality :</td><td>{{customer.address_municipality}}</td></tr>
             <tr style = "font-size:25px;"><td>Pets Owned :</td><td><a href="{% url 'staff:pets_list_view' %}?filter={{customer.id}}">{{pets_count}}</a></td></tr>
             <tr style = "font-size:25px;"><td>Added by :</td><td>{{customer.added_by}}</td></tr>
+            <tr style = "font-size:25px;"><td>Created At :</td><td>{{customer.created_at}}</td></tr>
         </table>
     </div>
 </div>

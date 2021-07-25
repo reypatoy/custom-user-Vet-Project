@@ -18,5 +18,12 @@ urlpatterns = [
     path("pet_update/<slug:pk>", views.update_pet.as_view(), name="update_pet"),
     path("customers_list/", views.customers_list.as_view(), name="customers_list_view"),
     path("add_customer/", views.add_customer_view.as_view(), name="add_customer_view"),
-    path("customer_profile/",views.customer_profile_view,name="customer_profile_view"),
+    path(
+        "customer_profile/", views.customer_profile_view, name="customer_profile_view"
+    ),
+    path(
+        "add_pet_specific_customer/<slug:pk>",
+        views.add_pet_specific_customer_view.as_view(),
+        name="add_pet_specific_customer_view",
+    ),
 ]

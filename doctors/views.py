@@ -76,11 +76,14 @@ class pets_list_view(CheckGroupPermissionMixin, ListView):
         filter = self.request.GET.get("filter", "")
         order_by = self.request.GET.get("orderby", "id")
         if filter != "":
-            cat = pets.objects.filter(
-                Q(pet_name__contains=filter)
-                | Q(breed__contains=filter)
-                | Q(owner__contains=filter)
-            ).order_by(order_by)
+            if filter.isnumeric():
+                cat = pets.objects.filter(owner_id=filter).order_by(order_by)
+            else:
+                cat = pets.objects.filter(
+                    Q(pet_name__contains=filter)
+                    | Q(breed__contains=filter)
+                    | Q(owner__contains=filter)
+                ).order_by(order_by)
         else:
             cat = pets.objects.all().order_by(order_by)
         return cat
@@ -101,6 +104,20 @@ class add_pet_view(CheckGroupPermissionMixin, CreateView):
     def form_valid(self, form):
         form.save()
         return redirect("doctors:pets_list_view")
+
+
+class add_pet_specific_customer_view(CheckGroupPermissionMixin, CreateView):
+    model = pets
+    template_name = "doctors/pages/add_pet_specific_customer.html"
+    fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by"]
+
+    def form_valid(self,form):
+        customer = customer_user.objects.get(id=self.kwargs["pk"])
+        pet = form.save(commit=False)
+        pet.owner_id = customer
+        pet.save()
+        return redirect("doctors:customers_list_view")
+
 
 
 class update_pet(CheckGroupPermissionMixin, UpdateView):
