@@ -10,7 +10,11 @@ from django.db.models import Q
 from django.urls import reverse
 from django.contrib import messages
 
-from accounts.models import customer as customer_user, User as custom_user
+from accounts.models import (
+    customer as customer_user,
+    User as custom_user,
+    staff as staff_user,
+)
 from pets.models import pets
 
 
@@ -111,13 +115,12 @@ class add_pet_specific_customer_view(CheckGroupPermissionMixin, CreateView):
     template_name = "doctors/pages/add_pet_specific_customer.html"
     fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by"]
 
-    def form_valid(self,form):
+    def form_valid(self, form):
         customer = customer_user.objects.get(id=self.kwargs["pk"])
         pet = form.save(commit=False)
         pet.owner_id = customer
         pet.save()
         return redirect("doctors:customers_list_view")
-
 
 
 class update_pet(CheckGroupPermissionMixin, UpdateView):
@@ -191,3 +194,27 @@ def customer_profile_view(request):
     pets_count = pets.objects.filter(owner_id=id).count()
     context = {"customer": customer_profile, "pets_count": pets_count}
     return render(request, "doctors/pages/customer_profile.html", context)
+
+
+class staff_list_view(CheckGroupPermissionMixin, ListView):
+    model = staff_user
+    template_name = "doctors/pages/staff_list.html"
+    paginate_by = 6
+
+    def get_queryset(self):
+        filter = self.request.GET.get("filter", "")
+        order_by = self.request.GET.get("orderby", "auth_user_id_id")
+        if filter != "":
+            cat = staff_user.objects.filter(
+                Q(first_name__contains=filter) | Q(last_name__contains=filter)
+            ).order_by(order_by)
+        else:
+            cat = staff_user.objects.all().order_by(order_by)
+        return cat
+
+    def get_context_data(self, **kwargs):
+        context = super(staff_list_view, self).get_context_data(**kwargs)
+        context["filter"] = self.request.GET.get("filter", "")
+        context["orderby"] = self.request.GET.get("orderby", "auth_user_id_id")
+        context["all_table_fields"] = staff_user._meta.get_fields()
+        return context

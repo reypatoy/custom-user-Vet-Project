@@ -26,4 +26,5 @@ urlpatterns = [
         views.add_pet_specific_customer_view.as_view(),
         name="add_pet_specific_customer_view",
     ),
+    path("staff_list/", views.staff_list_view.as_view(), name="staff_list_view"),
 ]

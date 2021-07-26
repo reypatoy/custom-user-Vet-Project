@@ -209,7 +209,7 @@ class staff_list_view(checkPremiumGroupMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(staff_list_view, self).get_context_data(**kwargs)
         context["filter"] = self.request.GET.get("filter", "")
-        context["orderby"] = self.request.GET.get("orderby", "id")
+        context["orderby"] = self.request.GET.get("orderby", "auth_user_id_id")
         context["all_table_fields"] = staff_user._meta.get_fields()
         return context
 
