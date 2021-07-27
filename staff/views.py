@@ -22,7 +22,7 @@ from django.urls import reverse
 
 class checkPremiumGroupMixin:
     def dispatch(self, request, *args, **kwargs):
-        if request.user.groups.filter(name="staff_group").exists():
+        if request.user.is_authenticated:
 
             return super().dispatch(request, *args, **kwargs)
         else:
@@ -87,8 +87,19 @@ def staff_logout_view(request):
 class add_pet_view(checkPremiumGroupMixin, SuccessMessageMixin, CreateView):
     model = pets
     success_message = "Pet Added Successfully!!!"
-    fields = "__all__"
+    fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by", "owner_id"]
     template_name = "staff/pages/add_pets.html"
+
+    def form_valid(self, form):
+        pets_count = pets.objects.all()
+        max = 0
+        for id in pets_count:
+            if id.id > max:
+                max = id.id
+        pet = form.save(commit=False)
+        pet.id = max + 1
+        pet.save()
+        return redirect("staff:add_pet_view")
 
 
 class add_pet_specific_customer_view(checkPremiumGroupMixin, CreateView):
@@ -97,9 +108,15 @@ class add_pet_specific_customer_view(checkPremiumGroupMixin, CreateView):
     template_name = "staff/pages/add_pet_specific_customer.html"
 
     def form_valid(self, form):
+        pets_count = pets.objects.all()
+        max = 0
+        for id in pets_count:
+            if id.id > max:
+                max = id.id
         customer = customer_user.objects.get(id=self.kwargs["pk"])
         pet = form.save(commit=False)
         pet.owner_id = customer
+        pet.id = max + 1
         pet.save()
         return redirect("staff:customers_list_view")
 
@@ -108,7 +125,7 @@ class pet_update_view(checkPremiumGroupMixin, SuccessMessageMixin, UpdateView):
     model = pets
     template_name = "staff/pages/pet_update.html"
     success_message = "Pet Updated Successfully!!!"
-    fields = "__all__"
+    fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by", "owner_id"]
 
 
 class pets_list_view(checkPremiumGroupMixin, ListView):
@@ -172,7 +189,6 @@ def add_staff_view(request):
                     current_staff.profile_pic = profile_pic
 
                     current_staff.save()
-                    User_instance.groups.add(1)
                     success_message = "Staff Added Successfully!!!"
                 else:
                     error_message = form.errors

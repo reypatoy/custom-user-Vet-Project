@@ -23,7 +23,7 @@ from pets.models import pets
 
 class CheckGroupPermissionMixin:
     def dispatch(self, request, *args, **kwargs):
-        if request.user.groups.filter(name="doctors_group"):
+        if request.user.is_authenticated:
             return super().dispatch(request, *args, **kwargs)
         else:
             return redirect("/%s?next=%s" % ("doctors/login/", request.path))

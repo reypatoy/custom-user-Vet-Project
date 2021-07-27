@@ -36,7 +36,9 @@ urlpatterns = [
         name="add_pet_specific_customer_view",
     ),
     path(
-        "pet_update/<slug:pk>", views.pet_update_view.as_view(), name="pet_update_view"
+        "pet_update/<slug:pk>",
+        views.pet_update_view.as_view(),
+        name="pet_update_view",
     ),
     path("add_customer/", views.add_customer_view.as_view(), name="add_customer_view"),
 ]
