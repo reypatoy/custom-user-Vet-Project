@@ -23,8 +23,10 @@ from django.urls import reverse
 class checkPremiumGroupMixin:
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-
-            return super().dispatch(request, *args, **kwargs)
+            if request.user.user_type == 2:
+                return super().dispatch(request, *args, **kwargs)
+            else:
+                return redirect("/%s?next=%s" % ("staff/login/", request.path))
         else:
             return redirect("/%s?next=%s" % ("staff/login/", request.path))
 

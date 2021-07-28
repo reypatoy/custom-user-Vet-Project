@@ -24,7 +24,10 @@ from pets.models import pets
 class CheckGroupPermissionMixin:
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return super().dispatch(request, *args, **kwargs)
+            if request.user.user_type == 1:
+                return super().dispatch(request, *args, **kwargs)
+            else:
+                return redirect("/%s?next=%s" % ("doctors/login/", request.path))
         else:
             return redirect("/%s?next=%s" % ("doctors/login/", request.path))
 
@@ -103,10 +106,17 @@ class pets_list_view(CheckGroupPermissionMixin, ListView):
 class add_pet_view(CheckGroupPermissionMixin, CreateView):
     model = pets
     template_name = "doctors/pages/add_pet.html"
-    fields = "__all__"
+    fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by", "owner_id"]
 
     def form_valid(self, form):
-        form.save()
+        pets_id = pets.objects.all()
+        max = 0
+        for id in pets_id:
+            if id.id > max:
+                max = id.id
+        pet = form.save(commit=False)
+        pet.id = max + 1
+        pet.save()
         return redirect("doctors:pets_list_view")
 
 
@@ -116,9 +126,15 @@ class add_pet_specific_customer_view(CheckGroupPermissionMixin, CreateView):
     fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by"]
 
     def form_valid(self, form):
+        pets_id = pets.objects.all()
+        max = 0
+        for id in pets_id:
+            if id.id > max:
+                max = id.id
         customer = customer_user.objects.get(id=self.kwargs["pk"])
         pet = form.save(commit=False)
         pet.owner_id = customer
+        pet.id = max + 1
         pet.save()
         return redirect("doctors:customers_list_view")
 
@@ -127,7 +143,7 @@ class update_pet(CheckGroupPermissionMixin, UpdateView):
     model = pets
     template_name = "doctors/pages/pet_update.html"
     success_message = "Pet Updated Successfully!!!"
-    fields = "__all__"
+    fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by"]
 
     def form_valid(self, form):
         form.save()
@@ -218,3 +234,33 @@ class staff_list_view(CheckGroupPermissionMixin, ListView):
         context["orderby"] = self.request.GET.get("orderby", "auth_user_id_id")
         context["all_table_fields"] = staff_user._meta.get_fields()
         return context
+
+
+class add_staff_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView):
+    model = custom_user
+    template_name = "doctors/pages/add_staff.html"
+    fields = ["first_name", "last_name", "email", "username", "password"]
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.user_type = 2
+        user.set_password(form.cleaned_data["password"])
+        user.save()
+
+        profile_pic = self.request.FILES["profile_pic"]
+        address_barangay = self.request.POST.get("address_barangay")
+        address_municipality = self.request.POST.get("address_municipality")
+        contact_number = self.request.POST.get("contact_number")
+        user.staff.first_name = user.first_name
+        user.staff.last_name = user.last_name
+        user.staff.email = user.email
+        user.staff.username = user.username
+        user.staff.profile_pic = profile_pic
+        user.staff.address_barangay = address_barangay
+        user.staff.address_municipality = address_municipality
+        user.staff.contact_number = contact_number
+        user.staff.added_by = self.request.user.username
+        user.save()
+        messages.success(self.request, "Staff Added Successfully!!!")
+        return redirect("doctors:staff_list_view")
+        return super().form_valid(form)
