@@ -28,4 +28,5 @@ urlpatterns = [
     ),
     path("staff_list/", views.staff_list_view.as_view(), name="staff_list_view"),
     path("add_staff/", views.add_staff_view.as_view(), name="add_staff_view"),
+    path("staff_profile/", views.staff_profile_view, name="staff_profile_view"),
 ]

@@ -264,3 +264,14 @@ class add_staff_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView)
         messages.success(self.request, "Staff Added Successfully!!!")
         return redirect("doctors:staff_list_view")
         return super().form_valid(form)
+
+
+def staff_profile_view(request):
+    if request.user.is_authenticated and request.user.user_type == 1:
+        context = None
+        id = request.GET.get("id")
+        staff_profile = staff_user.objects.get(auth_user_id=id)
+        context = {"staff": staff_profile}
+        return render(request, "doctors/pages/staff_profile.html", context)
+    else:
+        return redirect("/%s?next=%s" % ("doctors/login/", request.path))
