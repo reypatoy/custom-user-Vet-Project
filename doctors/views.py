@@ -275,3 +275,25 @@ def staff_profile_view(request):
         return render(request, "doctors/pages/staff_profile.html", context)
     else:
         return redirect("/%s?next=%s" % ("doctors/login/", request.path))
+
+
+class add_doctor_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView):
+    model = custom_user
+    template_name = "doctors/pages/add_doctor.html"
+    fields = ["first_name", "last_name", "email", "username", "password"]
+
+    def form_valid(self, form):
+        doctor = form.save(commit=False)
+        doctor.user_type = 1
+        doctor.set_password(form.cleaned_data["password"])
+        doctor.save()
+        doctor.admin.profile_pic = self.request.FILES["profile_pic"]
+        doctor.admin.contact_number = self.request.POST.get("contact_number")
+        doctor.admin.address_barangay = self.request.POST.get("address_barangay")
+        doctor.admin.address_municipality = self.request.POST.get(
+            "address_municipality"
+        )
+        doctor.admin.added_by = self.request.user.username
+        doctor.save()
+
+        return redirect("doctors:add_doctor_view")

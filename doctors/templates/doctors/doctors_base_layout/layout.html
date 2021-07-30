@@ -75,7 +75,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities1"
                     aria-expanded="true" aria-controls="collapseUtilities1">
-                    <img class = "img-fluid" style = "width: 30px; height: 30px; border-radius: 50%;" src="{% static 'Images/staff_logo.png' %}" alt="">
+                    <img class = "img-fluid" style = "width: 30px; height: 30px; border-radius: 50%;" src="{% static 'Images/customer_logo.jpg' %}" alt="">
                     <span>Customers</span>
                 </a>
                 <div id="collapseUtilities1" class="collapse" aria-labelledby="headingUtilities"
@@ -100,6 +100,22 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="{% url 'doctors:staff_list_view' %}">Staff List</a>
                         <a class="collapse-item" href="{% url 'doctors:add_staff_view' %}">Add Staff</a>
+                        <a class="collapse-item" href="">Animations</a>
+                        <a class="collapse-item" href="">Other</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities2"
+                    aria-expanded="true" aria-controls="collapseUtilities2">
+                    <img class = "img-fluid" style = "width: 30px; height: 30px; border-radius: 50%;" src="{% static 'Images/doctor_logo.png' %}" alt="">
+                    <span>Doctors</span>
+                </a>
+                <div id="collapseUtilities2" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'doctors:staff_list_view' %}">Doctors List</a>
+                        <a class="collapse-item" href="{% url 'doctors:add_doctor_view' %}">Add Doctor</a>
                         <a class="collapse-item" href="">Animations</a>
                         <a class="collapse-item" href="">Other</a>
                     </div>
