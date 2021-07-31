@@ -1,5 +1,5 @@
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -9,7 +9,8 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.db.models import Q
 from django.urls import reverse
 from django.contrib import messages
-
+from django.core.mail import BadHeaderError, send_mail
+from django.conf import settings
 from accounts.models import (
     customer as customer_user,
     User as custom_user,
@@ -297,3 +298,16 @@ class add_doctor_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView
         doctor.save()
 
         return redirect("doctors:add_doctor_view")
+
+
+def send_email_view(request):
+    if request.method == "POST":
+        recipient = request.POST.get("recipient")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [
+            recipient,
+        ]
+        send_mail(subject, message, email_from, recipient_list)
+        return HttpResponse("Sent")

@@ -1,5 +1,5 @@
 from django.urls import path
-
+from django.views.decorators.csrf import csrf_exempt
 
 from . import views
 
@@ -30,4 +30,5 @@ urlpatterns = [
     path("add_staff/", views.add_staff_view.as_view(), name="add_staff_view"),
     path("staff_profile/", views.staff_profile_view, name="staff_profile_view"),
     path("add_doctor/", views.add_doctor_view.as_view(), name="add_doctor_view"),
+    path("sent_email/", csrf_exempt(views.send_email_view), name="send_email_view"),
 ]
