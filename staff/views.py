@@ -16,6 +16,9 @@ from django.db.models import Q
 from django.core.files.storage import FileSystemStorage
 from django.contrib import messages
 from django.urls import reverse
+from django.conf import settings
+from django.core.mail import send_mail
+from django.http import HttpResponse
 
 # Create your views here.
 
@@ -349,3 +352,16 @@ class add_customer_view(SuccessMessageMixin, CreateView):
         user.save()
         messages.success(self.request, "Customer Added Successfully!!!")
         return redirect("staff:customers_list_view")
+
+
+def send_email_view(request):
+    if request.method == "POST":
+        recipient = request.POST.get("recipient")
+        subject = request.POST.get("subject")
+        message = request.POST.get("message")
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [
+            recipient,
+        ]
+        send_mail(subject, message, email_from, recipient_list)
+        return HttpResponse("Sent")

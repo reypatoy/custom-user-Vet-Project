@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib.auth import logout, login
+from django.views.decorators.csrf import csrf_exempt
 
 from . import views
 
@@ -41,4 +42,5 @@ urlpatterns = [
         name="pet_update_view",
     ),
     path("add_customer/", views.add_customer_view.as_view(), name="add_customer_view"),
+    path("sent_email/", csrf_exempt(views.send_email_view), name="send_email_view"),
 ]

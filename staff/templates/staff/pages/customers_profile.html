@@ -8,8 +8,12 @@
             <div class="">
                 
                 <h4>{{customer.username}}</h4>
-
-                <p class="text-muted">{{customer.email}}</p>
+                <a class="dropdown-item" style = "border-radius: 10px;" href="#" id = 'email' data-toggle="modal" data-target="#sent_email_modal">
+                    {{customer.email}}
+                </a>
+                <div style = "background-color: none; border-radius: 5px;" id = "progress">
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -29,5 +33,79 @@
         </table>
     </div>
 </div>
+<!-- send email modal -->
+<div class="modal fade" id="sent_email_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Send Email</h5>
+          <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+        </div>
+        <form></form>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="recipient" class="col-form-label">From:</label>
+                    <input type="text" class="form-control" value = "beastfriendveterinaryclinic@gmail.com" id="recipient" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="recipient" class="col-form-label">To:</label>
+                    <input type="text" class="form-control" value = "{{customer.email}}" id="recipient" readonly>
+                </div>
+                <div class="mb-3" id = "error">
+                    
+                </div>
+                <div class="mb-3">
+                    <label for="subject" class="col-form-label">Subject:</label>
+                    <input type="text" class="form-control" value = "" id="subject" required>
+                </div>
+                <div class="mb-3">
+                <label for="message" class="col-form-label">Message:</label>
+                <textarea class="form-control" id="message" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button id = "send" type="submit" class="btn btn-primary">Send message</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- end modal -->
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+  <script>
+    $(document).ready(function(){
+        $('#send').click(function(){
+            let recipient = $('#recipient').val()
+            let message = $.trim($('#message').val())
+            let subject = $.trim($('#subject').val())
+            if(subject != '' && message != ''){
+                $('#sent_email_modal').modal('hide')
+                $('#progress').html('<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; border-radius:10px" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Sending</div>');
+                $.ajax({
+                        type : 'POST',
+                        url : "{% url 'staff:send_email_view' %}",
+                        data :{
+                            recipient:recipient,
+                            message:message,
+                            subject:subject
+                        },
+                        success:function(data){
+                            $('#progress').html('<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; border-radius:10px;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">'+data+'</div>');
+                            setTimeout(function(){
+                                $('#progress').html('');
+                            }, 5000);
+                            $('#error').html('');
+                            $('#message').val('');
+                            $('#subject').val('');
+                        },
+                    });
+            }else{
+                $('#error').html('<label class="col-form-label  text-danger">Please fill all fields</label>')
+            }      
+        });
+    });
+</script>
 </div>
 {% endblock %}

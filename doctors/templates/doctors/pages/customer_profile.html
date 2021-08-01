@@ -72,6 +72,9 @@
         </div>
       </div>
       <!-- end modal -->
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
     <script>
         $(document).ready(function(){
             $('#send').click(function(){
@@ -79,7 +82,7 @@
                 let message = $.trim($('#message').val())
                 let subject = $.trim($('#subject').val())
                 if(subject != '' && message != ''){
-                    $('#sent_email_modal').modal('toggle')
+                    $('#sent_email_modal').modal('hide')
                     $('#progress').html('<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; border-radius:10px" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Sending</div>');
                     $.ajax({
                             type : 'POST',
