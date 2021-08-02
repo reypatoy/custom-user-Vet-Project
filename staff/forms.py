@@ -17,5 +17,15 @@ class add_staff_form(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'address_barangay', 'profile_pic', 'address_municipality', 'contact_number',
-                  'email', 'username', 'password1', 'password2', 'user_type')
+        fields = (
+            "first_name",
+            "last_name",
+            "address_barangay",
+            "profile_pic",
+            "address_municipality",
+            "contact_number",
+            "email",
+            "password1",
+            "password2",
+            "user_type",
+        )

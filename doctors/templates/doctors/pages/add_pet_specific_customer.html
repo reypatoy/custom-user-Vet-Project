@@ -29,7 +29,7 @@
                             <input type="{{fields.field.widget.input_type}}" id = "{{fields.name}}" name = "{{fields.name}}" style = "height: 45px;" class="form-control" required>
                         {% endif %}
                         {% if fields.name == "added_by" %}
-                            <input type="{{fields.field.widget.input_type}}" value = "{{request.user.username}}" id = "{{fields.name}}" name = "{{fields.name}}" required class="form-control">
+                            <input type="{{fields.field.widget.input_type}}" value = "{{request.user.email}}" id = "{{fields.name}}" name = "{{fields.name}}" required class="form-control">
                         {% endif %}
                     </div>
                 {% endfor %}

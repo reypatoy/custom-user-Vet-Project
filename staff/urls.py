@@ -43,4 +43,20 @@ urlpatterns = [
     ),
     path("add_customer/", views.add_customer_view.as_view(), name="add_customer_view"),
     path("sent_email/", csrf_exempt(views.send_email_view), name="send_email_view"),
+    path("password_reset/", views.password_reset_view, name="password_reset_view"),
+    path(
+        "validate_email/",
+        csrf_exempt(views.validate_email_for_staff_password_reset),
+        name="validate_email_for_staff_password_reset",
+    ),
+    path(
+        "send_otp_via_email/",
+        csrf_exempt(views.send_otp_via_email_view),
+        name="send_otp_via_email_view",
+    ),
+    path(
+        "staff_password_reset_view/",
+        csrf_exempt(views.staff_password_reset_view),
+        name="staff_password_reset_view",
+    ),
 ]

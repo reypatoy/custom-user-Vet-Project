@@ -1,4 +1,3 @@
-
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models.fields import EmailField
@@ -19,6 +18,14 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = (
-            'first_name', 'last_name', 'profile_pic', 'contact_number', 'address_barangay',
-            'address_municipality', 'email', 'username', 'password1', 'password2', 'user_type'
+            "first_name",
+            "last_name",
+            "profile_pic",
+            "contact_number",
+            "address_barangay",
+            "address_municipality",
+            "email",
+            "password1",
+            "password2",
+            "user_type",
         )

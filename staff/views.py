@@ -172,7 +172,6 @@ def add_staff_view(request):
             if request.method == "POST":
                 form = add_staff_form(request.POST, request.FILES)
                 if form.is_valid():
-                    username = form.cleaned_data.get("username")
                     first_name = form.cleaned_data.get("first_name")
                     last_name = form.cleaned_data.get("last_name")
                     contact_number = form.cleaned_data.get("contact_number")
@@ -183,14 +182,13 @@ def add_staff_view(request):
                     User_instance = form.save()
                     current_staff = staff_user.objects.get(auth_user_id=User_instance)
 
-                    current_staff.username = username
                     current_staff.first_name = first_name
                     current_staff.last_name = last_name
                     current_staff.contact_number = contact_number
                     current_staff.address_barangay = address_barangay
                     current_staff.address_municipality = address_municipality
                     current_staff.email = email
-                    current_staff.added_by = request.user.username
+                    current_staff.added_by = request.user.email
                     current_staff.profile_pic = profile_pic
 
                     current_staff.save()
@@ -238,7 +236,7 @@ class staff_list_view(checkPremiumGroupMixin, ListView):
 class staff_update_view(checkPremiumGroupMixin, UpdateView):
     model = custom_user
     template_name = "staff/pages/staff_update.html"
-    fields = ["first_name", "last_name", "username", "password", "password"]
+    fields = ["first_name", "last_name", "password", "password"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -258,7 +256,6 @@ class staff_update_view(checkPremiumGroupMixin, UpdateView):
             # file_name = fs.save(profile_pic.name, profile_pic)
             # profile_pic_url = fs.url(file_name)
             staff.profile_pic = profile_pic
-        staff.username = self.request.POST.get("username")
         staff.email = self.request.POST.get("email")
         staff.first_name = self.request.POST.get("first_name")
         staff.last_name = self.request.POST.get("last_name")
@@ -327,7 +324,7 @@ def customers_profile_view(request):
 
 class add_customer_view(SuccessMessageMixin, CreateView):
     model = custom_user
-    fields = ["first_name", "last_name", "email", "username", "password"]
+    fields = ["first_name", "last_name", "email", "password"]
     template_name = "staff/pages/add_customer.html"
 
     def form_valid(self, form):
@@ -343,12 +340,11 @@ class add_customer_view(SuccessMessageMixin, CreateView):
         user.customer.first_name = user.first_name
         user.customer.last_name = user.last_name
         user.customer.email = user.email
-        user.customer.username = user.username
         user.customer.profile_pic = profile_pic
         user.customer.address_barangay = address_barangay
         user.customer.address_municipality = address_municipality
         user.customer.contact_number = contact_number
-        user.customer.added_by = self.request.user.username
+        user.customer.added_by = self.request.user.email
         user.save()
         messages.success(self.request, "Customer Added Successfully!!!")
         return redirect("staff:customers_list_view")
@@ -365,3 +361,40 @@ def send_email_view(request):
         ]
         send_mail(subject, message, email_from, recipient_list)
         return HttpResponse("Sent")
+
+
+def password_reset_view(request):
+    return render(request, "staff/auth/password_reset.html", {})
+
+
+def validate_email_for_staff_password_reset(request):
+    if request.method == "POST":
+        email = request.POST.get("new_email")
+        user = custom_user.objects.filter(email=email).count()
+        if user == 1:
+            return HttpResponse("1")
+        else:
+            return HttpResponse("0")
+
+
+def send_otp_via_email_view(request):
+    if request.method == "POST":
+        recipient = request.POST.get("user_email")
+        subject = "Your OTP"
+        message = request.POST.get("new_otp")
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [
+            recipient,
+        ]
+        send_mail(subject, message, email_from, recipient_list)
+        return HttpResponse("Sent")
+
+
+def staff_password_reset_view(request):
+    if request.method == "POST":
+        email = request.POST.get("confirm_email")
+        new_password = request.POST.get("new_password")
+        user = custom_user.objects.get(email=email)
+        user.set_password(new_password)
+        user.save()
+        return HttpResponse("Password updated successfully")

@@ -181,7 +181,7 @@ class customers_list(CheckGroupPermissionMixin, ListView):
 class add_customer_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView):
     model = custom_user
     template_name = "doctors/pages/add_customer.html"
-    fields = ["first_name", "last_name", "email", "username", "password"]
+    fields = ["first_name", "last_name", "email", "password"]
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -192,14 +192,13 @@ class add_customer_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateVi
         user.customer.first_name = user.first_name
         user.customer.last_name = user.last_name
         user.customer.email = user.email
-        user.customer.username = user.username
         user.customer.profile_pic = self.request.FILES["profile_pic"]
         user.customer.contact_number = self.request.POST.get("contact_number")
         user.customer.address_barangay = self.request.POST.get("address_barangay")
         user.customer.address_municipality = self.request.POST.get(
             "address_municipality"
         )
-        user.customer.added_by = self.request.user.username
+        user.customer.added_by = self.request.user.email
         user.save()
         messages.success(self.request, "Customer added successfully!!!")
         return redirect("doctors:customers_list_view")
@@ -240,7 +239,7 @@ class staff_list_view(CheckGroupPermissionMixin, ListView):
 class add_staff_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView):
     model = custom_user
     template_name = "doctors/pages/add_staff.html"
-    fields = ["first_name", "last_name", "email", "username", "password"]
+    fields = ["first_name", "last_name", "email", "password"]
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -255,16 +254,14 @@ class add_staff_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView)
         user.staff.first_name = user.first_name
         user.staff.last_name = user.last_name
         user.staff.email = user.email
-        user.staff.username = user.username
         user.staff.profile_pic = profile_pic
         user.staff.address_barangay = address_barangay
         user.staff.address_municipality = address_municipality
         user.staff.contact_number = contact_number
-        user.staff.added_by = self.request.user.username
+        user.staff.added_by = self.request.user.email
         user.save()
         messages.success(self.request, "Staff Added Successfully!!!")
         return redirect("doctors:staff_list_view")
-        return super().form_valid(form)
 
 
 def staff_profile_view(request):
@@ -281,7 +278,7 @@ def staff_profile_view(request):
 class add_doctor_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView):
     model = custom_user
     template_name = "doctors/pages/add_doctor.html"
-    fields = ["first_name", "last_name", "email", "username", "password"]
+    fields = ["first_name", "last_name", "email", "password"]
 
     def form_valid(self, form):
         doctor = form.save(commit=False)
@@ -294,7 +291,7 @@ class add_doctor_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView
         doctor.admin.address_municipality = self.request.POST.get(
             "address_municipality"
         )
-        doctor.admin.added_by = self.request.user.username
+        doctor.admin.added_by = self.request.user.email
         doctor.save()
 
         return redirect("doctors:add_doctor_view")

@@ -6,9 +6,9 @@
         <div class = "container">
             <form action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token%}
-                {% if error_message %}
+                {% if form.errors %}
                     <div class = "alert alert-danger">
-                        {{ error_message }}
+                        {{ form.errors }}
                     </div>
                 {% endif %}
                 {% if success_message %}
