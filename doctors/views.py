@@ -289,7 +289,7 @@ class add_doctor_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView
         doctor.admin.contact_number = self.request.POST.get("contact_number")
         doctor.admin.address_barangay = self.request.POST.get("address_barangay")
         doctor.admin.address_municipality = self.request.POST.get(
-            "address_municipality"
+            "address_municipality" 
         )
         doctor.admin.added_by = self.request.user.email
         doctor.save()
@@ -308,3 +308,39 @@ def send_email_view(request):
         ]
         send_mail(subject, message, email_from, recipient_list)
         return HttpResponse("Sent")
+
+def password_reset_view(request):
+    return render(request, "doctors/auth/password_reset.html", {})
+
+
+def validate_email_for_doctors_password_reset(request):
+    if request.method == "POST":
+        email = request.POST.get("new_email")
+        user = custom_user.objects.filter(email=email).count()
+        if user == 1:
+            return HttpResponse("1")
+        else:
+            return HttpResponse("0")
+
+
+def send_otp_via_email_view(request):
+    if request.method == "POST":
+        recipient = request.POST.get("user_email")
+        subject = "Your OTP"
+        message = request.POST.get("new_otp")
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [
+            recipient,
+        ]
+        send_mail(subject, message, email_from, recipient_list)
+        return HttpResponse("Sent")
+
+
+def doctors_password_reset_view(request):
+    if request.method == "POST":
+        email = request.POST.get("confirm_email")
+        new_password = request.POST.get("new_password")
+        user = custom_user.objects.get(email=email)
+        user.set_password(new_password)
+        user.save()
+        return HttpResponse("Password updated successfully")
