@@ -289,12 +289,37 @@ class add_doctor_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView
         doctor.admin.contact_number = self.request.POST.get("contact_number")
         doctor.admin.address_barangay = self.request.POST.get("address_barangay")
         doctor.admin.address_municipality = self.request.POST.get(
-            "address_municipality" 
+            "address_municipality"
         )
         doctor.admin.added_by = self.request.user.email
         doctor.save()
 
         return redirect("doctors:add_doctor_view")
+
+
+class doctors_list_view(CheckGroupPermissionMixin, ListView):
+    model = custom_user
+    template_name = "doctors/pages/doctors_list.html"
+    paginate_by = 6
+
+    def get_queryset(self):
+        filter = self.request.GET.get("filter", "")
+        order_by = self.request.GET.get("orderby", "id")
+        if filter != "":
+            cat = custom_user.objects.filter(
+                Q(first_name__contains=filter)
+                | Q(last_name__contains=filter) & Q(user_type=1)
+            ).order_by(order_by)
+        else:
+            cat = custom_user.objects.filter(user_type=1).order_by(order_by)
+        return cat
+
+    def get_context_data(self, **kwargs):
+        context = super(doctors_list_view, self).get_context_data(**kwargs)
+        context["filter"] = self.request.GET.get("filter", "")
+        context["orderby"] = self.request.GET.get("orderby")
+        context["all_table_fields"] = custom_user._meta.get_fields()
+        return context
 
 
 def send_email_view(request):
@@ -308,6 +333,7 @@ def send_email_view(request):
         ]
         send_mail(subject, message, email_from, recipient_list)
         return HttpResponse("Sent")
+
 
 def password_reset_view(request):
     return render(request, "doctors/auth/password_reset.html", {})

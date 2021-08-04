@@ -30,7 +30,7 @@ urlpatterns = [
     path("add_staff/", views.add_staff_view.as_view(), name="add_staff_view"),
     path("staff_profile/", views.staff_profile_view, name="staff_profile_view"),
     path("add_doctor/", views.add_doctor_view.as_view(), name="add_doctor_view"),
-    path("sent_email/", csrf_exempt(views.send_email_view), name="send_email_view"), 
+    path("sent_email/", csrf_exempt(views.send_email_view), name="send_email_view"),
     path("password_reset/", views.password_reset_view, name="password_reset_view"),
     path(
         "validate_email/",
@@ -47,4 +47,5 @@ urlpatterns = [
         csrf_exempt(views.doctors_password_reset_view),
         name="doctors_password_reset_view",
     ),
+    path("doctors_list/", views.doctors_list_view.as_view(), name="doctors_list_view"),
 ]
