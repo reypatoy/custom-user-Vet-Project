@@ -322,6 +322,18 @@ class doctors_list_view(CheckGroupPermissionMixin, ListView):
         return context
 
 
+def doctors_profile_view(request):
+    context = None
+    if request.user.is_authenticated:
+        id = request.GET.get("id")
+        doctor = custom_user.objects.get(id=id)
+        context = {"doctor": doctor}
+        return render(request, "doctors/pages/doctors_profile.html", context)
+
+    else:
+        return redirect("doctors:doctors_login_view")
+
+
 def send_email_view(request):
     if request.method == "POST":
         recipient = request.POST.get("recipient")
