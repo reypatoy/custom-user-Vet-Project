@@ -49,4 +49,9 @@ urlpatterns = [
     ),
     path("doctors_list/", views.doctors_list_view.as_view(), name="doctors_list_view"),
     path("doctors_profile/", views.doctors_profile_view, name="doctors_profile_view"),
+    path(
+        "account_update/<slug:pk>",
+        views.account_update_view.as_view(),
+        name="account_update_view",
+    ),
 ]

@@ -13,6 +13,7 @@ from django.core.mail import BadHeaderError, send_mail
 from django.conf import settings
 from accounts.models import (
     customer as customer_user,
+    Admin as admin_user,
     User as custom_user,
     staff as staff_user,
 )
@@ -184,7 +185,13 @@ class add_customer_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateVi
     fields = ["first_name", "last_name", "email", "password"]
 
     def form_valid(self, form):
+        customers = custom_user.objects.all()
+        max = 0
+        for customer in customers:
+            if customer.id > max:
+                max = customer.id
         user = form.save(commit=False)
+        user.id = max + 1
         user.user_type = 3
         user.set_password(form.cleaned_data["password"])
         user.save()
@@ -382,3 +389,29 @@ def doctors_password_reset_view(request):
         user.set_password(new_password)
         user.save()
         return HttpResponse("Password updated successfully")
+
+
+class account_update_view(CheckGroupPermissionMixin, SuccessMessageMixin, UpdateView):
+    model = custom_user
+    template_name = "doctors/pages/account_update.html"
+    fields = ["first_name", "last_name", "email", "password"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        model = admin_user.objects.get(auth_user_id=self.object.pk)
+        context["account"] = model
+        return context
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.set_password(form.cleaned_data["password"])
+        user.save()
+
+        admin = admin_user.objects.get(auth_user_id=user.id)
+        if self.request.FILES.get("profile_pic", False):
+            admin.profile_pic = self.request.FILES["profile_pic"]
+        admin.contact_number = self.request.POST.get("contact_number")
+        admin.address_barangay = self.request.POST.get("address_barangay")
+        admin.address_municipality = self.request.POST.get("address_municipality")
+        admin.save()
+        return redirect("doctors:doctors_login_view")
