@@ -182,20 +182,15 @@ class customers_list(CheckGroupPermissionMixin, ListView):
 class add_customer_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView):
     model = custom_user
     template_name = "doctors/pages/add_customer.html"
-    fields = ["first_name", "last_name", "email", "password"]
+    fields = ["first_name", "last_name", "email", "username", "password"]
 
     def form_valid(self, form):
-        customers = custom_user.objects.all()
-        max = 0
-        for customer in customers:
-            if customer.id > max:
-                max = customer.id
         user = form.save(commit=False)
-        user.id = max + 1
         user.user_type = 3
         user.set_password(form.cleaned_data["password"])
         user.save()
 
+        user.customer.username = user.username
         user.customer.first_name = user.first_name
         user.customer.last_name = user.last_name
         user.customer.email = user.email
@@ -246,7 +241,7 @@ class staff_list_view(CheckGroupPermissionMixin, ListView):
 class add_staff_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView):
     model = custom_user
     template_name = "doctors/pages/add_staff.html"
-    fields = ["first_name", "last_name", "email", "password"]
+    fields = ["first_name", "last_name", "email", "username", "password"]
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -258,6 +253,8 @@ class add_staff_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView)
         address_barangay = self.request.POST.get("address_barangay")
         address_municipality = self.request.POST.get("address_municipality")
         contact_number = self.request.POST.get("contact_number")
+
+        user.staff.username = user.username
         user.staff.first_name = user.first_name
         user.staff.last_name = user.last_name
         user.staff.email = user.email
@@ -285,7 +282,7 @@ def staff_profile_view(request):
 class add_doctor_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView):
     model = custom_user
     template_name = "doctors/pages/add_doctor.html"
-    fields = ["first_name", "last_name", "email", "password"]
+    fields = ["first_name", "last_name", "email", "username", "password"]
 
     def form_valid(self, form):
         doctor = form.save(commit=False)
@@ -298,7 +295,7 @@ class add_doctor_view(CheckGroupPermissionMixin, SuccessMessageMixin, CreateView
         doctor.admin.address_municipality = self.request.POST.get(
             "address_municipality"
         )
-        doctor.admin.added_by = self.request.user.email
+        doctor.admin.added_by = None
         doctor.save()
 
         return redirect("doctors:add_doctor_view")
@@ -394,7 +391,7 @@ def doctors_password_reset_view(request):
 class account_update_view(CheckGroupPermissionMixin, SuccessMessageMixin, UpdateView):
     model = custom_user
     template_name = "doctors/pages/account_update.html"
-    fields = ["first_name", "last_name", "email", "password"]
+    fields = ["first_name", "last_name", "email", "username", "password"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

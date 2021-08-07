@@ -8,11 +8,6 @@ class User(AbstractUser):
     User_Type = ((1, "Admin"), (2, "Staff"), (3, "Customer"))
     user_type = models.IntegerField(choices=User_Type, default=1)
 
-    username = models.CharField(max_length=30, unique=False, null=True)
-    email = models.EmailField(max_length=255, unique=True)
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
 
 class Admin(models.Model):
     profile_pic = models.ImageField(
@@ -33,7 +28,7 @@ class Admin(models.Model):
 
 
 class staff(models.Model):
-    username = models.CharField(max_length=50, blank=True, null=True, unique=True)
+    username = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(max_length=50, blank=True, null=True, unique=True)
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
@@ -55,7 +50,7 @@ class staff(models.Model):
 
 
 class customer(models.Model):
-    username = models.CharField(max_length=50, blank=True, null=True, unique=True)
+    username = models.CharField(max_length=50, blank=True, null=True)
     email = models.EmailField(max_length=50, blank=True, null=True, unique=True)
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
