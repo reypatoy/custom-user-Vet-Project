@@ -12,6 +12,7 @@ class add_staff_form(UserCreationForm):
     address_municipality = forms.CharField(max_length=100, required=True)
     contact_number = forms.CharField(max_length=15, required=True)
     email = forms.EmailField(max_length=50, required=True)
+    username = forms.CharField(max_length=50, required=True)
     password1 = forms.PasswordInput()
     password2 = forms.PasswordInput()
 
@@ -25,6 +26,7 @@ class add_staff_form(UserCreationForm):
             "address_municipality",
             "contact_number",
             "email",
+            "username",
             "password1",
             "password2",
             "user_type",

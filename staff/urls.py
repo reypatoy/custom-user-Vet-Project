@@ -59,4 +59,9 @@ urlpatterns = [
         csrf_exempt(views.staff_password_reset_view),
         name="staff_password_reset_view",
     ),
+    path(
+        "account_update/<slug:pk>",
+        views.account_update_view.as_view(),
+        name="account_update_view",
+    ),
 ]

@@ -179,6 +179,7 @@ def add_staff_view(request):
                     address_municipality = form.cleaned_data.get("address_municipality")
                     profile_pic = form.cleaned_data.get("profile_pic")
                     email = form.cleaned_data.get("email")
+                    username = form.cleaned_data.get("username")
                     User_instance = form.save()
                     current_staff = staff_user.objects.get(auth_user_id=User_instance)
 
@@ -188,6 +189,7 @@ def add_staff_view(request):
                     current_staff.address_barangay = address_barangay
                     current_staff.address_municipality = address_municipality
                     current_staff.email = email
+                    current_staff.username = username
                     current_staff.added_by = request.user.email
                     current_staff.profile_pic = profile_pic
 
@@ -216,7 +218,7 @@ class staff_list_view(checkPremiumGroupMixin, ListView):
 
     def get_queryset(self):
         filter = self.request.GET.get("filter", "")
-        order_by = self.request.GET.get("orderby", "auth_user_id_id")
+        order_by = self.request.GET.get("orderby", "auth_user_id")
         if filter is not None:
             cat = staff_user.objects.filter(
                 Q(first_name__contains=filter) | Q(last_name__contains=filter)
@@ -228,7 +230,7 @@ class staff_list_view(checkPremiumGroupMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(staff_list_view, self).get_context_data(**kwargs)
         context["filter"] = self.request.GET.get("filter", "")
-        context["orderby"] = self.request.GET.get("orderby", "auth_user_id_id")
+        context["orderby"] = self.request.GET.get("orderby", "auth_user_id")
         context["all_table_fields"] = staff_user._meta.get_fields()
         return context
 
@@ -236,7 +238,7 @@ class staff_list_view(checkPremiumGroupMixin, ListView):
 class staff_update_view(checkPremiumGroupMixin, UpdateView):
     model = custom_user
     template_name = "staff/pages/staff_update.html"
-    fields = ["first_name", "last_name", "password", "password"]
+    fields = ["first_name", "last_name", "password", "username", "email", "password"]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -256,9 +258,10 @@ class staff_update_view(checkPremiumGroupMixin, UpdateView):
             # file_name = fs.save(profile_pic.name, profile_pic)
             # profile_pic_url = fs.url(file_name)
             staff.profile_pic = profile_pic
-        staff.email = self.request.POST.get("email")
-        staff.first_name = self.request.POST.get("first_name")
-        staff.last_name = self.request.POST.get("last_name")
+        staff.username = user.username
+        staff.email = user.email
+        staff.first_name = user.first_name
+        staff.last_name = user.last_name
         staff.contact_number = self.request.POST.get("contact_number")
         staff.address_barangay = self.request.POST.get("address_barangay")
         staff.address_municipality = self.request.POST.get("address_municipality")
@@ -287,7 +290,7 @@ class customers_list_view(checkPremiumGroupMixin, ListView):
 
     def get_queryset(self):
         filter = self.request.GET.get("filter", "")
-        order_by = self.request.GET.get("orderby", "id")
+        order_by = self.request.GET.get("orderby", "auth_user_id")
         if filter != "":
             cat = customer_user.objects.filter(
                 Q(first_name__contains=filter)
@@ -302,7 +305,7 @@ class customers_list_view(checkPremiumGroupMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(customers_list_view, self).get_context_data(**kwargs)
         context["filter"] = self.request.GET.get("filter", "")
-        context["orderby"] = self.request.GET.get("orderby", "id")
+        context["orderby"] = self.request.GET.get("orderby", "auth_user_id")
         context["all_table_fields"] = customer_user._meta.get_fields()
         return context
 
@@ -322,9 +325,9 @@ def customers_profile_view(request):
         return redirect("/%s?next=%s" % ("staff/login/", request.path))
 
 
-class add_customer_view(SuccessMessageMixin, CreateView):
+class add_customer_view(checkPremiumGroupMixin, SuccessMessageMixin, CreateView):
     model = custom_user
-    fields = ["first_name", "last_name", "email", "password"]
+    fields = ["first_name", "last_name", "email", "username", "password"]
     template_name = "staff/pages/add_customer.html"
 
     def form_valid(self, form):
@@ -337,6 +340,8 @@ class add_customer_view(SuccessMessageMixin, CreateView):
         address_barangay = self.request.POST.get("address_barangay")
         address_municipality = self.request.POST.get("address_municipality")
         contact_number = self.request.POST.get("contact_number")
+
+        user.customer.username = user.username
         user.customer.first_name = user.first_name
         user.customer.last_name = user.last_name
         user.customer.email = user.email
@@ -398,3 +403,33 @@ def staff_password_reset_view(request):
         user.set_password(new_password)
         user.save()
         return HttpResponse("Password updated successfully")
+
+
+class account_update_view(checkPremiumGroupMixin, UpdateView):
+    model = custom_user
+    template_name = "staff/pages/account_update.html"
+    fields = fields = ["first_name", "last_name", "email", "username", "password"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        model = staff_user.objects.get(auth_user_id=self.object.pk)
+        context["account"] = model
+        return context
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.set_password(form.cleaned_data["password"])
+        user.save()
+
+        staff = staff_user.objects.get(auth_user_id=user.id)
+        if self.request.FILES.get("profile_pic", False):
+            staff.profile_pic = self.request.FILES["profile_pic"]
+        staff.username = user.username
+        staff.email = user.email
+        staff.first_name = user.first_name
+        staff.last_name = user.last_name
+        staff.contact_number = self.request.POST.get("contact_number")
+        staff.address_barangay = self.request.POST.get("address_barangay")
+        staff.address_municipality = self.request.POST.get("address_municipality")
+        staff.save()
+        return redirect("staff:staff_login_view")

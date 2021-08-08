@@ -6,11 +6,11 @@
       <h2 class = "page-header" style = "padding: 20px;">staff List</h2>
     </div>
     <div class="col-md-3" style="padding: 10px;">
-      <div class="sort-element">
+      <div class="sort-element"> 
         <h4>Sort By</h4>
-          <a href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby=id"style="margin-top: 25px;">Date Added</a> <b>&nbsp;|&nbsp;</b>
-          <a href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby=owner"style="margin-top: 25px;">Owner</a><b>&nbsp;|&nbsp;</b>
-          <a href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby=breed"style="margin-top: 25px;">Breed</a>
+          <a href="{% url 'staff:staff_list_view' %}?filter={{filter}}&orderby=auth_user_id"style="margin-top: 25px;">Date Added</a> <b>&nbsp;|&nbsp;</b>
+          <a href="{% url 'staff:staff_list_view' %}?filter={{filter}}&orderby=last_name"style="margin-top: 25px;">Last Name</a><b>&nbsp;|&nbsp;</b>
+          <a href="{% url 'staff:staff_list_view' %}?filter={{filter}}&orderby=address_municipality"style="margin-top: 25px;">Municipality</a>
       </div>  
   </div>
     <div class="col-md-4" >
@@ -85,15 +85,15 @@
             <nav aria-label="Page navigation example">
               <ul class="pagination">
                 {% if page_obj.has_previous%}
-                  <li class="page-item"><a class="page-link" href="{% url 'staff:pets_list_view' %}?filter={{filter}}&ordeyby={{orderby}}&page={{page_obj.previous_page_number}}">Previous</a></li>
+                  <li class="page-item"><a class="page-link" href="{% url 'staff:staff_list_view' %}?filter={{filter}}&ordeyby={{orderby}}&page={{page_obj.previous_page_number}}">Previous</a></li>
                 {% else %}
                   <li class="page-item disabled" ><a class="page-link" href="">Previous</a></li>
                 {% endif %}
                 {% for i in paginator.page_range %}
-                  <li class="page-item"><a class="page-link" href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby={{orderby}}&page={{i}}">{{i}}</a></li>
+                  <li class="page-item"><a class="page-link" href="{% url 'staff:staff_list_view' %}?filter={{filter}}&orderby={{orderby}}&page={{i}}">{{i}}</a></li>
                 {% endfor %}
                 {% if page_obj.has_next %}
-                  <li class="page-item"><a class="page-link" href="{% url 'staff:pets_list_view' %}?filter={{filter}}&orderby={{orderby}}&page={{page_obj.next_page_number}}">Next</a></li>
+                  <li class="page-item"><a class="page-link" href="{% url 'staff:staff_list_view' %}?filter={{filter}}&orderby={{orderby}}&page={{page_obj.next_page_number}}">Next</a></li>
                 {% else %}
                   <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                 {% endif %}
