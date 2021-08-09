@@ -1,7 +1,8 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from pets.models import pets
+from pets.models import pets as customer_pets
 from .forms import add_staff_form
 from accounts.models import (
+    Admin,
     User as custom_user,
     customer as customer_user,
     staff as staff_user,
@@ -41,7 +42,17 @@ def staff_dashboard_view(request):
             return redirect("/%s?next=%s" % ("staff/login/", request.path))
 
         else:
-            return render(request, "staff/pages/staff_dashboard.html", {})
+            doctors = Admin.objects.all().count()
+            staff = staff_user.objects.all().count()
+            customer = customer_user.objects.all().count()
+            pets = customer_pets.objects.all().count()
+            context = {
+                "doctors": doctors,
+                "staff": staff,
+                "customer": customer,
+                "pets": pets,
+            }
+            return render(request, "staff/pages/staff_dashboard.html", context)
     else:
         return redirect("/%s?next=%s" % ("staff/login/", request.path))
 
@@ -90,13 +101,13 @@ def staff_logout_view(request):
 
 
 class add_pet_view(checkPremiumGroupMixin, SuccessMessageMixin, CreateView):
-    model = pets
+    model = customer_pets
     success_message = "Pet Added Successfully!!!"
     fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by", "owner_id"]
     template_name = "staff/pages/add_pets.html"
 
     def form_valid(self, form):
-        pets_count = pets.objects.all()
+        pets_count = customer_pets.objects.all()
         max = 0
         for id in pets_count:
             if id.id > max:
@@ -108,12 +119,12 @@ class add_pet_view(checkPremiumGroupMixin, SuccessMessageMixin, CreateView):
 
 
 class add_pet_specific_customer_view(checkPremiumGroupMixin, CreateView):
-    model = pets
+    model = customer_pets
     fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by"]
     template_name = "staff/pages/add_pet_specific_customer.html"
 
     def form_valid(self, form):
-        pets_count = pets.objects.all()
+        pets_count = customer_pets.objects.all()
         max = 0
         for id in pets_count:
             if id.id > max:
@@ -127,14 +138,14 @@ class add_pet_specific_customer_view(checkPremiumGroupMixin, CreateView):
 
 
 class pet_update_view(checkPremiumGroupMixin, SuccessMessageMixin, UpdateView):
-    model = pets
+    model = customer_pets
     template_name = "staff/pages/pet_update.html"
     success_message = "Pet Updated Successfully!!!"
     fields = ["pet_image", "pet_name", "breed", "age", "owner", "added_by", "owner_id"]
 
 
 class pets_list_view(checkPremiumGroupMixin, ListView):
-    model = pets
+    model = customer_pets
     template_name = "staff/pages/pets_list.html"
     paginate_by = 6
 
@@ -143,22 +154,24 @@ class pets_list_view(checkPremiumGroupMixin, ListView):
         order_by = self.request.GET.get("orderby", "id")
         if filter != "":
             if filter.isnumeric():
-                cat = pets.objects.filter(Q(owner_id=filter)).order_by(order_by)
+                cat = customer_pets.objects.filter(Q(owner_id=filter)).order_by(
+                    order_by
+                )
             else:
-                cat = pets.objects.filter(
+                cat = customer_pets.objects.filter(
                     Q(pet_name__contains=filter)
                     | Q(breed__contains=filter)
                     | Q(owner__contains=filter)
                 ).order_by(order_by)
         else:
-            cat = pets.objects.all().order_by(order_by)
+            cat = customer_pets.objects.all().order_by(order_by)
         return cat
 
     def get_context_data(self, **kwargs):
         context = super(pets_list_view, self).get_context_data(**kwargs)
         context["filter"] = self.request.GET.get("filter", "")
         context["orderby"] = self.request.GET.get("orderby", "id")
-        context["all_table_fields"] = pets._meta.get_fields()
+        context["all_table_fields"] = customer_pets._meta.get_fields()
         return context
 
 
@@ -316,7 +329,7 @@ def customers_profile_view(request):
             id = request.GET.get("id")
             context = None
             customer = customer_user.objects.get(id=id)
-            pets_count = pets.objects.filter(owner_id=customer.id).count()
+            pets_count = customer_pets.objects.filter(owner_id=customer.id).count()
             context = {"customer": customer, "pets_count": pets_count}
             return render(request, "staff/pages/customers_profile.html", context)
         else:
