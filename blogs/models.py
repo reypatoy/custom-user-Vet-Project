@@ -8,10 +8,9 @@ from accounts.models import Admin
 class Blogs(models.Model):
     id = models.IntegerField(primary_key=True)
     blog_title = models.CharField(max_length=255, null=True, blank=True)
-    blog_description = models.CharField(max_length=255, null=True, blank=True)
+    blog_description = models.TextField(null=True, blank=True)
     blog_image = models.ImageField(
         upload_to="blog_images", default="no_blog_images.jpeg"
     )
-    blog_uploader = models.ForeignKey(
-        Admin, related_name="blogs", on_delete=models.CASCADE
-    )
+    blog_uploader = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateField(auto_now_add=True, null=True, blank=True)

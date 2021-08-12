@@ -1,0 +1,60 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% block content %}
+    <div class="container">
+        <h2 class = "page-header">Add Blog</h2>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == "success" %}
+                        <div class="alert alert-success">
+                            {{message}}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <form method="POST" enctype="multipart/form-data" onsubmit = "return validate()">
+                {% csrf_token %}
+                {% for fields in form %}
+                    <div id = "errors" class="form-group">
+                        
+                    </div>
+                    <div class="form-group"> 
+                        {% if fields.errors %}
+                            <div class="alert alert-danger">
+                                {{fields.errors}}
+                            </div>
+                        {% endif %}
+                        <label>{{fields.label}}</label> 
+                        {% if fields.name != "blog_description" %} 
+                            <input type="{{fields.field.widget.input_type}}" id = "{{fields.name}}" name = "{{fields.name}}" style = "height: 45px;" class="form-control" required>
+                        {% else %}
+                            <textarea name="{{fields.name}}" id="{{fields.name}}" class="form-control" required>
+
+                            </textarea>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button class = "btn btn-primary btn-block" type = "submit">Save</button>
+            </form>
+          </div>
+    </div>
+    <div style = "margin-bottom:150px">
+
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script>
+        function validate(){
+            let title = $.trim($('#blog_title').val());
+            let blog_description = $.trim($('#blog_description').val());
+            if(title != "" && blog_description != ""){
+                $('#errors').html("")
+                return true;
+            }else{
+                $('#errors').html('<div class = "alert alert-danger">Please fill all fields</div>');
+                return false;
+            }
+        }
+    </script>
+{% endblock %}

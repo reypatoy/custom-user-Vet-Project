@@ -18,7 +18,7 @@ from accounts.models import (
     staff as staff_user,
 )
 from pets.models import pets as customer_pets
-
+from blogs.models import Blogs as doctors_blogs
 
 # Create your views here.
 
@@ -422,3 +422,21 @@ class account_update_view(CheckGroupPermissionMixin, SuccessMessageMixin, Update
         admin.address_municipality = self.request.POST.get("address_municipality")
         admin.save()
         return redirect("doctors:doctors_login_view")
+
+
+class add_blog_view(CheckGroupPermissionMixin, CreateView):
+    model = doctors_blogs
+    template_name = "doctors/pages/add_blogs.html"
+    fields = ["blog_image", "blog_title", "blog_description"]
+
+    def form_valid(self, form):
+        max = 0
+        blogs = doctors_blogs.objects.all()
+        for blog in blogs:
+            if blog.id > max:
+                max = blog.id
+        new_blog = form.save(commit=False)
+        new_blog.id = max + 1
+        new_blog.blog_uploader = self.request.user.username
+        new_blog.save()
+        return redirect("doctors:add_blog_view")
