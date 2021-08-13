@@ -59,4 +59,9 @@ urlpatterns = [
         views.add_blog_view.as_view(),
         name="add_blog_view",
     ),
+    path(
+        "blog_list/",
+        views.blog_list_view.as_view(),
+        name="blog_list_view",
+    ),
 ]

@@ -427,7 +427,12 @@ class account_update_view(CheckGroupPermissionMixin, SuccessMessageMixin, Update
 class add_blog_view(CheckGroupPermissionMixin, CreateView):
     model = doctors_blogs
     template_name = "doctors/pages/add_blogs.html"
-    fields = ["blog_image", "blog_title", "blog_description"]
+    fields = [
+        "illness_image",
+        "illness_name",
+        "illness_description",
+        "illness_prevention",
+    ]
 
     def form_valid(self, form):
         max = 0
@@ -437,6 +442,11 @@ class add_blog_view(CheckGroupPermissionMixin, CreateView):
                 max = blog.id
         new_blog = form.save(commit=False)
         new_blog.id = max + 1
-        new_blog.blog_uploader = self.request.user.username
+        new_blog.illness_uploader = self.request.user
         new_blog.save()
         return redirect("doctors:add_blog_view")
+
+
+class blog_list_view(CheckGroupPermissionMixin, ListView):
+    model = doctors_blogs
+    template_name = "doctors/pages/blog_list.html"

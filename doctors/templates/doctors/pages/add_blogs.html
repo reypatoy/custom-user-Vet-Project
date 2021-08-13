@@ -25,10 +25,10 @@
                             </div>
                         {% endif %}
                         <label>{{fields.label}}</label> 
-                        {% if fields.name != "blog_description" %} 
+                        {% if fields.name != "illness_description" and fields.name != "illness_prevention" %} 
                             <input type="{{fields.field.widget.input_type}}" id = "{{fields.name}}" name = "{{fields.name}}" style = "height: 45px;" class="form-control" required>
                         {% else %}
-                            <textarea name="{{fields.name}}" id="{{fields.name}}" class="form-control" required>
+                            <textarea name="{{fields.name}}" id="{{fields.name}}" class="form-control">
 
                             </textarea>
                         {% endif %}
@@ -38,7 +38,7 @@
             </form>
           </div>
     </div>
-    <div style = "margin-bottom:150px">
+    <div style = "margin-bottom:80px">
 
     </div>
     <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
@@ -46,9 +46,10 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
     <script>
         function validate(){
-            let title = $.trim($('#blog_title').val());
-            let blog_description = $.trim($('#blog_description').val());
-            if(title != "" && blog_description != ""){
+            let illness_name = $.trim($('#illness_name').val());
+            let illness_description = $.trim($('#illness_description').val());
+            let illness_prevention = $.trim($('#illness_prevention').val());
+            if(illness_name != "" && illness_description != "" && illness_prevention != ""){
                 $('#errors').html("")
                 return true;
             }else{

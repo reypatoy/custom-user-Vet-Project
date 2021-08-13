@@ -1,0 +1,58 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% block content %}
+    <div class="container">
+        <h2 class = "page-header">Blogs</h2>
+        {% for blog in blogs_list %}
+        <div class="col-12 col-md-6 col-lg-6">
+            <article class="article article-style-c">
+              <div class="article-header">
+                <img src="/media/{{blog.illness_image}}" class="img img-fluid" alt="">
+              </div>
+              <div class="article-details">
+                <div class="article-category"><div class="bullet"></div>{{blog.created_at}}</div>
+                <div class="article-title">
+                  <h2>{{blog.illness_name}}</h2>
+                </div>
+                <div class="article-description">
+                    <h6 class = "text-info">Description</h6>
+                  </div>
+                <p>{{blog.illness_description}}</p>
+                <div class="article-prevention">
+                    <h6 class = "text-info">Prevention</h6>
+                  </div>
+                <p>{{blog.illness_prevention}}</p>
+                <div class="article-user">
+                  <img alt="image" style = "height: 50px; height: 50px; border-radius: 50%;" class = "img img-fluid" src="/media/{{blog.illness_uploader.admin.profile_pic}}">
+                  <div class="article-user-details">
+                    <div class="user-detail-name">
+                      <a href="{% url 'doctors:doctors_profile_view' %}?id={{blog.illness_uploader.id}}">{{blog.illness_uploader}}</a>
+                    </div>
+                    <div class="text-job"><a href=""><i class="fas fa-edit"></i>Edit</a></div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        {% endfor %}
+    </div>
+    <div style = "margin-bottom:80px">
+
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script>
+        function validate(){
+            let illness_name = $.trim($('#illness_name').val());
+            let illness_description = $.trim($('#illness_description').val());
+            let illness_prevention = $.trim($('#illness_prevention').val());
+            if(illness_name != "" && illness_description != "" && illness_prevention != ""){
+                $('#errors').html("")
+                return true;
+            }else{
+                $('#errors').html('<div class = "alert alert-danger">Please fill all fields</div>');
+                return false;
+            }
+        }
+    </script>
+{% endblock %}
