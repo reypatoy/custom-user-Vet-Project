@@ -1,7 +1,7 @@
-{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% extends 'staff/staff_base_layout/layout.html' %}
 {% block content %}
     <div class="container">
-        <h2 class = "page-header">Blogs</h2>
+        <h2 class = "page-header">Doctors Blogs</h2>
         <div class="row">
           {% for blog in blogs_list %}
           <div class="col-12 col-md-6 col-lg-6">
@@ -26,7 +26,7 @@
                     <img alt="image" style = "height: 50px; height: 50px; border-radius: 50%;" class = "img img-fluid" src="/media/{{blog.illness_uploader.admin.profile_pic}}">
                     <div class="article-user-details">
                       <div class="user-detail-name">
-                        <a href="{% url 'doctors:doctors_profile_view' %}?id={{blog.illness_uploader.id}}">{{blog.illness_uploader}}</a>
+                        <a href="">{{blog.illness_uploader}}</a>
                       </div>
                       <div class="text-job"><a href=""><i class="fas fa-edit"></i>Edit</a></div>
                     </div>
@@ -41,13 +41,13 @@
             <nav aria-label="Page navigation example">
               <ul class="pagination">
                 {% if page_obj.has_previous%}
-                  <li class="page-item"><a class="page-link" href="{% url 'doctors:blog_list_view' %}?page={{page_obj.previous_page_number}}">Previous</a></li>
+                  <li class="page-item"><a class="page-link" href="{% url 'staff:blog_list_view' %}?page={{page_obj.previous_page_number}}">Previous</a></li>
                 {% else %}
                   <li class="page-item disabled" ><a class="page-link" href="">Previous</a></li>
                 {% endif %}
                   <li class="page-item disabled"><a class="page-link" href="">Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}</a></li>
                 {% if page_obj.has_next %}
-                  <li class="page-item"><a class="page-link" href="{% url 'doctors:blog_list_view' %}?page={{page_obj.next_page_number}}">Next</a></li>
+                  <li class="page-item"><a class="page-link" href="{% url 'staff:blog_list_view' %}?page={{page_obj.next_page_number}}">Next</a></li>
                 {% else %}
                   <li class="page-item disabled"><a class="page-link" href="">Next</a></li>
                 {% endif %}

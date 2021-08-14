@@ -7,6 +7,8 @@ from accounts.models import (
     customer as customer_user,
     staff as staff_user,
 )
+from blogs.models import Blogs as doctors_blogs
+
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
@@ -446,3 +448,9 @@ class account_update_view(checkPremiumGroupMixin, UpdateView):
         staff.address_municipality = self.request.POST.get("address_municipality")
         staff.save()
         return redirect("staff:staff_login_view")
+
+
+class blog_list_view(checkPremiumGroupMixin, ListView):
+    model = doctors_blogs
+    template_name = "staff/pages/blog_list.html"
+    paginate_by = 2

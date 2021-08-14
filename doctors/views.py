@@ -450,3 +450,4 @@ class add_blog_view(CheckGroupPermissionMixin, CreateView):
 class blog_list_view(CheckGroupPermissionMixin, ListView):
     model = doctors_blogs
     template_name = "doctors/pages/blog_list.html"
+    paginate_by = 2
