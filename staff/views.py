@@ -453,4 +453,29 @@ class account_update_view(checkPremiumGroupMixin, UpdateView):
 class blog_list_view(checkPremiumGroupMixin, ListView):
     model = doctors_blogs
     template_name = "staff/pages/blog_list.html"
-    paginate_by = 2
+    paginate_by = 3
+
+
+class doctors_list_view(checkPremiumGroupMixin, ListView):
+    model = custom_user
+    template_name = "staff/pages/doctors_list.html"
+    paginate_by = 6
+
+    def get_queryset(self):
+        filter = self.request.GET.get("filter", "")
+        order_by = self.request.GET.get("orderby", "id")
+        if filter != "":
+            cat = custom_user.objects.filter(
+                Q(first_name__contains=filter)
+                | Q(last_name__contains=filter) & Q(user_type=1)
+            ).order_by(order_by)
+        else:
+            cat = custom_user.objects.filter(user_type=1).order_by(order_by)
+        return cat
+
+    def get_context_data(self, **kwargs):
+        context = super(doctors_list_view, self).get_context_data(**kwargs)
+        context["filter"] = self.request.GET.get("filter", "")
+        context["orderby"] = self.request.GET.get("orderby")
+        context["all_table_fields"] = custom_user._meta.get_fields()
+        return context
