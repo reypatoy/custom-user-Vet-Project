@@ -479,3 +479,18 @@ class doctors_list_view(checkPremiumGroupMixin, ListView):
         context["orderby"] = self.request.GET.get("orderby")
         context["all_table_fields"] = custom_user._meta.get_fields()
         return context
+
+
+def doctors_profile_view(request):
+    context = None
+    if request.user.is_authenticated and request.user.user_type == 2:
+        id = request.GET.get("id")
+        if id is not None:
+            doctor = custom_user.objects.get(id=id)
+            context = {"doctor": doctor}
+            return render(request, "staff/pages/doctors_profile.html", context)
+        else:
+            return HttpResponse("Missing parameter")
+
+    else:
+        return redirect("staff:staff_login_view")

@@ -338,11 +338,14 @@ class doctors_list_view(CheckGroupPermissionMixin, ListView):
 
 def doctors_profile_view(request):
     context = None
-    if request.user.is_authenticated:
+    if request.user.is_authenticated and request.user.user_type == 1:
         id = request.GET.get("id")
-        doctor = custom_user.objects.get(id=id)
-        context = {"doctor": doctor}
-        return render(request, "doctors/pages/doctors_profile.html", context)
+        if id is not None:
+            doctor = custom_user.objects.get(id=id)
+            context = {"doctor": doctor}
+            return render(request, "doctors/pages/doctors_profile.html", context)
+        else:
+            return HttpResponse("Missing parameter")
 
     else:
         return redirect("doctors:doctors_login_view")

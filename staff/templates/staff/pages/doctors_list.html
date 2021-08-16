@@ -46,7 +46,7 @@
                       <div class="candidate-list-details">
                         <div class="candidate-list-info">
                           <div class="candidate-list-title">
-                            <h5 class="mb-0"><a href="{% url 'doctors:doctors_profile_view' %}?id={{user.id}}">{{user.first_name}} {{user.last_name}}</a></h5>
+                            <h5 class="mb-0"><a href="{% url 'staff:doctors_profile_view' %}?id={{user.id}}">{{user.first_name}} {{user.last_name}}</a></h5>
                           </div>
                         </div>
                       </div>
@@ -58,7 +58,7 @@
                     </td>
                     <td>
                       <ul class="list-unstyled mb-0 d-flex justify-content-end" style="margin-top:30px">
-                        <li><a href="{% url 'doctors:doctors_profile_view' %}?id={{user.id}}" class="text-primary" style="margin-right:10px" data-toggle="tooltip" title="" data-original-title="view"><i class="far fa-eye"></i></a></li>
+                        <li><a href="{% url 'staff:doctors_profile_view' %}?id={{user.id}}" class="text-primary" style="margin-right:10px" data-toggle="tooltip" title="" data-original-title="view"><i class="far fa-eye"></i></a></li>
                         <!-- <li><a href="" class="text-info"  data-toggle="tooltip" title="" data-original-title="Add"><i class="fas fa-plus"></i></a></li> -->
                     </ul>
                     </td>

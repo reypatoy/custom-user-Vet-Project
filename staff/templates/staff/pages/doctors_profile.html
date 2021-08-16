@@ -1,0 +1,30 @@
+{% extends 'staff/staff_base_layout/layout.html' %}
+{% block content %}
+<div class="row">
+<div class="col-lg-4">
+    <div class="text-center card-box">
+        <div class="member-card pt-2 pb-2">
+            <a href="/media/{{doctor.admin.profile_pic}}"><div class="thumb-lg member-thumb mx-auto"><img src="/media/{{doctor.admin.profile_pic}}" class="rounded-circle img-thumbnail img-fluid" alt="profile-image"></div></a>
+            <div class="">
+                
+                <h4>{{doctor.email}}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-8" style = "height: 600px;">
+    <div class = "container-fluid" style = "position:absolute">
+        <table class = "table table-striped">
+            <tr style="background-color:#D4E6F1;"><th colspan="2"><h2> Doctor Details</h2></th></tr>
+            <tr style = "font-size:25px;"><td>First Name :</td><td>{{doctor.first_name}}</td></tr>
+            <tr style = "font-size:25px;"><td>Last Name :</td><td>{{doctor.last_name}}</td></tr>
+            <tr style = "font-size:25px;"><td>Contact Number :</td><td>{{doctor.admin.contact_number}}</td></tr>
+            <tr style = "font-size:25px;"><td>Adress Barangay :</td><td>{{doctor.admin.address_barangay}}</td></tr>
+            <tr style = "font-size:25px;"><td>Adress Municipality :</td><td>{{doctor.admin.address_municipality}}</td></tr>
+            <tr style = "font-size:25px;"><td>Added By :</td><td>{{doctor.admin.added_by}}</td></tr>
+            <tr style = "font-size:25px;"><td>Created At :</td><td>{{doctor.admin.created_at}}</td></tr>
+        </table>
+    </div>
+</div>
+</div>
+{% endblock %}

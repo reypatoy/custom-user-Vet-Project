@@ -70,4 +70,5 @@ urlpatterns = [
         name="blog_list_view",
     ),
     path("doctors_list/", views.doctors_list_view.as_view(), name="doctors_list_view"),
+     path("doctors_profile/", views.doctors_profile_view, name="doctors_profile_view"),
 ]
