@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 
 from .forms import SignUpForm
 from accounts.models import User, customer
+from blogs.models import Blogs as doctors_blogs
 
 
 def login_view(request):
@@ -110,3 +111,8 @@ def home_view(request):
 
 def appointment_view(request):
     return render(request, "pages/appointment.html")
+
+
+def blogs_view(request):
+    blogs = doctors_blogs.objects.all()
+    return render(request, "pages/blogs.html", {"blogs": blogs})
