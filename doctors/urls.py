@@ -64,4 +64,9 @@ urlpatterns = [
         views.blog_list_view.as_view(),
         name="blog_list_view",
     ),
+    path(
+        "update_blog/<slug:pk>",
+        views.update_blog_view.as_view(),
+        name="update_blog_view",
+    ),
 ]

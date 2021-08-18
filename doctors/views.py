@@ -454,3 +454,18 @@ class blog_list_view(CheckGroupPermissionMixin, ListView):
     model = doctors_blogs
     template_name = "doctors/pages/blog_list.html"
     paginate_by = 2
+
+
+class update_blog_view(CheckGroupPermissionMixin, UpdateView):
+    model = doctors_blogs
+    template_name = "doctors/pages/update_blog.html"
+    fields = [
+        "illness_name",
+        "illness_image",
+        "illness_description",
+        "illness_prevention",
+    ]
+
+    def form_valid(self, form):
+        form.save()
+        return redirect("doctors:blog_list_view")

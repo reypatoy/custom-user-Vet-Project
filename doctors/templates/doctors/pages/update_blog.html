@@ -1,0 +1,64 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% block content %}
+    <div class="container">
+        <h2 class = "page-header">Update Blog</h2>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == "success" %}
+                        <div class="alert alert-success">
+                            {{message}}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <form method="POST" enctype="multipart/form-data" onsubmit = "return validate()">
+                {% csrf_token %}
+                {% for fields in form %}
+                    <div id = "errors" class="form-group">
+                        
+                    </div>
+                    <div class="form-group"> 
+                        {% if fields.errors %}
+                            <div class="alert alert-danger">
+                                {{fields.errors}}
+                            </div>
+                        {% endif %}
+                        {% if fields.name == "illness_image"%}
+                            <img style = "height: 200px; width: 300px; border-radius: 10px;" class = "img img-fluid" src="/media/{{fields.value}}" alt=""><br>
+                        {% endif %}
+                        <label>{{fields.label}}</label> 
+                        {% if fields.name != "illness_description" and fields.name != "illness_prevention" %} 
+                            <input type="{{fields.field.widget.input_type}}" value = "{{fields.value}}" id = "{{fields.name}}" name = "{{fields.name}}" style = "height: 45px;" class="form-control">
+                        {% else %}
+                            <textarea name="{{fields.name}}" id="{{fields.name}}" class="form-control">{{fields.value}}
+                                
+                            </textarea>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button class = "btn btn-primary btn-block" type = "submit">Save</button>
+            </form>
+          </div>
+    </div>
+    <div style = "margin-bottom:80px">
+
+    </div>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script>
+        function validate(){
+            let illness_name = $.trim($('#illness_name').val());
+            let illness_description = $.trim($('#illness_description').val());
+            let illness_prevention = $.trim($('#illness_prevention').val());
+            if(illness_name != "" && illness_description != "" && illness_prevention != ""){
+                $('#errors').html("")
+                return true;
+            }else{
+                $('#errors').html('<div class = "alert alert-danger">Please fill all fields</div>');
+                return false;
+            }
+        }
+    </script>
+{% endblock %}

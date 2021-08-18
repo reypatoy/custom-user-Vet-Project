@@ -28,7 +28,7 @@
                       <div class="user-detail-name">
                         <a href="{% url 'doctors:doctors_profile_view' %}?id={{blog.illness_uploader.id}}">{{blog.illness_uploader}}</a>
                       </div>
-                      <div class="text-job"><a href=""><i class="fas fa-edit"></i>Edit</a></div>
+                      <div class="text-job"><a href="{% url 'doctors:update_blog_view' blog.id %}"><i class="fas fa-edit"></i>Edit</a></div>
                     </div>
                   </div>
                 </div>
