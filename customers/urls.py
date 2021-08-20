@@ -9,6 +9,7 @@ from .views import (
     dashboard_view,
     logout_view,
     blogs_view,
+    appointment_view,
 )
 
 app_name = "customers"
@@ -20,4 +21,5 @@ urlpatterns = [
     path("dashboard/", dashboard_view, name="dashboard_view"),
     path("logout/", logout_view, name="logout_view"),
     path("blogs/", blogs_view, name="blogs_view"),
+    path("appointment/", appointment_view.as_view(), name="appointment_view"),
 ]

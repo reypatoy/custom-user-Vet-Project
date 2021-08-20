@@ -5,10 +5,12 @@ from pathlib import Path
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
+from django.views.generic import CreateView
 
 from .forms import SignUpForm
 from accounts.models import User, customer
 from blogs.models import Blogs as doctors_blogs
+from appointments.models import Appointment
 
 
 def login_view(request):
@@ -109,8 +111,10 @@ def home_view(request):
     return render(request, "pages/home.html", {"title": "Home"})
 
 
-def appointment_view(request):
-    return render(request, "pages/appointment.html")
+class appointment_view(CreateView):
+    model = Appointment
+    template_name = "pages/appointment.html"
+    fields = ["description", "date"]
 
 
 def blogs_view(request):
