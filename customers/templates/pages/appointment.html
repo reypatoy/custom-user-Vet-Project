@@ -2,10 +2,7 @@
 {% load static %}
 {% block style %}
   <style>
-    body
-      {
-        background-color:#5fcf80;
-      }
+    
       #body_header
       {
 
@@ -93,33 +90,39 @@
     <div id="body_header">
       <!--This is a division tag for body header-->
       <h1>Appointment Request Form</h1>
-      <p>Make your appointments more easier</p>
+      <p class = "text-info" style = "font-size: 16px;">Please Select Date And Time To Request An Appointment</p>
 
     </div>
-    <form action="index.html" method="post">
+    <form method="post">
+      {% csrf_token %}
       <fieldset>
 
         {% for fields in form %}
           <div class="form-group">
             <label for="name">{{fields.label}}*:</label>
             {% if fields.name == 'description' %}
-              <textarea class = "form-control" name="{{fields.name}}" id="{{fields.name}}" >
+              <div id = "error">
+
+              </div>
+              <textarea  class = "form-control" name="{{fields.name}}" id="{{fields.name}}" >
 
               </textarea>
             {% else %}
-              <input class = "form-control" type="text" id="{{fields.name}}" name="{{fields.name}}" required">
+              <div id = "verefying">
+
+              </div>
+              <input readonly class = "form-control" type="text" id="{{fields.name}}" name="{{fields.name}}" placeholder="Please set schedule to request Appointment">
             {% endif %}
           </div>
             {% endfor %}
       </fieldset>
-      <button type="submit">Request For Appointment</button>
+          
     </form>
+    <div style = "height:250px">
+
+    </div>
   </div>
 
-
-<div style = "height:250px">
-
-</div>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
@@ -127,11 +130,84 @@
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/jquery.datetimepicker.full.js' %}"></script>
 <script>
   $(document).ready(function(){
-    $('#date').click(function(){
-      alert('Yes')
+
+    $('#schedule').datetimepicker({
+      format:'Y/m/d H:i',
+      formatTime:'H:i',
+      formatDate:'Y/m/d',
+      startDate: false,
+      minDate:true,
+
+      maxDate:false,
+
+      minTime:'08:00',
+      maxTime:'16:00',
+      // defaultTime:'15:30',
+      minDateTime:true,
+      closeOnDateSelect:false,
+      step: 30,
+
+closeOnTimeSelect:true,
+
+closeOnWithoutClick:false,
+
+closeOnInputClick:false,
+
+openOnFocus:true,
+
+
+      maxDateTime:false,
+      dayOfWeekStart: 1,
+      scrollMonth:true,
+      scrollTime:true,
+      monthStart: 0,
+
+      monthEnd: 11,
+      // disabledDates : ["2021/08/25"],
+      touchMovedThreshold: 5,
+      timeHeightInTimePicker: 25,
+      scrollMonth:true,
+
+      scrollTime:true,
+
+      scrollInput:true,
+     
+      allowTimes: ['08:30','09:00','09:30','10:00','10:30','11:00','11:30','13:30','14:00','14:30','15:00','15:30'],
+      onSelectTime:function () {
+        $('#verefying').html('<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; border-radius:10px" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Verefying</div><br>');
+          $.ajax({
+               type : "POST",
+               url : "{% url 'customers:verefy_schedule_view' %}",
+               data:{
+                    schedule:$('#schedule').val()
+               },
+               success:function(response){
+                  if(response == 1){
+                    $('#verefying').html('<div class = "alert alert-danger">Schedule is already taken <br> Please adkjust your date or time</div>');
+                  }else{
+                    let description = $.trim($('#description').val());
+                    if(description != ""){
+                        $('#verefying').html('<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 100%; border-radius:10px" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Saving request</div><br>');
+                        $('#error').html('');
+                        
+                      }else{
+                        $('#error').html('<div class = "alert alert-danger">Please put a description</div>')
+                        $('#verefying').html('');
+
+                      }
+                  }
+               }
+          });
+      },
+     
+       
     })
+   
   })
+  
 </script>
 {% endblock %}

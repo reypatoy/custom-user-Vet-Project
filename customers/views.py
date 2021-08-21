@@ -10,7 +10,8 @@ from django.views.generic import CreateView
 from .forms import SignUpForm
 from accounts.models import User, customer
 from blogs.models import Blogs as doctors_blogs
-from appointments.models import Appointment
+from appointments.models import Appointment as customers_appointment
+from django.http import HttpResponse
 
 
 def login_view(request):
@@ -112,11 +113,31 @@ def home_view(request):
 
 
 class appointment_view(CreateView):
-    model = Appointment
+    model = customers_appointment
     template_name = "pages/appointment.html"
-    fields = ["description", "date"]
+    fields = ["description", "schedule"]
+
+    def form_valid(self, form):
+        new_appointment = form.save(commit=False)
+
+        appointments = customers_appointment.objects.all()
+        max = 0
+        for appointment in appointments:
+            if appointment.id > max:
+                max = appointment.id
+        new_appointment.id = max + 1
+        new_appointment.customer = self.request.user.customer
+        new_appointment.save()
+        return redirect("customers:appointment_view")
 
 
 def blogs_view(request):
     blogs = doctors_blogs.objects.all()
     return render(request, "pages/blogs.html", {"blogs": blogs})
+
+
+def verefy_schedule_view(request):
+    if request.method == "POST":
+        schedule = request.POST.get("schedule")
+        verefy = customers_appointment.objects.filter(schedule=schedule).count()
+        return HttpResponse(verefy)

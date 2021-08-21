@@ -7,7 +7,7 @@ from accounts.models import customer
 class Appointment(models.Model):
     id = models.IntegerField(primary_key=True)
     description = models.TextField()
-    date = models.DateTimeField()
+    schedule = models.CharField(max_length=255)
     customer = models.ForeignKey(
         customer, related_name="appointment", on_delete=models.CASCADE
     )
