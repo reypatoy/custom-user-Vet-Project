@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import CreateView
 
 from .forms import SignUpForm
-from accounts.models import User, customer
+from accounts.models import User, customer as customer_user
 from blogs.models import Blogs as doctors_blogs
 from appointments.models import Appointment as customers_appointment
 from django.http import HttpResponse
@@ -30,7 +30,7 @@ def login_view(request):
             user = authenticate(username=username, password=password)
 
             if user is not None:
-                users = customer.objects.all()
+                users = customer_user.objects.all()
                 if request.GET.get("next"):
                     return redirect(request.GET.get("next"))
 
@@ -68,7 +68,7 @@ def signup_view(request):
             profile_pic = form.cleaned_data.get("profile_pic")
             email = form.cleaned_data.get("email")
             User_instance = form.save()
-            current_customer = customer.objects.get(auth_user_id=User_instance)
+            current_customer = customer_user.objects.get(auth_user_id=User_instance)
 
             current_customer.first_name = first_name
             current_customer.last_name = last_name
@@ -112,23 +112,8 @@ def home_view(request):
     return render(request, "pages/home.html", {"title": "Home"})
 
 
-class appointment_view(CreateView):
-    model = customers_appointment
-    template_name = "pages/appointment.html"
-    fields = ["description", "schedule"]
-
-    def form_valid(self, form):
-        new_appointment = form.save(commit=False)
-
-        appointments = customers_appointment.objects.all()
-        max = 0
-        for appointment in appointments:
-            if appointment.id > max:
-                max = appointment.id
-        new_appointment.id = max + 1
-        new_appointment.customer = self.request.user.customer
-        new_appointment.save()
-        return redirect("customers:appointment_view")
+def appointment_view(request):
+    return render(request, "pages/appointment.html", {})
 
 
 def blogs_view(request):
@@ -141,3 +126,24 @@ def verefy_schedule_view(request):
         schedule = request.POST.get("schedule")
         verefy = customers_appointment.objects.filter(schedule=schedule).count()
         return HttpResponse(verefy)
+
+
+def save_appointment_view(request):
+    appointments = customers_appointment.objects.all()
+    max = 0
+    for appointment in appointments:
+        if appointment.id > max:
+            max = appointment.id
+    if request.method == "POST":
+        description = request.POST.get("description")
+        schedule = request.POST.get("schedule")
+        new_appointment = customers_appointment.objects.create(
+            id=max + 1,
+            description=description,
+            schedule=schedule,
+            customer=request.user.customer,
+        )
+        new_appointment.save()
+    return HttpResponse(
+        "Please Check Your Email For Further Info About Your Appointment"
+    )

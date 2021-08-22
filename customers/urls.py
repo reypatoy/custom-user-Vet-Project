@@ -12,6 +12,7 @@ from .views import (
     blogs_view,
     appointment_view,
     verefy_schedule_view,
+    save_appointment_view,
 )
 
 app_name = "customers"
@@ -23,10 +24,15 @@ urlpatterns = [
     path("dashboard/", dashboard_view, name="dashboard_view"),
     path("logout/", logout_view, name="logout_view"),
     path("blogs/", blogs_view, name="blogs_view"),
-    path("appointment/", appointment_view.as_view(), name="appointment_view"),
+    path("appointment/", appointment_view, name="appointment_view"),
     path(
         "verefy_schedule/",
         csrf_exempt(verefy_schedule_view),
         name="verefy_schedule_view",
+    ),
+    path(
+        "save_appointment/",
+        csrf_exempt(save_appointment_view),
+        name="save_appointment_view",
     ),
 ]

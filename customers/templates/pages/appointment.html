@@ -5,7 +5,6 @@
     
       #body_header
       {
-
         width:auto;
         margin:0px auto;
         text-align:center;
@@ -90,31 +89,29 @@
     <div id="body_header">
       <!--This is a division tag for body header-->
       <h1>Appointment Request Form</h1>
-      <p class = "text-info" style = "font-size: 16px;">Please Select Date And Time To Request An Appointment</p>
+      <div id = "instruction" class = "text-info" style = "margin:0px auto; font-size: 16px; max-width: 500px;">Please Select Date And Time To Request An Appointment</div>
 
     </div>
     <form method="post">
       {% csrf_token %}
       <fieldset>
-
-        {% for fields in form %}
-          <div class="form-group">
-            <label for="name">{{fields.label}}*:</label>
-            {% if fields.name == 'description' %}
+            <div class="form-group">
+              <label for="name">Description *:</label>
               <div id = "error">
 
               </div>
-              <textarea  class = "form-control" name="{{fields.name}}" id="{{fields.name}}" >
+              <textarea  class = "form-control" name="description" id="description" >
 
               </textarea>
-            {% else %}
+            </div>
+            <div class="form-group">
+              <label for="name">Schedule *:</label>
               <div id = "verefying">
 
               </div>
-              <input readonly class = "form-control" type="text" id="{{fields.name}}" name="{{fields.name}}" placeholder="Please set schedule to request Appointment">
-            {% endif %}
-          </div>
-            {% endfor %}
+              
+              <input readonly class = "form-control" type="text" id="schedule" name="schedule" placeholder="Please set schedule to request Appointment">
+            </div>
       </fieldset>
           
     </form>
@@ -178,7 +175,7 @@ openOnFocus:true,
      
       allowTimes: ['08:30','09:00','09:30','10:00','10:30','11:00','11:30','13:30','14:00','14:30','15:00','15:30'],
       onSelectTime:function () {
-        $('#verefying').html('<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; border-radius:10px" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Verefying</div><br>');
+        $('#verefying').html('<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; border-radius:10px" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Validating Schedule...</div><br>');
           $.ajax({
                type : "POST",
                url : "{% url 'customers:verefy_schedule_view' %}",
@@ -191,9 +188,24 @@ openOnFocus:true,
                   }else{
                     let description = $.trim($('#description').val());
                     if(description != ""){
-                        $('#verefying').html('<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 100%; border-radius:10px" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Saving request</div><br>');
+                        $('#verefying').html('<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 100%; border-radius:10px" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Saving Request</div><br>');
                         $('#error').html('');
-                        
+                        $.ajax({
+                            type : 'POST',
+                            url: "{% url 'customers:save_appointment_view' %}",
+                            data :{
+                              description:description,
+                              schedule:$('#schedule').val()
+                            },success:function(response){
+                              $('#verefying').html('');
+                                $('#instruction').html('<div class = "alert alert-info">'+response+'</div>');
+                                  $('#description').val('');
+                                  $('#schedule').val('');
+                                setTimeout(() => {
+                                  $('#instruction').html('Please Select Date And Time To Request An Appointment');
+                                }, 10000);
+                            }
+                        });
                       }else{
                         $('#error').html('<div class = "alert alert-danger">Please put a description</div>')
                         $('#verefying').html('');
