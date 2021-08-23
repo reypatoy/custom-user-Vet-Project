@@ -183,7 +183,7 @@ def add_staff_view(request):
             success_message = None
             staff_data = None
             error_message = None
-            form = add_staff_form()
+            form = add_staff_form() 
             if request.method == "POST":
                 form = add_staff_form(request.POST, request.FILES)
                 if form.is_valid():
