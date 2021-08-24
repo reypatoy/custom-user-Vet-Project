@@ -54,6 +54,7 @@ def login_view(request):
 
 
 def signup_view(request):
+
     errors = None
     if request.method == "POST":
         form = SignUpForm(request.POST, request.FILES)
@@ -103,9 +104,8 @@ def dashboard_view(request):
 
 
 def logout_view(request):
-    if request.method == "POST":
-        logout(request)
-        return redirect("customers:home_view")
+    logout(request)
+    return redirect("customers:home_view")
 
 
 def home_view(request):
@@ -113,7 +113,10 @@ def home_view(request):
 
 
 def appointment_view(request):
-    return render(request, "pages/appointment.html", {})
+    if request.user.is_authenticated and request.user.user_type == 3:
+        return render(request, "pages/appointment.html", {})
+    else:
+        return redirect("customers:login_view")
 
 
 def blogs_view(request):

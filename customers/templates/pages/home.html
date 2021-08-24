@@ -1,21 +1,42 @@
 {% extends '.\base_layout/new_layout.html' %}
 {% load static %}
+{% block style %}
+  <style>
+      * {
+        margin: 0px;
+      }
+      .home-background {
+        height: 620px;
+        width: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+      }
+  </style>
+{% endblock %}
 {% block title %}
   Home
 {% endblock %}
 {% block content %}
-
+<br><br><br>
 <div class="container-fluid home-background" style = "background-image: url('{% static 'Images/home-background.jpg' %}');">
   <div class="row">
     <div class="container col-md-6 offset-md-1 text-center"><br><br><br><br><br><br><br><br>
         <h1 class = "fw-bolder" style = "color:#5f6f3a">BeastFriend Veterinary Clinic</h1>
         <h4 class = "fw-bold" style = "color:#b4a7af">Mastering The Art Of Pet Care</h4><br>
-        <a href="/appointments"><button class = "btn btn-success" style = "padding:10px">Request An Appointment Now!!!</button></a>
+        <a href="{% url 'customers:appointment_view' %}"><button class = "btn btn-success" style = "padding:10px">Request An Appointment Now!!!</button></a>
    </div>
   </div>
 </div>
 
 
 
-<script src="{% static 'js/home.js' %}"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<script src="{% static 'js/jquery.js' %}"></script>
 {% endblock %}

@@ -1,9 +1,36 @@
- {% extends  '.\base_layout/layout.html' %}
+ {% extends  '.\base_layout/new_layout.html' %}
+ {% load static %}
+ {% block style %}
+  <style>
+      .forgot-password {
+        text-decoration: none;
+        padding-bottom: 30px;
+      }
+      .forgot-password:hover {
+        text-decoration: underline;
+      }
+      .create-account {
+        float: right;
+        text-decoration: none;
+        padding-bottom: 30px;
+      }
+      .create-account:hover {
+        text-decoration: underline;
+      }
+
+  </style>
+ {% endblock %}
+ {% block title %}
+    Login
+ {% endblock %}
  {% block content %}
+ <br>
+ <br> <br>
+ <br>
  <br>
  <br>
  <div class="container">
-          <div class="container col-lg-4">
+          <div class="container col-lg-6">
             <form class = "bg-light" method="POST" style = "border-radius:10px; padding: 20px">
               {% csrf_token %}
                 <h1 class = "text-center" style = "margin-bottom:20px">Login</h1>
@@ -41,4 +68,11 @@
       <div style = "height:250px">
 
       </div>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+<script src="{% static 'js/jquery.js' %}"></script>
 {% endblock %}
