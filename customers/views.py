@@ -12,6 +12,8 @@ from accounts.models import User, customer as customer_user
 from blogs.models import Blogs as doctors_blogs
 from appointments.models import Appointment as customers_appointment
 from django.http import HttpResponse
+from django.utils.dateparse import parse_datetime
+from datetime import datetime
 
 
 def login_view(request):
@@ -140,10 +142,11 @@ def save_appointment_view(request):
     if request.method == "POST":
         description = request.POST.get("description")
         schedule = request.POST.get("schedule")
+        datetime_object = datetime.strptime(schedule, "%Y/%m/%d %H:%M")
         new_appointment = customers_appointment.objects.create(
             id=max + 1,
             description=description,
-            schedule=schedule,
+            schedule=datetime_object,
             customer=request.user.customer,
         )
         new_appointment.save()

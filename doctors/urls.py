@@ -69,4 +69,9 @@ urlpatterns = [
         views.update_blog_view.as_view(),
         name="update_blog_view",
     ),
+    path(
+        "appointment_list/",
+        views.appointment_list_view.as_view(),
+        name="appointment_list_view",
+    ),
 ]

@@ -19,6 +19,7 @@ from accounts.models import (
 )
 from pets.models import pets as customer_pets
 from blogs.models import Blogs as doctors_blogs
+from appointments.models import Appointment as customers_appointment
 
 # Create your views here.
 
@@ -469,3 +470,12 @@ class update_blog_view(CheckGroupPermissionMixin, UpdateView):
     def form_valid(self, form):
         form.save()
         return redirect("doctors:blog_list_view")
+
+
+class appointment_list_view(CheckGroupPermissionMixin, ListView):
+    model = customers_appointment
+    template_name = "doctors/pages/appointment_list.html"
+
+    def get_queryset(self):
+        cat = customers_appointment.objects.all().order_by("schedule")
+        return cat

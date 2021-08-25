@@ -138,6 +138,19 @@
                     </div>
                 </div>
             </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities4"
+                    aria-expanded="true" aria-controls="collapseUtilities4">
+                    <img class = "img-fluid" style = "width: 30px; height: 30px; border-radius: 50%;" src="{% static 'Images/blog_logo.png' %}" alt="">
+                    <span>Appointments</span>
+                </a>
+                <div id="collapseUtilities4" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="{% url 'doctors:appointment_list_view' %}">Appointment List</a>
+                    </div>
+                </div>
+            </li>
             <!-- Divider -->
             <hr class="sidebar-divider">
 

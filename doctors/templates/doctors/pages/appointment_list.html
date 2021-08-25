@@ -1,0 +1,49 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4>Appointments</h4>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive table-invoice">
+                  <table class="table table-striped">
+                    <tbody><tr>
+                      <th>Invoice ID</th>
+                      <th>Customer</th>
+                      <th>Status</th>
+                      <th>Due Date</th>
+                      <th>Action</th>
+                    </tr>
+                    {% for appointment in appointment_list %}
+                    <tr>
+                      <td><a href="#">{{appointment.customer}}</a></td>
+                      <td class="font-weight-600">Kusnadi</td>
+                      <td><div class="badge badge-warning">Unpaid</div></td>
+                      <td>{{appointment.schedule}}</td>
+                      <td>
+                        <a href="#" class="btn btn-primary">Detail</a>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody></table>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script>
+        // $(document).ready(function(){
+        //   $('#filter').keyup(function(){
+
+        //   })
+        // })
+    </script>
+
+{% endblock %}
