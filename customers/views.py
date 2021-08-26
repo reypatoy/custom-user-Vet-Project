@@ -129,7 +129,8 @@ def blogs_view(request):
 def verefy_schedule_view(request):
     if request.method == "POST":
         schedule = request.POST.get("schedule")
-        verefy = customers_appointment.objects.filter(schedule=schedule).count()
+        datetime_object = datetime.strptime(schedule, "%Y/%m/%d %H:%M")
+        verefy = customers_appointment.objects.filter(schedule=datetime_object).count()
         return HttpResponse(verefy)
 
 
