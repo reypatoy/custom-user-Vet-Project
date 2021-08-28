@@ -479,3 +479,23 @@ class appointment_list_view(CheckGroupPermissionMixin, ListView):
     def get_queryset(self):
         cat = customers_appointment.objects.all().order_by("schedule")
         return cat
+
+
+def approve_appointment_view(request):
+    if request.method == "POST":
+        # updating appointment status to approved
+        appointment_id = request.POST.get("appointment_id")
+        appointment = customers_appointment.objects.get(id=appointment_id)
+        appointment.status = 1
+        appointment.save()
+        # sending email to customer for appointment approved confirmation
+        recipient = appointment.customer.email
+        subject = "Appointment Confirmation"
+        message = "Dear valued customer, your appointment to Beastfriend Veterinary Clinic is approved, Please come at your exact schedule Thank you!!!"
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [
+            recipient,
+        ]
+        send_mail(subject, message, email_from, recipient_list)
+
+        return HttpResponse("Email already sent to customer")
