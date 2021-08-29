@@ -489,9 +489,32 @@ def approve_appointment_view(request):
         appointment.status = 1
         appointment.save()
         # sending email to customer for appointment approved confirmation
-        recipient = appointment.customer.email
+        recipient = "reypatoy@gmail.com"
         subject = "Appointment Confirmation"
         message = "Dear valued customer, your appointment to Beastfriend Veterinary Clinic is approved, Please come at your exact schedule Thank you!!!"
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [
+            recipient,
+        ]
+        send_mail(subject, message, email_from, recipient_list)
+
+        return HttpResponse("Email already sent to customer")
+
+def decline_appointment_view(request):
+    if request.method == "POST":
+        # updating appointment status to declined
+        appointment_id = request.POST.get("appointment_id")
+        email = request.POST.get("email")
+        subject = request.POST.get("subject")
+        reason = request.POST.get("reason")
+
+        appointment = customers_appointment.objects.get(id=appointment_id)
+        appointment.status = 3
+        appointment.save()
+        # sending email to customer for appointment declined
+        recipient = "reypatoy@gmail.com"
+        subject = subject
+        message = reason
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [
             recipient,

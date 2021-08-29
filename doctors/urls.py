@@ -79,4 +79,9 @@ urlpatterns = [
         csrf_exempt(views.approve_appointment_view),
         name="approve_appointment_view",
     ),
+    path(
+        "decline_appointment_view/",
+        csrf_exempt(views.decline_appointment_view),
+        name="decline_appointment_view",
+    ),
 ]
