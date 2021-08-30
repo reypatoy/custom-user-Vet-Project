@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.core.mail import BadHeaderError, send_mail
 from django.conf import settings
+from datetime import datetime
 from accounts.models import (
     customer as customer_user,
     Admin as admin_user,
@@ -500,6 +501,7 @@ def approve_appointment_view(request):
 
         return HttpResponse("Email already sent to customer")
 
+
 def decline_appointment_view(request):
     if request.method == "POST":
         # updating appointment status to declined
@@ -515,6 +517,40 @@ def decline_appointment_view(request):
         recipient = "reypatoy@gmail.com"
         subject = subject
         message = reason
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [
+            recipient,
+        ]
+        send_mail(subject, message, email_from, recipient_list)
+
+        return HttpResponse("Email already sent to customer")
+
+
+def reschedule_appointment_view(request):
+    if request.method == "POST":
+        # updating appointment status to declined
+        reschedule_appointment_id = request.POST.get("reschedule_appointment_id")
+        reschedule_appointment_email = request.POST.get("reschedule_appointment_email")
+        reschedule_appointment_subject = request.POST.get(
+            "reschedule_appointment_subject"
+        )
+        reschedule_appointment_reason = request.POST.get(
+            "reschedule_appointment_reason"
+        )
+        reschedule_appointment_date = request.POST.get("reschedule_appointment_date")
+        formated_date_time = datetime.strptime(
+            reschedule_appointment_date, "%Y/%m/%d %H:%M"
+        )
+
+        appointment = customers_appointment.objects.get(id=reschedule_appointment_id)
+        appointment.status = 2
+        appointment.old_schedule = appointment.schedule
+        appointment.schedule = formated_date_time
+        appointment.save()
+        # sending email to customer for appointment declined
+        recipient = "reypatoy@gmail.com"
+        subject = reschedule_appointment_subject
+        message = f"Reason : {reschedule_appointment_reason}, Your new schedule is on {reschedule_appointment_date} Please come at the exact time, Thank you!!!"
         email_from = settings.EMAIL_HOST_USER
         recipient_list = [
             recipient,
