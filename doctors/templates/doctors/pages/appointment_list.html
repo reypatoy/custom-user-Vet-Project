@@ -45,7 +45,7 @@
                                 <td>{% if appointment.status == 1 %}
                                       <div class="badge badge-success">Approved</div>
                                     {% elif appointment.status == 2 %}
-                                      <div class="badge badge-warning" data-toggle="tooltip" data-placement="top" title="ReSchedule" data-original-title="ReSchedule">ReSchedule</div>
+                                      <div class="badge badge-warning" data-toggle="tooltip" data-placement="top" title="Old Schedule : {{appointment.old_schedule}}" data-original-title="ReSchedule">ReSchedule</div>
                                     {% endif %}
                                 </td>  
                                 <td>{{appointment.schedule}}</td>
@@ -304,6 +304,7 @@
     var tr_reschedule;
     var id_reschedule;
     var email_reschedule;
+    var td4;
     function reschedule(button, temp_email){
       let email = `'${temp_email}'`;
       let id = button.value;
@@ -314,19 +315,18 @@
           let otd1 = row_reschedule.cells[0].innerHTML;
           let otd2 = row_reschedule.cells[1].innerHTML;
 
-          let otd4 = row_reschedule.cells[3].innerHTML;
           let otd5 = row_reschedule.cells[4].innerHTML;
 
           let td1 = tr_reschedule.appendChild(document.createElement('td'));
           let td2 = tr_reschedule.appendChild(document.createElement('td'));
           let td3 = tr_reschedule.appendChild(document.createElement('td'));
-          let td4 = tr_reschedule.appendChild(document.createElement('td'));
+              td4 = tr_reschedule.appendChild(document.createElement('td'));
           let td5 = tr_reschedule.appendChild(document.createElement('td'));
 
           td1.innerHTML=otd1;
           td2.innerHTML=otd2;
           td3.innerHTML='<div class="badge badge-warning">Rescheduled</div>';
-          td4.innerHTML=otd4;
+
           td5.innerHTML='<button class="btn btn-warning btn-sm" value="'+id+'" data-toggle="tooltip" onclick = "reschedule(this,'+email+')" data-placement="top" title="ReSchedule" data-original-title="ReSchedule"><i class="fas fa-calendar-alt"></i></button>&nbsp;<button class="btn btn-danger btn-sm" value="'+id+'" onclick = "decline(this,'+email+')" data-toggle="tooltip" data-placement="top" title="Decline" data-original-title="Decline"><i class="fa fa-times" aria-hidden="true"></i></button>';
           
 
@@ -345,32 +345,46 @@
           if(subject_subject != '' && reason_reshedule != '' && date != '' && time != ''){
             let formated_date = date.replaceAll("-", "/");
             let schedule = `${formated_date} ${time}`;
+            $('#reschedule_loader').html('<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; border-radius:10px; " aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Validating New Schedule...</div>');
+            $.ajax({
+              type:'POST',
+              url:"{% url 'doctors:verefy_schedule_view' %}",
+              data:{
+                schedule : schedule
+              },
+              success:function(response){
+                if(response == 1){
+                  $('#reschedule_loader').html('<div class="alert alert-danger">Schedule Already Taken, Please Try Another</div>');
+                }else{
+                  td4.innerHTML=response;
+                 $('#reschedule_loader').html('<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 100%; border-radius:10px; " aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Sending email...</div>');
+                  $.ajax({
+                      type:"POST",
+                      url:"{% url 'doctors:reschedule_appointment_view' %}",
+                      data:{
+                          reschedule_appointment_id:id_reschedule,
+                          reschedule_appointment_email:email_reschedule,
+                          reschedule_appointment_subject:subject_subject,
+                          reschedule_appointment_reason:reason_reshedule,
+                          reschedule_appointment_date:schedule,
 
-            $('#reschedule_loader').html('<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; border-radius:10px; " aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Sending email...</div>');
-                $.ajax({
-                    type:"POST",
-                    url:"{% url 'doctors:reschedule_appointment_view' %}",
-                    data:{
-                        reschedule_appointment_id:id_reschedule,
-                        reschedule_appointment_email:email_reschedule,
-                        reschedule_appointment_subject:subject_subject,
-                        reschedule_appointment_reason:reason_reshedule,
-                        reschedule_appointment_date:schedule,
-
-                    },
-                    success:function(response){
-                        $('#reschedule_loader').html('');
-                        $('#sent_email_modal_reschedule').modal('hide');
-                        $('#loader').html(`<div class = "alert alert-success">${response}</div>`)
-                        document.querySelector('#tablebody').replaceChild(tr_reschedule, row_reschedule);
-                        setTimeout(() => {
-                          $('#loader').html("");
-                        }, 3000);
-                      }
-                })
-            }
-          
+                      },
+                      success:function(response){
+                          $('#reschedule_loader').html('');
+                          $('#sent_email_modal_reschedule').modal('hide');
+                          $('#loader').html(`<div class = "alert alert-success">${response}</div>`)
+                          document.querySelector('#tablebody').replaceChild(tr_reschedule, row_reschedule);
+                          setTimeout(() => {
+                            $('#loader').html("");
+                          }, 3000);
+                        }
+                  })
+                }
+              }
+            })
           }
+          
+        }
     </script>
 
 {% endblock %}

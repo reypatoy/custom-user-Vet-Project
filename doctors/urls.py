@@ -85,6 +85,11 @@ urlpatterns = [
         name="decline_appointment_view",
     ),
     path(
+        "verefy_schedule_view/",
+        csrf_exempt(views.verefy_schedule_view),
+        name="verefy_schedule_view",
+    ),
+    path(
         "reschedule_appointment_view/",
         csrf_exempt(views.reschedule_appointment_view),
         name="reschedule_appointment_view",

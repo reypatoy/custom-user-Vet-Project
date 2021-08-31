@@ -526,6 +526,18 @@ def decline_appointment_view(request):
         return HttpResponse("Email already sent to customer")
 
 
+def verefy_schedule_view(request):
+    if request.method == "POST":
+
+        schedule = request.POST.get("schedule")
+        datetime_object = datetime.strptime(schedule, "%Y/%m/%d %H:%M")
+        verefy = customers_appointment.objects.filter(schedule=datetime_object).count()
+        if verefy == 0:
+            return HttpResponse(datetime_object)
+        else:
+            return HttpResponse(verefy)
+
+
 def reschedule_appointment_view(request):
     if request.method == "POST":
         # updating appointment status to declined
