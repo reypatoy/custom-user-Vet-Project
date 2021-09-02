@@ -68,7 +68,7 @@
   </style>
 {% endblock %}
 {% block content %}
-<div class="container">
+<div class="container" id = "appointment_div">
     <div class="row">
         <div class="col-md-8">
             <div class="card">
@@ -90,6 +90,7 @@
                       </tr>
                       {% for appointment in appointment_list %}
                       <tr>
+                        {% if appointment.schedule >= now %}
                         {% if appointment.status != 3 %}
                             {% if appointment.status == null  %}
                               <td><a href="#">{{appointment.customer}}</a></td>
@@ -105,7 +106,7 @@
                                 
                               </td>
                             {% else %}
-                              <td><a href="#">{{appointment.customer}}</a></td>
+                              <td><a href="{% url 'doctors:customer_profile_view' %}?id={{appointment.customer.id}}">{{appointment.customer}}</a></td>
                                 <td class="font-weight-600"><p onclick = 'show("{{appointment.description}}")' class="d-inline-block text-truncate" style="max-width: 100px;">{{appointment.description}}</p></td>
                                 <td>{% if appointment.status == 1 %}
                                       <div class="badge badge-success">Approved</div>
@@ -120,6 +121,7 @@
                                   
                                 </td>
                             {% endif %}
+                        {% endif %}
                         {% endif %}
                       </tr>
                       {% endfor %}
@@ -277,12 +279,17 @@
     </div>
   </div>
 </div>
+</div>
 <!-- end modal -->
 <script src="{% static 'js/doctors_dashboard_appointment.js' %}"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
     <script>
+      let height = document.querySelector('#appointment_div').offsetHeight;
+      if(height <= 700){
+        document.querySelector('#appointment_div').setAttribute("style","height:700px");
+      }
       $(function(){
         var dtToday = new Date();
         

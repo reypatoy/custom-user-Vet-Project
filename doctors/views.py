@@ -11,7 +11,10 @@ from django.urls import reverse
 from django.contrib import messages
 from django.core.mail import BadHeaderError, send_mail
 from django.conf import settings
-from datetime import datetime
+from datetime import date, datetime
+import pytz
+
+utc = pytz.UTC
 from accounts.models import (
     customer as customer_user,
     Admin as admin_user,
@@ -473,13 +476,11 @@ class update_blog_view(CheckGroupPermissionMixin, UpdateView):
         return redirect("doctors:blog_list_view")
 
 
-class appointment_list_view(CheckGroupPermissionMixin, ListView):
-    model = customers_appointment
-    template_name = "doctors/pages/appointment_list.html"
-
-    def get_queryset(self):
-        cat = customers_appointment.objects.all().order_by("schedule")
-        return cat
+def appointment_list_view(request):
+    context = []
+    appointments = customers_appointment.objects.all().order_by("schedule")
+    context = {"appointment_list": appointments, "now": utc.localize(datetime.now())}
+    return render(request, "doctors/pages/appointment_list.html", context)
 
 
 def approve_appointment_view(request):
@@ -570,3 +571,17 @@ def reschedule_appointment_view(request):
         send_mail(subject, message, email_from, recipient_list)
 
         return HttpResponse("Email already sent to customer")
+
+
+def archived_appointment_list_view(request):
+    context = []
+    appointments = customers_appointment.objects.all().order_by("schedule")
+    context = {"appointment_list": appointments, "now": utc.localize(datetime.now())}
+    return render(request, "doctors/pages/archived_appointments.html", context)
+
+def delete_appointment_view(request):
+    if request.method == "POST":
+        appointment_id = request.POST.get("appointment_id")
+        appointment = customers_appointment.objects.get(id=appointment_id)
+        appointment.delete()
+        return HttpResponse("Deleted Successfully!!!")

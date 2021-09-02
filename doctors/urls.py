@@ -71,7 +71,7 @@ urlpatterns = [
     ),
     path(
         "appointment_list/",
-        views.appointment_list_view.as_view(),
+        views.appointment_list_view,
         name="appointment_list_view",
     ),
     path(
@@ -93,5 +93,15 @@ urlpatterns = [
         "reschedule_appointment_view/",
         csrf_exempt(views.reschedule_appointment_view),
         name="reschedule_appointment_view",
+    ),
+    path(
+        "archived_appointment_list_view/",
+        views.archived_appointment_list_view,
+        name="archived_appointment_list_view"
+    ),
+    path(
+        "delete_appointment_view/",
+        csrf_exempt(views.delete_appointment_view),
+        name="delete_appointment_view",
     ),
 ]
