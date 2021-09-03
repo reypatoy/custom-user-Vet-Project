@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
+import pytz
 from pets.models import pets as customer_pets
 from .forms import add_staff_form
 from accounts.models import (
@@ -8,6 +9,7 @@ from accounts.models import (
     staff as staff_user,
 )
 from blogs.models import Blogs as doctors_blogs
+from appointments.models import Appointment as customers_appointment
 
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -22,6 +24,9 @@ from django.urls import reverse
 from django.conf import settings
 from django.core.mail import send_mail
 from django.http import HttpResponse
+
+utc = pytz.UTC
+from datetime import date, datetime
 
 # Create your views here.
 
@@ -183,7 +188,7 @@ def add_staff_view(request):
             success_message = None
             staff_data = None
             error_message = None
-            form = add_staff_form() 
+            form = add_staff_form()
             if request.method == "POST":
                 form = add_staff_form(request.POST, request.FILES)
                 if form.is_valid():
@@ -494,3 +499,10 @@ def doctors_profile_view(request):
 
     else:
         return redirect("staff:staff_login_view")
+
+
+def appointment_list_view(request):
+    context = []
+    appointments = customers_appointment.objects.all().order_by("schedule")
+    context = {"appointment_list": appointments, "now": utc.localize(datetime.now())}
+    return render(request, "staff/pages/appointment_list.html", context)
