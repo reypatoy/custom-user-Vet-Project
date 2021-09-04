@@ -71,5 +71,12 @@ urlpatterns = [
     ),
     path("doctors_list/", views.doctors_list_view.as_view(), name="doctors_list_view"),
     path("doctors_profile/", views.doctors_profile_view, name="doctors_profile_view"),
-    path("appointment_list/", views.appointment_list_view, name="appointment_list_view"),
+    path(
+        "appointment_list/", views.appointment_list_view, name="appointment_list_view"
+    ),
+    path(
+        "archived_appointment_list/",
+        views.archived_appointment_list_view,
+        name="archived_appointment_list_view",
+    ),
 ]

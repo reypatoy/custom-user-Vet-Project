@@ -506,3 +506,10 @@ def appointment_list_view(request):
     appointments = customers_appointment.objects.all().order_by("schedule")
     context = {"appointment_list": appointments, "now": utc.localize(datetime.now())}
     return render(request, "staff/pages/appointment_list.html", context)
+
+
+def archived_appointment_list_view(request):
+    context = []
+    appointments = customers_appointment.objects.all().order_by("schedule")
+    context = {"appointment_list": appointments, "now": utc.localize(datetime.now())}
+    return render(request, "staff/pages/archived_appointments.html", context)

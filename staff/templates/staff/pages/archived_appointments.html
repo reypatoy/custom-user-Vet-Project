@@ -1,4 +1,4 @@
-{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% extends 'staff/staff_base_layout/layout.html' %}
 {% load static %}
 {% block style %}
   <style>
@@ -86,7 +86,6 @@
                         <th>Description</th>
                         <th>Status</th>
                         <th>Schedule</th>
-                        <th>Action</th>
                       </tr>
                       {% for appointment in appointment_list %}
                       <tr>
@@ -104,9 +103,6 @@
                                     {% endif %}
                                 </td>  
                                 <td>{{appointment.schedule}}</td>
-                                <td>
-                                  <button class="btn btn-warning btn-sm" data-toggle="tooltip" onclick = "deleted(this,'{{appointment.id}}')" data-placement="top" title="Delete" data-original-title="Delete"><i class="far fa-trash-alt"></i></button>
-                                </td>
                         {% endif %}
                       </tr>
                       {% endfor %}
@@ -141,24 +137,24 @@
 </div>
 <!-- read more  modal -->
 <div class="modal fade" id="read_more" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Read More</h5>
-        <button type="button" id= "close" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Read More</h5>
+          <button type="button" id= "close" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+        </div>
+        <form></form>
+            <div class="modal-body">
+                <p id = "data">
+  
+                </p>
+            </div>
+        </form>
       </div>
-      <form></form>
-          <div class="modal-body">
-              <p id = "data">
-
-              </p>
-          </div>
-      </form>
     </div>
   </div>
-</div>
-<!-- end modal -->
-<script src="{% static 'js/doctors_dashboard_appointment.js' %}"></script>
+  <!-- end modal -->
+<script src="{% static 'js/staff_dashboard_appointment.js' %}"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
@@ -178,27 +174,6 @@
         
     });
    
-    function deleted(button, id){
-      let tr = button.parentNode.parentNode;
-      $(document).ready(function(){
-        $('#loader').html('<div class="progress-bar progress-bar-striped bg-info" role="progressbar" style="width: 100%; border-radius:10px; " aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Deleting...</div>');
-            $.ajax({
-                type:"POST",
-                url:"{% url 'doctors:delete_appointment_view' %}",
-                data:{
-                    appointment_id:id
-                },
-                success:function(response){
-                    $('#loader').html(`<div class="alert alert-info">${response}</div>`);
-                    tr.parentNode.removeChild(tr);
-                    setTimeout(() => {
-                        $('#loader').html("");
-                    }, 5000);
-                }
-            })     
-        })
-      }
-    
     
     </script>
 
