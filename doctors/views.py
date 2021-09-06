@@ -24,6 +24,7 @@ from accounts.models import (
 from pets.models import pets as customer_pets
 from blogs.models import Blogs as doctors_blogs
 from appointments.models import Appointment as customers_appointment
+from checkup.models import Checkup as pet_checkup
 
 # Create your views here.
 
@@ -579,9 +580,25 @@ def archived_appointment_list_view(request):
     context = {"appointment_list": appointments, "now": utc.localize(datetime.now())}
     return render(request, "doctors/pages/archived_appointments.html", context)
 
+
 def delete_appointment_view(request):
     if request.method == "POST":
         appointment_id = request.POST.get("appointment_id")
         appointment = customers_appointment.objects.get(id=appointment_id)
         appointment.delete()
         return HttpResponse("Deleted Successfully!!!")
+
+
+def checkup_view(request):
+    context = None
+    if request.user.is_authenticated and request.user.user_type == 1:
+        if request.method == "GET":
+            pet_id = request.GET.get("pet_id")
+            if pet_id is not None:
+                pet = customer_pets.objects.get(id=pet_id)
+                context = {"pet": pet}
+                return render(request, "doctors/pages/checkup_pet.html", context)
+            else:
+                return HttpResponse("Missing some parameters")
+    else:
+        return redirect("/%s?next=%s" % ("doctors/login/", request.path))

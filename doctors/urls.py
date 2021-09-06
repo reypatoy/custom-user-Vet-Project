@@ -97,11 +97,16 @@ urlpatterns = [
     path(
         "archived_appointment_list_view/",
         views.archived_appointment_list_view,
-        name="archived_appointment_list_view"
+        name="archived_appointment_list_view",
     ),
     path(
         "delete_appointment_view/",
         csrf_exempt(views.delete_appointment_view),
         name="delete_appointment_view",
+    ),
+    path(
+        "checkup/",
+        views.checkup_view,
+        name="checkup_view",
     ),
 ]

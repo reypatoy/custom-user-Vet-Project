@@ -1,0 +1,60 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% block title %}
+
+{% endblock %}
+{% block style %}
+
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Check Up</h2>
+    <div class="row border border-1 card-body">
+        <div class="col col-md-4">
+            <div class="form-group">
+                <label class="form-label"><b>Owner's name: </b></label>
+                <label for=""> {{pet.owner}}</label>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><b>Address: </b> </label>
+                <label for="">{{pet.owner_id.address_barangay}}, {{pet.owner_id.address_municipality}}</label>
+            </div>  
+        </div>
+        <div class="col col-md-4">
+            <div class="form-group">
+                <label class="form-label"><b>Pet name: </b></label>
+                <label for=""> {{pet.pet_name}}</label>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><b>Age: </b> </label>
+                <label for="">{{pet.age}}</label>
+            </div>
+        </div>
+        <div class="col col-md-4 col-sm-collapse">
+            <div class="form-group">
+                <label class="form-label"><b>Breed: </b></label>
+                <label for=""> {{pet.breed}}</label>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><b>Sex: </b> </label>
+                <label for=""></label>
+            </div>
+        </div>
+    </div><br>
+    <p>Please fill up this fields</p>
+    <form class="row border border-1 card-body" action="">
+        <div class="row col-md-12">
+            <label for="inputPassword" class="col-md-4 col-sm-5 col-form-label">What is your pet coming in for today: </label>
+            <div class="col-sm-8 col-md-8">
+                <input type="text" name="what_is_your_pet_coming_in_for_today" class="form-control" id="what_is_your_pet_coming_in_for_today">
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label for="inputPassword" class="col-md-4 col-sm-5 col-form-label">How long have the problems been going on: </label>
+            <div class="col-sm-8 col-md-8">
+                <input type="text" name="what_is_your_pet_coming_in_for_today" class="form-control" id="what_is_your_pet_coming_in_for_today">
+            </div>
+        </div>
+    </form>
+</div>
+    
+{% endblock %}

@@ -9,6 +9,8 @@ from accounts.models import Admin
 class Checkup(models.Model):
     id = models.IntegerField(primary_key=True)
     pet = models.ForeignKey(pets, related_name="checkup", on_delete=models.CASCADE)
+    what_is_your_pet_coming_in_for_today = models.CharField(max_length=255, null=True)
+    how_long_have_the_problem_been_going_on = models.CharField(max_length=255,null=True)
     has_your_pet_had_any_choices = (
         (1, "Vomiting"),
         (2, "Diarrhea"),
