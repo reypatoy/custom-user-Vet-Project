@@ -10,31 +10,21 @@ class Checkup(models.Model):
     id = models.IntegerField(primary_key=True)
     pet = models.ForeignKey(pets, related_name="checkup", on_delete=models.CASCADE)
     what_is_your_pet_coming_in_for_today = models.CharField(max_length=255, null=True)
-    how_long_have_the_problem_been_going_on = models.CharField(max_length=255,null=True)
-    has_your_pet_had_any_choices = (
-        (1, "Vomiting"),
-        (2, "Diarrhea"),
-        (3, "Coughing"),
-        (4, "Sneezing"),
+    how_long_have_the_problem_been_going_on = models.CharField(
+        max_length=255, null=True
     )
-    has_your_pet_had_any = models.IntegerField(choices=has_your_pet_had_any_choices)
-    general_choices = ((1, "Normal"), (2, "Increased"), (3, "Decreased"), (4, "None"))
-    pets_appetite = models.IntegerField(choices=general_choices)
-    drinking = models.IntegerField(choices=general_choices)
-    urination = models.IntegerField(choices=general_choices)
-    activity_level = models.IntegerField(choices=general_choices)
-    vaccination_choices = ((1, "Rabies"), (2, "C6"), (3, "C6/CV"), (4, "Pneumodog"))
-    vaccination = models.IntegerField(choices=vaccination_choices)
-    deworming_choices = ((1, "GI worms"), (2, "Heartworm Prevention"))
-    deworming = models.IntegerField(choices=deworming_choices)
+    has_your_pet_had_any = models.CharField(max_length=255, null=True)
+    pets_appetite = models.CharField(max_length=255, null=True)
+    drinking = models.CharField(max_length=255, null=True)
+    urination = models.CharField(max_length=255, null=True)
+    activity_level = models.CharField(max_length=255, null=True)
+    vaccination = models.CharField(max_length=255, null=True)
+    deworming = models.CharField(max_length=255, null=True)
     tick_and_flea_tx = models.CharField(max_length=255, null=True)
     endoctocide = models.CharField(max_length=255, null=True)
     what_does_your_pet_eat = models.CharField(max_length=255, null=True)
-    when_did_your_pet_last_eat = models.DateTimeField(null=True)
-    is_your_pet_taking_any_medications_choices = ((1, "Yes"), (2, "No"))
-    is_your_pet_taking_any_medications = models.IntegerField(
-        choices=is_your_pet_taking_any_medications_choices
-    )
+    when_did_your_pet_last_eat = models.CharField(max_length=255, null=True)
+    is_your_pet_taking_any_medications = models.CharField(max_length=255, null=True)
     if_so_please_list_medication_and_doses = models.CharField(max_length=255, null=True)
     body_weight = models.CharField(max_length=255, null=True)
     temparature = models.CharField(max_length=255, null=True)
