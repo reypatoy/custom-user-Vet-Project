@@ -6,8 +6,8 @@
 
 {% endblock %}
 {% block content %}
-<div class="container">
-    <h2>Check Up</h2>
+<div class="container border border-2 card-body">
+    <h2>Check Up Form</h2>
     <div class="row border border-1 card-body">
         <div class="col col-md-4">
             <div class="form-group">
@@ -40,9 +40,12 @@
             </div>
         </div>
     </div><br>
-    <p>Please fill up this fields</p>
-    <form class="row border border-1 card-body" action="">
-        <input type="hidden" value = "{{pet.id}}">
+    <div id = "form-error">
+
+    </div>
+    <form class="row border border-1 card-body" method="POST" onsubmit="return validate()" action="">
+        {% csrf_token %}
+        <input id = "pet_id" name = "pet_id" type="hidden" value = "{{pet.id}}">
         <div class="row col-md-12">
             <label for="inputPassword" class="col-md-4 col-sm-5 col-form-label">What is your pet coming in for today: </label>
             <div class="col-sm-8 col-md-8">
@@ -52,7 +55,7 @@
         <div class="row col-md-12" style="margin-top: 10px;">
             <label for="inputPassword" class="col-md-4 col-sm-5 col-form-label">How long have the problems been going on: </label>
             <div class="col-sm-8 col-md-8">
-                <input type="text" name="what_is_your_pet_coming_in_for_today" class="form-control" id="what_is_your_pet_coming_in_for_today">
+                <input type="text" name="how_long_have_the_problem_been_going_on" class="form-control" id="how_long_have_the_problem_been_going_on">
             </div>
         </div>
         <div class="row col-md-12" style="margin-top: 10px;">
@@ -299,13 +302,13 @@
             <div class="col-sm-8 col-md-8" style="margin-top: 10px;">
                 <div class="row">
                     <div class="col">
-                        <input class="form-check-input is_your_pet_taking_any_medications" value = "Yes" type="radio" name="is_your_pet_taking_any_medications">
+                        <input onclick="enable_if_so_field()" class="form-check-input is_your_pet_taking_any_medications" value = "Yes" type="radio" name="is_your_pet_taking_any_medications">
                         <label class="form-check-label" style = "margin-right: 30px;" for="is_your_pet_taking_any_medications">
                             Yes
                         </label>
                     </div>
                     <div class="col">
-                        <input class="form-check-input is_your_pet_taking_any_medications" value = "No" type="radio" name="is_your_pet_taking_any_medications">
+                        <input onclick="disable_if_so_field()" class="form-check-input is_your_pet_taking_any_medications" value = "No" type="radio" name="is_your_pet_taking_any_medications">
                         <label class="form-check-label" style = "margin-right: 30px;" for="is_your_pet_taking_any_medications">
                             No
                         </label>
@@ -322,15 +325,62 @@
         <div class="row col-md-12" style="margin-top: 10px;">
             <label for="inputPassword" class="col-md-4 col-sm-5 col-form-label">If so, please list medication and doses? </label>
             <div class="col-sm-8 col-md-8">
-                <input type="text" name="if_so_please_list_medication_and_doses" class="form-control" id="if_so_please_list_medication_and_doses">
+                <input type="text" style="pointer-events: none;" name="if_so_please_list_medication_and_doses" class="form-control" id="if_so_please_list_medication_and_doses">
             </div>
         </div>
         <div class="row col-md-12" style="margin-top: 20px;">
             <input type="submit" name="submit" class="btn form-control bg-success" value = "Submit" id="submit">
         </div>
     </form>
-</div>
+</div><br>
+<script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
     <script>
-        
+        function enable_if_so_field(){
+            document.querySelector('#if_so_please_list_medication_and_doses').setAttribute("style","pointer-events:auto");
+        }
+        function disable_if_so_field(){
+            document.querySelector('#if_so_please_list_medication_and_doses').setAttribute("style","pointer-events:none");
+            $('#if_so_please_list_medication_and_doses').val("");
+        }
+       function validate(){
+            let what_is_your_pet_coming_in_for_today = $.trim(document.querySelector('#what_is_your_pet_coming_in_for_today').value);
+            let how_long_have_the_problem_been_going_on = $.trim(document.querySelector('#how_long_have_the_problem_been_going_on').value);
+            let has_your_pet_had_any = $.trim($("input[type='radio'][name='has_your_pet_had_any']:checked").val());
+            let pets_appetite = $.trim($("input[type='radio'][name='pets_appetite']:checked").val());
+            let drinking = $.trim($("input[type='radio'][name='drinking']:checked").val());
+            let urination = $.trim($("input[type='radio'][name='urination']:checked").val());
+            let activity_level = $.trim($("input[type='radio'][name='activity_level']:checked").val());
+            let vaccination = $.trim($("input[type='radio'][name='vaccination']:checked").val());
+            let deworming = $.trim($("input[type='radio'][name='deworming']:checked").val());
+            let tick_and_flea_tx = $.trim(document.querySelector('#tick_and_flea_tx').value);
+            let endoctocide = $.trim(document.querySelector('#endoctocide').value);   
+            let what_does_your_pet_eat = $.trim(document.querySelector('#what_does_your_pet_eat').value);   
+            let when_did_your_pet_last_eat = $.trim(document.querySelector('#when_did_your_pet_last_eat').value);      
+            let is_your_pet_taking_any_medications = $.trim($("input[type='radio'][name='is_your_pet_taking_any_medications']:checked").val());
+            let if_so_please_list_medication_and_doses = $.trim(document.querySelector('#if_so_please_list_medication_and_doses').value); 
+            
+            if(what_is_your_pet_coming_in_for_today != "" && how_long_have_the_problem_been_going_on != "" && has_your_pet_had_any != "" && 
+                pets_appetite != "" && drinking != "" && urination != "" && activity_level != "" &&
+                vaccination != "" && deworming != "" && tick_and_flea_tx != "" && endoctocide != "" &&
+                what_does_your_pet_eat != "" && when_did_your_pet_last_eat != "" && is_your_pet_taking_any_medications != ""
+            ){
+                if(is_your_pet_taking_any_medications == "Yes"){
+                    if(if_so_please_list_medication_and_doses != ""){
+                        $('#form-error').html("");
+                        return true;
+                    }else{
+                        $('#form-error').html('<div class = "alert alert-danger">Please fill all the fields!!!</div>');
+                        return false;
+                    }
+                }
+                $('#form-error').html("");
+                return true;
+            }else{
+                $('#form-error').html('<div class = "alert alert-danger">Please fill all the fields!!!</div>');
+                return false;
+            }
+        }
     </script>
 {% endblock %}

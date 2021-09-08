@@ -600,5 +600,8 @@ def checkup_view(request):
                 return render(request, "doctors/pages/checkup_pet.html", context)
             else:
                 return HttpResponse("Missing some parameters")
+        elif request.method == "POST":
+            pets_appetite = request.POST.get("pets_appetite")
+            return HttpResponse(pets_appetite)
     else:
         return redirect("/%s?next=%s" % ("doctors/login/", request.path))
