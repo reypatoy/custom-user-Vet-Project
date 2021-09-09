@@ -43,6 +43,6 @@ class Checkup(models.Model):
     tx = models.TextField(null=True)
     rx = models.TextField(null=True)
     attending_veterinarian = models.ForeignKey(
-        Admin, related_name="checkup", on_delete=models.CASCADE
+        Admin, related_name="checkup", on_delete=models.CASCADE, null=True
     )
     created_at = models.DateTimeField(auto_now_add=True)

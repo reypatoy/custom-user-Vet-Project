@@ -601,7 +601,43 @@ def checkup_view(request):
             else:
                 return HttpResponse("Missing some parameters")
         elif request.method == "POST":
-            pets_appetite = request.POST.get("pets_appetite")
-            return HttpResponse(pets_appetite)
+            max_id = 0
+            pet = customer_pets.objects.get(id=request.POST.get("pet_id"))
+            checkups = pet_checkup.objects.all()
+            for checkup in checkups:
+                if checkup.id > max_id:
+                    max_id = checkup.id
+            save = pet_checkup.objects.create(
+                id=max_id + 1,
+                pet=request.POST.get("pet"),
+                what_is_your_pet_coming_in_for_today=request.POST.get(
+                    "what_is_your_pet_coming_in_for_today"
+                ),
+                how_long_have_the_problem_been_going_on=request.POST.get(
+                    "how_long_have_the_problem_been_going_on"
+                ),
+                has_your_pet_had_any=request.POST.get("has_your_pet_had_any"),
+                pets_appetite=request.POST.get("pets_appetite"),
+                drinking=request.POST.get("drinking"),
+                urination=request.POST.get("urination"),
+                activity_level=request.POST.get("activity_level"),
+                vaccination=request.POST.get("vaccination"),
+                deworming=request.POST.get("deworming"),
+                tick_and_flea_tx=request.POST.get("tick_and_flea_tx"),
+                endoctocide=request.POST.get("endoctocide"),
+                what_does_your_pet_eat=request.POST.get("what_does_your_pet_eat"),
+                when_did_your_pet_last_eat=request.POST.get(
+                    "when_did_your_pet_last_eat"
+                ),
+                is_your_pet_taking_any_medications=request.POST.get(
+                    "is_your_pet_taking_any_medications"
+                ),
+                if_so_please_list_medication_and_doses=request.POST.get(
+                    "if_so_please_list_medication_and_doses"
+                ),
+            )
+            save.save()
+            return redirect("doctors:pets_list_view")
+
     else:
         return redirect("/%s?next=%s" % ("doctors/login/", request.path))
