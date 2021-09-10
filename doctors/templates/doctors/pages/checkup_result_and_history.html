@@ -1,0 +1,56 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% load static %}
+{% block style %}
+  <style>
+      
+  </style>
+{% endblock %}
+{% block content %}
+<div class="container" id = "checkup_history_div">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h4>Checkup and Result History</h4>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive table-invoice">
+                  <table  class="table table-striped">
+                    <div id="loader">
+                     
+                    </div>
+                    <tbody id = "tablebody"><tr>
+                        <th>Pet Name</th>
+                        <th>Owner</th>
+                        <th>Date Checkup</th>
+                        <th>Action</th>
+                      </tr>
+                      {% for checkup in checkups %}
+                      <tr>
+                            <td>{{checkup.pet}}</td>
+                            <td class="font-weight-600">{{checkup.pet.owner_id}}</td>
+                            <td>{{checkup.created_at}}</td>  
+                            <td>
+                                <a href="" class="btn btn-info btn-md" data-toggle="tooltip"  data-placement="top" title="View" data-original-title="View"><i class="far fa-eye"></i></a>
+                            </td>
+                      </tr>
+                      {% endfor %}
+                  </tbody></table>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+<script src="{% static 'js/doctors_dashboard_appointment.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script>
+    let height = document.querySelector('#checkup_history_div').offsetHeight;
+    if(height <= 700){
+        document.querySelector('#checkup_history_div').setAttribute("style","height:700px");
+      }
+    </script>
+
+{% endblock %}

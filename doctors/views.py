@@ -609,7 +609,7 @@ def checkup_view(request):
                     max_id = checkup.id
             save = pet_checkup.objects.create(
                 id=max_id + 1,
-                pet=request.POST.get("pet"),
+                pet=pet,
                 what_is_your_pet_coming_in_for_today=request.POST.get(
                     "what_is_your_pet_coming_in_for_today"
                 ),
@@ -638,6 +638,24 @@ def checkup_view(request):
             )
             save.save()
             return redirect("doctors:pets_list_view")
+
+    else:
+        return redirect("/%s?next=%s" % ("doctors/login/", request.path))
+
+
+def checkup_result_and_history_view(request):
+    if request.user.is_authenticated and request.user.user_type == 1:
+        if request.method == "GET":
+            pet_id = request.GET.get("pet_id")
+            if pet_id is not None:
+                checkups = pet_checkup.objects.filter(pet=pet_id)
+                return render(
+                    request,
+                    "doctors/pages/checkup_result_and_history.html",
+                    {"checkups": checkups},
+                )
+            else:
+                return HttpResponse("Missing some parameters")
 
     else:
         return redirect("/%s?next=%s" % ("doctors/login/", request.path))
