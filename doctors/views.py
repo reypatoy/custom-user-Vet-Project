@@ -659,3 +659,20 @@ def checkup_result_and_history_view(request):
 
     else:
         return redirect("/%s?next=%s" % ("doctors/login/", request.path))
+
+
+def view_checkup_result_history_view(request):
+    if request.user.is_authenticated and request.user.user_type == 1:
+        if request.method == "GET":
+            id = request.GET.get("id")
+            if id is not None:
+                checkup = pet_checkup.objects.get(id=id)
+                return render(
+                    request,
+                    "doctors/pages/view_checkup_result_history.html",
+                    {"checkup": checkup},
+                )
+            else:
+                return HttpResponse("Missing some parameters")
+    else:
+        return redirect("/%s?next=%s" % ("doctors/login/", request.path))

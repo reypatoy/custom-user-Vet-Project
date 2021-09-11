@@ -1,0 +1,357 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% block title %}
+    View Checkup Result
+{% endblock %}
+{% block style %}
+
+{% endblock %}
+{% block content %}
+<div class="container border border-2 card-body" id="printableArea">
+    <h2>Check Up Result History</h2>
+    <div class="row border border-1 card-body">
+        <div class="col col-md-4">
+            <div class="form-group">
+                <label class="form-label"><b>Owner's name: </b></label>
+                <label for=""> {{checkup.pet.owner}}</label>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><b>Address: </b> </label>
+                <label for="">{{checkup.pet.owner_id.address_barangay}}, {{checkup.pet.owner_id.address_municipality}}</label>
+            </div>  
+        </div>
+        <div class="col col-md-4">
+            <div class="form-group">
+                <label class="form-label"><b>Pet name: </b></label>
+                <label for=""> {{checkup.pet.pet_name}}</label>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><b>Age: </b> </label>
+                <label for="">{{checkup.pet.age}}</label>
+            </div>
+        </div>
+        <div class="col col-md-4 col-sm-collapse">
+            <div class="form-group">
+                <label class="form-label"><b>Breed: </b></label>
+                <label for=""> {{checkup.pet.breed}}</label>
+            </div>
+            <div class="form-group">
+                <label class="form-label"><b>Sex: </b> </label>
+                <label for=""></label>
+            </div>
+        </div>
+    </div><br>
+    <div id = "form-error">
+
+    </div>
+    <div class="row border border-1 card-body">
+        <div class="row col-md-12">
+            <label for="" class="col-md-4 col-sm-5 col-form-label">What is your pet coming in for today: </label>
+            <div class="col-sm-8 col-md-8">
+                <input disabled type="text" value = "{{checkup.what_is_your_pet_coming_in_for_today}}" name="what_is_your_pet_coming_in_for_today" class="form-control" id="what_is_your_pet_coming_in_for_today">
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label for="" class="col-md-4 col-sm-5 col-form-label">How long have the problems been going on: </label>
+            <div class="col-sm-8 col-md-8">
+                <input disabled type="text" value = "{{checkup.how_long_have_the_problem_been_going_on}}" name="how_long_have_the_problem_been_going_on" class="form-control" id="how_long_have_the_problem_been_going_on">
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label for="" class="col-md-4 col-sm-5 col-form-label">Has your pet has any: </label>
+            <div class="col-sm-8 col-md-8" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col">
+                        <input {% if checkup.has_your_pet_had_any == "Vomiting" %} checked {% endif %} disabled class="form-check-input has_your_pet_had_any" value = "Vomiting" type="radio" name="has_your_pet_had_any">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="has_your_pet_had_any">
+                            Vomiting
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.has_your_pet_had_any == "Diarrhea" %} checked {% endif %} disabled class="form-check-input has_your_pet_had_any" value = "Diarrhea" type="radio" name="has_your_pet_had_any">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="has_your_pet_had_any">
+                            Diarrhea
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.has_your_pet_had_any == "Coughing" %} checked {% endif %} disabled class="form-check-input has_your_pet_had_any" value = "Coughing" type="radio" name="has_your_pet_had_any">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="has_your_pet_had_any">
+                            Coughing
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.has_your_pet_had_any == "Sneezing" %} checked {% endif %} disabled class="form-check-input has_your_pet_had_any" value = "Sneezing" type="radio" name="has_your_pet_had_any">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="has_your_pet_had_any">
+                            Sneezing
+                        </label>
+                    </div>
+                </div>  
+            </div>
+        </div>
+
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label class="col-md-4 col-sm-5 col-form-label">Pets Appetite: </label>
+            <div class="col-sm-8 col-md-8" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col">
+                        <input {% if checkup.pets_appetite == "Normal" %} checked {% endif %} disabled class="form-check-input pets_appetite" value = "Normal" type="radio" name="pets_appetite">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="pets_appetite">
+                            Normal
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.pets_appetite == "Encreased" %} checked {% endif %} disabled class="form-check-input pets_appetite" value = "Encreased" type="radio" name="pets_appetite">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="pets_appetite">
+                            Encreased
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.pets_appetite == "Decreased" %} checked {% endif %} disabled class="form-check-input pets_appetite" value = "Decreased" type="radio" name="pets_appetite">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="pets_appetite">
+                            Decreased
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.pets_appetite == "None" %} checked {% endif %} disabled class="form-check-input pets_appetite" value = "None" type="radio" name="pets_appetite">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="pets_appetite">
+                            None
+                        </label>
+                    </div>
+                </div>   
+            </div>
+        </div>
+
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label class="col-md-4 col-sm-5 col-form-label">Drinking: </label>
+            <div class="col-sm-8 col-md-8" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col">
+                        <input {% if checkup.drinking == "Normal" %} checked {% endif %} disabled class="form-check-input drinking" value = "Normal" type="radio" name="drinking">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="drinking">
+                            Normal
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.drinking == "Encreased" %} checked {% endif %} disabled class="form-check-input drinking" value = "Encreased" type="radio" name="drinking">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="drinking">
+                            Encreased
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.drinking == "Decreased" %} checked {% endif %} disabled class="form-check-input drinking" value = "Decreased" type="radio" name="drinking">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="drinking">
+                            Decreased
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.drinking == "None" %} checked {% endif %} disabled class="form-check-input drinking" value = "None" type="radio" name="drinking">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="drinking">
+                            None
+                        </label>
+                    </div>
+                </div>   
+            </div>
+        </div>
+
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label class="col-md-4 col-sm-5 col-form-label">Urination: </label>
+            <div class="col-sm-8 col-md-8" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col">
+                        <input {% if checkup.urination == "Normal" %} checked {% endif %} disabled class="form-check-input urination" value = "Normal" type="radio" name="urination">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="urination">
+                            Normal
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.urination == "Encreased" %} checked {% endif %} disabled class="form-check-input urination" value = "Encreased" type="radio" name="urination">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="urination">
+                            Encreased
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.urination == "Decreased" %} checked {% endif %} disabled class="form-check-input urination" value = "Decreased" type="radio" name="urination">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="urination">
+                            Decreased
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.urination == "Straining" %} checked {% endif %} disabled class="form-check-input urination" value = "Straining" type="radio" name="urination">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="urination">
+                            Straining
+                        </label>
+                    </div>
+                </div>   
+            </div>
+        </div>
+        
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label class="col-md-4 col-sm-5 col-form-label">Activity Level: </label>
+            <div class="col-sm-8 col-md-8" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col">
+                        <input {% if checkup.activity_level == "Normal" %} checked {% endif %} disabled class="form-check-input activity_level" value = "Normal" type="radio" name="activity_level">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="activity_level">
+                            Normal
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.activity_level == "Encreased" %} checked {% endif %} disabled class="form-check-input activity_level" value = "Encreased" type="radio" name="activity_level">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="activity_level">
+                            Encreased
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.activity_level == "Decreased" %} checked {% endif %} disabled class="form-check-input activity_level" value = "Decreased" type="radio" name="activity_level">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="activity_level">
+                            Decreased
+                        </label>
+                    </div>
+                    <div class="col">
+                       
+                    </div>
+                </div>   
+            </div>
+        </div>
+
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label class="col-md-4 col-sm-5 col-form-label">Vaccination: </label>
+            <div class="col-sm-8 col-md-8" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col">
+                        <input {% if checkup.vaccination == "Rabies" %} checked {% endif %} disabled class="form-check-input vaccination" value = "Rabies" type="radio" name="vaccination">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="vaccination">
+                            Rabies
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.vaccination == "C6" %} checked {% endif %} disabled class="form-check-input vaccination" value = "C6" type="radio" name="vaccination">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="vaccination">
+                            C6
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.vaccination == "C6/CV" %} checked {% endif %} disabled class="form-check-input vaccination" value = "C6/CV" type="radio" name="vaccination">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="vaccination">
+                            C6/CV
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.vaccination == "Pneumondog" %} checked {% endif %} disabled class="form-check-input vaccination" value = "Pneumondog" type="radio" name="vaccination">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="vaccination">
+                            Pneumondog
+                        </label>
+                    </div>
+                </div>   
+            </div>
+        </div>
+
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label class="col-md-4 col-sm-5 col-form-label">Deworming: </label>
+            <div class="col-sm-8 col-md-8" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col">
+                        <input {% if checkup.deworming == "GI worms" %} checked {% endif %} disabled class="form-check-input deworming" value = "GI worms" type="radio" name="deworming">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="deworming">
+                            GI worms
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.deworming == "Heartworm Prevention" %} checked {% endif %} disabled class="form-check-input deworming" value = "Heartworm Prevention" type="radio" name="deworming">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="deworming">
+                            Heartworm Prevention
+                        </label>
+                    </div>
+                    <div class="col">
+                        
+                    </div>
+                    <div class="col">
+                        
+                    </div>
+                </div>   
+            </div>
+        </div>
+
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label for="" class="col-md-4 col-sm-5 col-form-label">Tick and Flea Tx: </label>
+            <div class="col-sm-8 col-md-8">
+                <input value = "{{checkup.tick_and_flea_tx}}" disabled type="text" name="tick_and_flea_tx" class="form-control" id="tick_and_flea_tx">
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label for="" class="col-md-4 col-sm-5 col-form-label">Endectocide: </label>
+            <div class="col-sm-8 col-md-8">
+                <input value = "{{checkup.endoctocide}}" disabled type="text" name="endoctocide" class="form-control" id="endoctocide">
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label for="" class="col-md-4 col-sm-5 col-form-label">What does your pet last eat? </label>
+            <div class="col-sm-8 col-md-8">
+                <input value = "{{checkup.what_does_your_pet_eat}}" disabled type="text" name="what_does_your_pet_eat" class="form-control" id="what_does_your_pet_eat">
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label for="" class="col-md-4 col-sm-5 col-form-label">When did your pet last eat? </label>
+            <div class="col-sm-8 col-md-8">
+                <input value = "{{checkup.when_did_your_pet_last_eat}}" disabled type="text" name="when_did_your_pet_last_eat" class="form-control" id="when_did_your_pet_last_eat">
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label class="col-md-4 col-sm-5 col-form-label">Is your pet taking any medication? </label>
+            <div class="col-sm-8 col-md-8" style="margin-top: 10px;">
+                <div class="row">
+                    <div class="col">
+                        <input {% if checkup.is_your_pet_taking_any_medications == "Yes" %} checked {% endif %} disabled class="form-check-input is_your_pet_taking_any_medications" value = "Yes" type="radio" name="is_your_pet_taking_any_medications">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="is_your_pet_taking_any_medications">
+                            Yes
+                        </label>
+                    </div>
+                    <div class="col">
+                        <input {% if checkup.is_your_pet_taking_any_medications == "No" %} checked {% endif %} disabled class="form-check-input is_your_pet_taking_any_medications" value = "No" type="radio" name="is_your_pet_taking_any_medications">
+                        <label class="form-check-label" style = "margin-right: 30px;" for="is_your_pet_taking_any_medications">
+                            No
+                        </label>
+                    </div>
+                    <div class="col">
+                       
+                    </div>
+                    <div class="col">
+                       
+                    </div>
+                </div>   
+            </div>
+        </div>
+        <div class="row col-md-12" style="margin-top: 10px;">
+            <label for="" class="col-md-4 col-sm-5 col-form-label">If so, please list medication and doses? </label>
+            <div class="col-sm-8 col-md-8">
+                <input value = "{{checkup.if_so_please_list_medication_and_doses}}" disabled type="text" style="pointer-events: none;" name="if_so_please_list_medication_and_doses" class="form-control" id="if_so_please_list_medication_and_doses">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-end col-md-12" style="margin-top: 20px;">
+    {% if checkup.body_weight != null %}<button onclick = "printdev('printableArea')" class="btn btn-secondary align-self-end" style="margin-right: 70px;">Print</button>{% endif %}
+    {% if checkup.body_weight == null %}<button id = "add_result" onclick="add_result(this)" class="btn btn-info align-self-end" style="margin-right: 70px;">Add Result</button>{% endif %}
+    <button onclick="cancel(this)" id = "cancel" class="btn btn-warning align-self-end" style="display: none; margin-right: 70px;">Cancel</button>
+</div>
+<br>
+<script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script>
+        function add_result(button){
+            $(button).hide();
+            $('#cancel').show();
+        }
+        function cancel(button){
+            $(button).hide();
+            $('#add_result').show();
+        }
+        function printdev(div){
+            var printContents = document.getElementById(div).innerHTML;
+            var originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+    </script>
+{% endblock %}

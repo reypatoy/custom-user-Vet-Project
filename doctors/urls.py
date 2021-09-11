@@ -110,8 +110,13 @@ urlpatterns = [
         name="checkup_view",
     ),
     path(
-        "checkup_result_and/",
+        "checkup_result_and_history/",
         views.checkup_result_and_history_view,
         name="checkup_result_and_history_view",
+    ),
+    path(
+        "view_checkup_result_history/",
+        views.view_checkup_result_history_view,
+        name="view_checkup_result_history_view",
     ),
 ]

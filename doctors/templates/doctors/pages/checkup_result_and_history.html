@@ -1,5 +1,8 @@
 {% extends 'doctors/doctors_base_layout/layout.html' %}
 {% load static %}
+{% block title %}
+   Checkup Result and History List
+{% endblock %}
 {% block style %}
   <style>
       
@@ -31,7 +34,7 @@
                             <td class="font-weight-600">{{checkup.pet.owner_id}}</td>
                             <td>{{checkup.created_at}}</td>  
                             <td>
-                                <a href="" class="btn btn-info btn-md" data-toggle="tooltip"  data-placement="top" title="View" data-original-title="View"><i class="far fa-eye"></i></a>
+                                <a href="{% url 'doctors:view_checkup_result_history_view' %}?id={{checkup.id}}" class="btn btn-info btn-md" data-toggle="tooltip"  data-placement="top" title="View" data-original-title="View"><i class="far fa-eye"></i></a>
                             </td>
                       </tr>
                       {% endfor %}
