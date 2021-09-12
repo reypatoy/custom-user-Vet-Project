@@ -327,23 +327,164 @@
             </div>
         </div>
     </div>
+    <form id="add_result_form" method="POST" class="border border-1 card-body" style="display:none; margin-top: 10px;" onsubmit="return validate()">
+        {% csrf_token %}
+        <div id = "error">
+
+        </div>
+        <div class="row">  
+            <input type="hidden" name = "id" value="{{checkup.id}}">  
+            <div class="col">
+                <h5>Vital Signs/Physical Exam</h5>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Body Weight: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="body_weight" class="form-control" id="body_weight">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Temperature (C): </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="temparature" class="form-control" id="temparature">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Heart Rate: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="heart_rate" class="form-control" id="heart_rate">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Respiratory Rate: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="respiratory_rate" class="form-control" id="respiratory_rate">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">MM: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="mm" class="form-control" id="mm">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">CRT (Sec): </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="crt_sec" class="form-control" id="crt_sec">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Dehydration (NMS): </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="dehydration_nms" class="form-control" id="dehydration_nms">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Skin/Coat: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="skin_coat" class="form-control" id="skin_coat">
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Discharge (Nose, Eye, Vulva etc): </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="discharge_nose_eye_vulva_etc" class="form-control" id="discharge_nose_eye_vulva_etc">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Others: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="others" class="form-control" id="others">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Diff Dx: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="diff_dx" class="form-control" id="diff_dx">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Laboratory: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="laboratory" class="form-control" id="laboratory">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Definitive Dx: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="definitive_dx" class="form-control" id="definitive_dx">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Prognoses: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <input type="text" name="prognosis" class="form-control" id="prognosis">
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Tx: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <textarea class="form-control" name="tx" id="tx"></textarea>
+                    </div>
+                </div>
+                <div class="row col-md-12" style="margin-top: 10px;">
+                    <label for="" class="col-md-4 col-sm-5 col-form-label">Rx: </label>
+                    <div class="col-sm-8 col-md-8">
+                        <textarea class="form-control" name="rx" id="rx"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end col-md-12" style="margin-top: 20px;">
+            <button type="button" onclick = "cancel(this)" class="btn btn-secondary align-self-end" style="margin-right: 70px;">Cancel</button>
+            <button type = "submit" class="btn btn-info align-self-end" style="margin-right: 70px;">Save</button>
+        </div>
+    </form>
 </div>
 <div class="d-flex justify-content-end col-md-12" style="margin-top: 20px;">
     {% if checkup.body_weight != null %}<button onclick = "printdev('printableArea')" class="btn btn-secondary align-self-end" style="margin-right: 70px;">Print</button>{% endif %}
     {% if checkup.body_weight == null %}<button id = "add_result" onclick="add_result(this)" class="btn btn-info align-self-end" style="margin-right: 70px;">Add Result</button>{% endif %}
-    <button onclick="cancel(this)" id = "cancel" class="btn btn-warning align-self-end" style="display: none; margin-right: 70px;">Cancel</button>
 </div>
 <br>
 <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
     <script>
+        function validate(){
+            let body_weight = $.trim($('#body_weight').val());
+            let temparature = $.trim($('#temparature').val());
+            let heart_rate = $.trim($('#heart_rate').val());
+            let respiratory_rate = $.trim($('#respiratory_rate').val());
+            let mm = $.trim($('#mm').val());
+            let crt_sec = $.trim($('#crt_sec').val());
+            let dehydration_nms = $.trim($('#dehydration_nms').val());
+            let skin_coat = $.trim($('#skin_coat').val());
+            let discharge_nose_eye_vulva_etc = $.trim($('#discharge_nose_eye_vulva_etc').val());
+            let diff_dx = $.trim($('#diff_dx').val());
+            let laboratory = $.trim($('#laboratory').val());
+            let definitive_dx = $.trim($('#definitive_dx').val());
+            let prognosis = $.trim($('#prognosis').val());
+            let tx = $.trim($('#tx').val());
+            let rx = $.trim($('#rx').val());
+            if(body_weight != "" && temparature != "" && heart_rate != "" && respiratory_rate != ""
+                && mm != "" && crt_sec != "" && dehydration_nms != "" && skin_coat != "" 
+                && discharge_nose_eye_vulva_etc != "" && diff_dx != "" && laboratory != ""
+                && definitive_dx != "" && prognosis != "" && tx != "" && rx != ""
+            ){
+                $('#error').html('');
+                return true;
+            }else{
+                $('#error').html('<div class = "alert alert-danger">Some Fields must be filled up</div>');
+                return false;
+            }
+        }
         function add_result(button){
             $(button).hide();
-            $('#cancel').show();
+            $('#add_result_form').show();
         }
         function cancel(button){
-            $(button).hide();
+            $('#add_result_form').hide();
             $('#add_result').show();
         }
         function printdev(div){

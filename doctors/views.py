@@ -674,5 +674,8 @@ def view_checkup_result_history_view(request):
                 )
             else:
                 return HttpResponse("Missing some parameters")
+        if request.method == "POST":
+            id = request.POST.get("id")
+            return redirect("/%s?id=%s" % ("doctors/view_checkup_result_history/", id))
     else:
         return redirect("/%s?next=%s" % ("doctors/login/", request.path))
