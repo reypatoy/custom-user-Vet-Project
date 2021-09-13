@@ -676,6 +676,27 @@ def view_checkup_result_history_view(request):
                 return HttpResponse("Missing some parameters")
         if request.method == "POST":
             id = request.POST.get("id")
+            checkup = pet_checkup.objects.get(id=id)
+            checkup.body_weight = request.POST.get("body_weight")
+            checkup.temparature = request.POST.get("temparature")
+            checkup.heart_rate = request.POST.get("heart_rate")
+            checkup.respiratory_rate = request.POST.get("respiratory_rate")
+            checkup.mm = request.POST.get("mm")
+            checkup.crt_sec = request.POST.get("crt_sec")
+            checkup.dehydration_nms = request.POST.get("dehydration_nms")
+            checkup.skin_coat = request.POST.get("skin_coat")
+            checkup.discharge_nose_eye_vulva_etc = request.POST.get(
+                "discharge_nose_eye_vulva_etc"
+            )
+            checkup.others = request.POST.get("others")
+            checkup.diff_dx = request.POST.get("diff_dx")
+            checkup.laboratory = request.POST.get("laboratory")
+            checkup.definitive_dx = request.POST.get("definitive_dx")
+            checkup.prognosis = request.POST.get("prognosis")
+            checkup.tx = request.POST.get("tx")
+            checkup.rx = request.POST.get("rx")
+            checkup.attending_veterinarian = request.user.admin
+            checkup.save()
             return redirect("/%s?id=%s" % ("doctors/view_checkup_result_history/", id))
     else:
         return redirect("/%s?next=%s" % ("doctors/login/", request.path))
