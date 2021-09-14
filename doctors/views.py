@@ -700,3 +700,101 @@ def view_checkup_result_history_view(request):
             return redirect("/%s?id=%s" % ("doctors/view_checkup_result_history/", id))
     else:
         return redirect("/%s?next=%s" % ("doctors/login/", request.path))
+
+
+def update_checkup_result_history_view(request):
+    if request.user.is_authenticated and request.user.user_type == 1:
+        if request.method == "GET":
+            id = request.GET.get("id")
+            if id is not None:
+                checkup = pet_checkup.objects.get(id=id)
+                return render(
+                    request,
+                    "doctors/pages/update_checkup_result_history.html",
+                    {"checkup": checkup},
+                )
+            else:
+                return HttpResponse("Missing some parameters")
+        if request.method == "POST":
+            id = request.POST.get("checkup_id")
+            body_weight = request.POST.get("body_weight")
+            checkup = pet_checkup.objects.get(id=id)
+            if body_weight is not None:
+                checkup.what_is_your_pet_coming_in_for_today = request.POST.get(
+                    "what_is_your_pet_coming_in_for_today"
+                )
+                checkup.how_long_have_the_problem_been_going_on = request.POST.get(
+                    "how_long_have_the_problem_been_going_on"
+                )
+                checkup.has_your_pet_had_any = request.POST.get("has_your_pet_had_any")
+                checkup.pets_appetite = request.POST.get("pets_appetite")
+                checkup.drinking = request.POST.get("drinking")
+                checkup.urination = request.POST.get("urination")
+                checkup.activity_level = request.POST.get("activity_level")
+                checkup.vaccination = request.POST.get("vaccination")
+                checkup.deworming = request.POST.get("deworming")
+                checkup.tick_and_flea_tx = request.POST.get("tick_and_flea_tx")
+                checkup.endoctocide = request.POST.get("endoctocide")
+                checkup.what_does_your_pet_eat = request.POST.get(
+                    "what_does_your_pet_eat"
+                )
+                checkup.when_did_your_pet_last_eat = request.POST.get(
+                    "when_did_your_pet_last_eat"
+                )
+                checkup.is_your_pet_taking_any_medications = request.POST.get(
+                    "is_your_pet_taking_any_medications"
+                )
+                checkup.if_so_please_list_medication_and_doses = request.POST.get(
+                    "if_so_please_list_medication_and_doses"
+                )
+                checkup.body_weight = body_weight
+                checkup.temparature = request.POST.get("temparature")
+                checkup.heart_rate = request.POST.get("heart_rate")
+                checkup.respiratory_rate = request.POST.get("respiratory_rate")
+                checkup.mm = request.POST.get("mm")
+                checkup.crt_sec = request.POST.get("crt_sec")
+                checkup.dehydration_nms = request.POST.get("dehydration_nms")
+                checkup.skin_coat = request.POST.get("skin_coat")
+                checkup.discharge_nose_eye_vulva_etc = request.POST.get(
+                    "discharge_nose_eye_vulva_etc"
+                )
+                checkup.others = request.POST.get("others")
+                checkup.diff_dx = request.POST.get("diff_dx")
+                checkup.laboratory = request.POST.get("laboratory")
+                checkup.definitive_dx = request.POST.get("definitive_dx")
+                checkup.prognosis = request.POST.get("prognosis")
+                checkup.tx = request.POST.get("tx")
+                checkup.rx = request.POST.get("rx")
+                checkup.save()
+            else:
+                checkup.what_is_your_pet_coming_in_for_today = request.POST.get(
+                    "what_is_your_pet_coming_in_for_today"
+                )
+                checkup.how_long_have_the_problem_been_going_on = request.POST.get(
+                    "how_long_have_the_problem_been_going_on"
+                )
+                checkup.has_your_pet_had_any = request.POST.get("has_your_pet_had_any")
+                checkup.pets_appetite = request.POST.get("pets_appetite")
+                checkup.drinking = request.POST.get("drinking")
+                checkup.urination = request.POST.get("urination")
+                checkup.activity_level = request.POST.get("activity_level")
+                checkup.vaccination = request.POST.get("vaccination")
+                checkup.deworming = request.POST.get("deworming")
+                checkup.tick_and_flea_tx = request.POST.get("tick_and_flea_tx")
+                checkup.endoctocide = request.POST.get("endoctocide")
+                checkup.what_does_your_pet_eat = request.POST.get(
+                    "what_does_your_pet_eat"
+                )
+                checkup.when_did_your_pet_last_eat = request.POST.get(
+                    "when_did_your_pet_last_eat"
+                )
+                checkup.is_your_pet_taking_any_medications = request.POST.get(
+                    "is_your_pet_taking_any_medications"
+                )
+                checkup.if_so_please_list_medication_and_doses = request.POST.get(
+                    "if_so_please_list_medication_and_doses"
+                )
+                checkup.save()
+            return redirect("/%s?id=%s" % ("doctors/view_checkup_result_history/", id))
+    else:
+        return redirect("/%s?next=%s" % ("doctors/login/", request.path))

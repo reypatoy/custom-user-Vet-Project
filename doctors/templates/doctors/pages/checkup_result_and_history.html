@@ -35,7 +35,7 @@
                             <td>{{checkup.created_at}}</td>  
                             <td>
                                 <a href="{% url 'doctors:view_checkup_result_history_view' %}?id={{checkup.id}}" class="btn btn-info btn-md" data-toggle="tooltip"  data-placement="top" title="View" data-original-title="View"><i class="far fa-eye"></i></a>
-                            </td>
+                              </td>
                       </tr>
                       {% endfor %}
                   </tbody></table>

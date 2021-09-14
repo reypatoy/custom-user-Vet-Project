@@ -1,0 +1,539 @@
+{% extends 'doctors/doctors_base_layout/layout.html' %}
+{% load static %}
+{% block title %}
+    Update Checkup Result
+{% endblock %}
+{% block style %}
+
+{% endblock %}
+{% block content %}
+<div class="container border border-2 card-body" id="printableArea">
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <img id = "logo" style="display:none; height: 50px; width: 200px; margin-left: 20px; margin-bottom: 10px; margin-right: 20px;" class = "img-fluid logo"  src="{% static 'Images/LOGO.png' %}" alt="BEASTFRIEND LOGO">
+                <h2>Update Checkup Result History</h2>
+            </div>
+        </div>
+        <div class="col-4 d-flex justify-content-end">
+            <label for=""><b>Date Checkup:</b>&nbsp;</label><label for="">{{checkup.created_at}}</label>
+        </div>
+    </div>
+    <div class="row border border-1 card-body">
+        <div class="col col-md-4">
+            <div class="form-group">
+                <label class="form-label"><b>Owner's name: </b></label>
+                <label for=""> {{checkup.pet.owner}}</label>
+            </div>
+            <div class="form-group" style="margin-top: -5px;">
+                <label class="form-label"><b>Address: </b> </label>
+                <label for="">{{checkup.pet.owner_id.address_barangay}}, {{checkup.pet.owner_id.address_municipality}}</label>
+            </div>  
+        </div>
+        <div class="col col-md-4">
+            <div class="form-group">
+                <label class="form-label"><b>Pet name: </b></label>
+                <label for=""> {{checkup.pet.pet_name}}</label>
+            </div>
+            <div class="form-group" style="margin-top: -5px;">
+                <label class="form-label"><b>Age: </b> </label>
+                <label for="">{{checkup.pet.age}}</label>
+            </div>
+        </div>
+        <div class="col col-md-4 col-sm-collapse">
+            <div class="form-group">
+                <label class="form-label"><b>Breed: </b></label>
+                <label for=""> {{checkup.pet.breed}}</label>
+            </div>
+            <div class="form-group" style="margin-top: -5px;">
+                <label class="form-label"><b>Sex: </b> </label>
+                <label for=""></label>
+            </div>
+        </div>
+    </div><br>
+    <div id = "error">
+
+    </div>
+    <form method="POST" onsubmit='return validate("{{checkup.body_weight}}")'>
+        {% csrf_token %}
+        <input id = "checkup_id" name = "checkup_id" type="hidden" value = "{{checkup.id}}">
+        <div class="row border border-1 card-body">
+            <div class="row col-md-12">
+                <label for="" class="col-md-4 col-sm-5 col-form-label">What is your pet coming in for today: </label>
+                <div class="col-sm-8 col-md-8">
+                    <input type="text" value = "{{checkup.what_is_your_pet_coming_in_for_today}}" name="what_is_your_pet_coming_in_for_today" class="form-control" id="what_is_your_pet_coming_in_for_today">
+                </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label for="" class="col-md-4 col-sm-5 col-form-label">How long have the problems been going on: </label>
+                <div class="col-sm-8 col-md-8">
+                    <input type="text" value = "{{checkup.how_long_have_the_problem_been_going_on}}" name="how_long_have_the_problem_been_going_on" class="form-control" id="how_long_have_the_problem_been_going_on">
+                </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label for="" class="col-md-4 col-sm-5 col-form-label">Has your pet has any: </label>
+                <div class="col-sm-8 col-md-8" style="margin-top: 5px;">
+                    <div class="row">
+                        <div class="col">
+                            <input {% if checkup.has_your_pet_had_any == "Vomiting" %} checked {% endif %} class="form-check-input has_your_pet_had_any" value = "Vomiting" type="radio" name="has_your_pet_had_any">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="has_your_pet_had_any">
+                                Vomiting
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.has_your_pet_had_any == "Diarrhea" %} checked {% endif %} class="form-check-input has_your_pet_had_any" value = "Diarrhea" type="radio" name="has_your_pet_had_any">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="has_your_pet_had_any">
+                                Diarrhea
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.has_your_pet_had_any == "Coughing" %} checked {% endif %} class="form-check-input has_your_pet_had_any" value = "Coughing" type="radio" name="has_your_pet_had_any">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="has_your_pet_had_any">
+                                Coughing
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.has_your_pet_had_any == "Sneezing" %} checked {% endif %} class="form-check-input has_your_pet_had_any" value = "Sneezing" type="radio" name="has_your_pet_had_any">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="has_your_pet_had_any">
+                                Sneezing
+                            </label>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label class="col-md-4 col-sm-5 col-form-label">Pets Appetite: </label>
+                <div class="col-sm-8 col-md-8" style="margin-top: 5px;">
+                    <div class="row">
+                        <div class="col">
+                            <input {% if checkup.pets_appetite == "Normal" %} checked {% endif %} class="form-check-input pets_appetite" value = "Normal" type="radio" name="pets_appetite">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="pets_appetite">
+                                Normal
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.pets_appetite == "Encreased" %} checked {% endif %} class="form-check-input pets_appetite" value = "Encreased" type="radio" name="pets_appetite">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="pets_appetite">
+                                Encreased
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.pets_appetite == "Decreased" %} checked {% endif %} class="form-check-input pets_appetite" value = "Decreased" type="radio" name="pets_appetite">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="pets_appetite">
+                                Decreased
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.pets_appetite == "None" %} checked {% endif %} class="form-check-input pets_appetite" value = "None" type="radio" name="pets_appetite">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="pets_appetite">
+                                None
+                            </label>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label class="col-md-4 col-sm-5 col-form-label">Drinking: </label>
+                <div class="col-sm-8 col-md-8" style="margin-top: 5px;">
+                    <div class="row">
+                        <div class="col">
+                            <input {% if checkup.drinking == "Normal" %} checked {% endif %} class="form-check-input drinking" value = "Normal" type="radio" name="drinking">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="drinking">
+                                Normal
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.drinking == "Encreased" %} checked {% endif %} class="form-check-input drinking" value = "Encreased" type="radio" name="drinking">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="drinking">
+                                Encreased
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.drinking == "Decreased" %} checked {% endif %} class="form-check-input drinking" value = "Decreased" type="radio" name="drinking">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="drinking">
+                                Decreased
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.drinking == "None" %} checked {% endif %} class="form-check-input drinking" value = "None" type="radio" name="drinking">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="drinking">
+                                None
+                            </label>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label class="col-md-4 col-sm-5 col-form-label">Urination: </label>
+                <div class="col-sm-8 col-md-8" style="margin-top: 5px;">
+                    <div class="row">
+                        <div class="col">
+                            <input {% if checkup.urination == "Normal" %} checked {% endif %} class="form-check-input urination" value = "Normal" type="radio" name="urination">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="urination">
+                                Normal
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.urination == "Encreased" %} checked {% endif %} class="form-check-input urination" value = "Encreased" type="radio" name="urination">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="urination">
+                                Encreased
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.urination == "Decreased" %} checked {% endif %} class="form-check-input urination" value = "Decreased" type="radio" name="urination">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="urination">
+                                Decreased
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.urination == "Straining" %} checked {% endif %} class="form-check-input urination" value = "Straining" type="radio" name="urination">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="urination">
+                                Straining
+                            </label>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+            
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label class="col-md-4 col-sm-5 col-form-label">Activity Level: </label>
+                <div class="col-sm-8 col-md-8" style="margin-top: 5px;">
+                    <div class="row">
+                        <div class="col">
+                            <input {% if checkup.activity_level == "Normal" %} checked {% endif %} class="form-check-input activity_level" value = "Normal" type="radio" name="activity_level">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="activity_level">
+                                Normal
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.activity_level == "Encreased" %} checked {% endif %} class="form-check-input activity_level" value = "Encreased" type="radio" name="activity_level">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="activity_level">
+                                Encreased
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.activity_level == "Decreased" %} checked {% endif %} class="form-check-input activity_level" value = "Decreased" type="radio" name="activity_level">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="activity_level">
+                                Decreased
+                            </label>
+                        </div>
+                        <div class="col">
+                        
+                        </div>
+                    </div>   
+                </div>
+            </div>
+
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label class="col-md-4 col-sm-5 col-form-label">Vaccination: </label>
+                <div class="col-sm-8 col-md-8" style="margin-top: 5px;">
+                    <div class="row">
+                        <div class="col">
+                            <input {% if checkup.vaccination == "Rabies" %} checked {% endif %} class="form-check-input vaccination" value = "Rabies" type="radio" name="vaccination">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="vaccination">
+                                Rabies
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.vaccination == "C6" %} checked {% endif %} class="form-check-input vaccination" value = "C6" type="radio" name="vaccination">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="vaccination">
+                                C6
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.vaccination == "C6/CV" %} checked {% endif %} class="form-check-input vaccination" value = "C6/CV" type="radio" name="vaccination">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="vaccination">
+                                C6/CV
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.vaccination == "Pneumondog" %} checked {% endif %} class="form-check-input vaccination" value = "Pneumondog" type="radio" name="vaccination">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="vaccination">
+                                Pneumondog
+                            </label>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label class="col-md-4 col-sm-5 col-form-label">Deworming: </label>
+                <div class="col-sm-8 col-md-8" style="margin-top: 5px;">
+                    <div class="row">
+                        <div class="col">
+                            <input {% if checkup.deworming == "GI worms" %} checked {% endif %} class="form-check-input deworming" value = "GI worms" type="radio" name="deworming">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="deworming">
+                                GI worms
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input {% if checkup.deworming == "Heartworm Prevention" %} checked {% endif %} class="form-check-input deworming" value = "Heartworm Prevention" type="radio" name="deworming">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="deworming">
+                                Heartworm Prevention
+                            </label>
+                        </div>
+                        <div class="col">
+                            
+                        </div>
+                        <div class="col">
+                            
+                        </div>
+                    </div>   
+                </div>
+            </div>
+
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label for="" class="col-md-4 col-sm-5 col-form-label">Tick and Flea Tx: </label>
+                <div class="col-sm-8 col-md-8">
+                    <input value = "{{checkup.tick_and_flea_tx}}" type="text" name="tick_and_flea_tx" class="form-control" id="tick_and_flea_tx">
+                </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label for="" class="col-md-4 col-sm-5 col-form-label">Endectocide: </label>
+                <div class="col-sm-8 col-md-8">
+                    <input value = "{{checkup.endoctocide}}" type="text" name="endoctocide" class="form-control" id="endoctocide">
+                </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label for="" class="col-md-4 col-sm-5 col-form-label">What does your pet last eat? </label>
+                <div class="col-sm-8 col-md-8">
+                    <input value = "{{checkup.what_does_your_pet_eat}}" type="text" name="what_does_your_pet_eat" class="form-control" id="what_does_your_pet_eat">
+                </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label for="" class="col-md-4 col-sm-5 col-form-label">When did your pet last eat? </label>
+                <div class="col-sm-8 col-md-8">
+                    <input value = "{{checkup.when_did_your_pet_last_eat}}" type="text" name="when_did_your_pet_last_eat" class="form-control" id="when_did_your_pet_last_eat">
+                </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label class="col-md-4 col-sm-5 col-form-label">Is your pet taking any medication? </label>
+                <div class="col-sm-8 col-md-8" style="margin-top: 5px;">
+                    <div class="row">
+                        <div class="col">
+                            <input onclick="enable_if_so_field()" {% if checkup.is_your_pet_taking_any_medications == "Yes" %} checked {% endif %} class="form-check-input is_your_pet_taking_any_medications" value = "Yes" type="radio" name="is_your_pet_taking_any_medications">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="is_your_pet_taking_any_medications">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="col">
+                            <input onclick="disable_if_so_field()" {% if checkup.is_your_pet_taking_any_medications == "No" %} checked {% endif %} class="form-check-input is_your_pet_taking_any_medications" value = "No" type="radio" name="is_your_pet_taking_any_medications">
+                            <label class="form-check-label" style = "margin-right: 30px;" for="is_your_pet_taking_any_medications">
+                                No
+                            </label>
+                        </div>
+                        <div class="col">
+                        
+                        </div>
+                        <div class="col">
+                        
+                        </div>
+                    </div>   
+                </div>
+            </div>
+            <div class="row col-md-12" style="margin-top: 5px;">
+                <label for="" class="col-md-4 col-sm-5 col-form-label">If so, please list medication and doses? </label>
+                <div class="col-sm-8 col-md-8">
+                    <input value = "{{checkup.if_so_please_list_medication_and_doses}}" type="text" style="pointer-events: none;" name="if_so_please_list_medication_and_doses" class="form-control" id="if_so_please_list_medication_and_doses">
+                </div>
+            </div>
+        </div>
+        {% if checkup.body_weight != null %}
+        <div class="border border-1 card-body" style="margin-top: 5px;">
+            <div class="row">  
+                <div class="col">
+                    <h5>Vital Signs/Physical Exam</h5>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Body Weight: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.body_weight}}" type="text" name="body_weight" class="form-control" id="body_weight">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Temperature (C): </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.temparature}}" type="text" name="temparature" class="form-control" id="temparature">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Heart Rate: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.heart_rate}}" type="text" name="heart_rate" class="form-control" id="heart_rate">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Respiratory Rate: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.respiratory_rate}}" type="text" name="respiratory_rate" class="form-control" id="respiratory_rate">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">MM: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.mm}}" type="text" name="mm" class="form-control" id="mm">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">CRT (Sec): </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.crt_sec}}" type="text" name="crt_sec" class="form-control" id="crt_sec">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Dehydration (NMS): </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.dehydration_nms}}" type="text" name="dehydration_nms" class="form-control" id="dehydration_nms">
+                        </div>
+                    </div>
+                    <div class="row col-md-12">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Skin/Coat: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.skin_coat}}" type="text" name="skin_coat" class="form-control" id="skin_coat">
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Discharge (Nose, Eye, Vulva etc): </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.discharge_nose_eye_vulva_etc}}" type="text" name="discharge_nose_eye_vulva_etc" class="form-control" id="discharge_nose_eye_vulva_etc">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Others: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.others}}" type="text" name="others" class="form-control" id="others">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Diff Dx: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.diff_dx}}" type="text" name="diff_dx" class="form-control" id="diff_dx">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Laboratory: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.laboratory}}" type="text" name="laboratory" class="form-control" id="laboratory">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Definitive Dx: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.definitive_dx}}" type="text" name="definitive_dx" class="form-control" id="definitive_dx">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Prognoses: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <input value = "{{checkup.prognosis}}" type="text" name="prognosis" class="form-control" id="prognosis">
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Tx: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <textarea class="form-control" name="tx" id="tx">{{checkup.tx}}</textarea>
+                        </div>
+                    </div>
+                    <div class="row col-md-12" style="margin-top: 5px;">
+                        <label for="" class="col-md-4 col-sm-5 col-form-label">Rx: </label>
+                        <div class="col-sm-8 col-md-8">
+                            <textarea class="form-control" name="rx" id="rx">{{checkup.rx}}</textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="d-flex justify-content-end col-md-12" style="margin-top: 20px;">
+            <button type = "submit" class="btn btn-info align-self-end" style="margin-right: 70px;">Update</button>
+        </div>
+    </form>
+</div>
+<br>
+<script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">
+    <script>
+        function validate(data){
+            let what_is_your_pet_coming_in_for_today = $.trim(document.querySelector('#what_is_your_pet_coming_in_for_today').value);
+            let how_long_have_the_problem_been_going_on = $.trim(document.querySelector('#how_long_have_the_problem_been_going_on').value);
+            let tick_and_flea_tx = $.trim(document.querySelector('#tick_and_flea_tx').value);
+            let endoctocide = $.trim(document.querySelector('#endoctocide').value);   
+            let what_does_your_pet_eat = $.trim(document.querySelector('#what_does_your_pet_eat').value);   
+            let when_did_your_pet_last_eat = $.trim(document.querySelector('#when_did_your_pet_last_eat').value);      
+            let is_your_pet_taking_any_medications = $.trim($("input[type='radio'][name='is_your_pet_taking_any_medications']:checked").val());
+            let if_so_please_list_medication_and_doses = $.trim(document.querySelector('#if_so_please_list_medication_and_doses').value); 
+            let body_weight = $.trim($('#body_weight').val());
+            let temparature = $.trim($('#temparature').val());
+            let heart_rate = $.trim($('#heart_rate').val());
+            let respiratory_rate = $.trim($('#respiratory_rate').val());
+            let mm = $.trim($('#mm').val());
+            let crt_sec = $.trim($('#crt_sec').val());
+            let dehydration_nms = $.trim($('#dehydration_nms').val());
+            let skin_coat = $.trim($('#skin_coat').val());
+            let discharge_nose_eye_vulva_etc = $.trim($('#discharge_nose_eye_vulva_etc').val());
+            let diff_dx = $.trim($('#diff_dx').val());
+            let laboratory = $.trim($('#laboratory').val());
+            let definitive_dx = $.trim($('#definitive_dx').val());
+            let prognosis = $.trim($('#prognosis').val());
+            let tx = $.trim($('#tx').val());
+            let rx = $.trim($('#rx').val());
+            if(data != "None"){
+                if(what_is_your_pet_coming_in_for_today != "" && how_long_have_the_problem_been_going_on != ""
+                    && tick_and_flea_tx != "" && endoctocide != "" &&
+                    what_does_your_pet_eat != "" && when_did_your_pet_last_eat != ""
+                    && body_weight != "" && temparature != "" && heart_rate != "" && respiratory_rate != ""
+                    && mm != "" && crt_sec != "" && dehydration_nms != "" && skin_coat != "" 
+                    && discharge_nose_eye_vulva_etc != "" && diff_dx != "" && laboratory != ""
+                    && definitive_dx != "" && prognosis != "" && tx != "" && rx != ""
+                ){
+                    if(is_your_pet_taking_any_medications == "Yes"){
+                        if(if_so_please_list_medication_and_doses != ""){
+                            $('#error').html("");
+                            return true;
+                        }else{
+                            $('#error').html('<div class = "alert alert-danger">Some Fields must be filled up</div>');
+                            return false;
+                        }
+                    }
+                    $('#error').html("");
+                    return true;
+                }else{
+                    $('#error').html('<div class = "alert alert-danger">Some Fields must be filled up</div>');
+                    return false;
+                }
+            }else{
+                if(what_is_your_pet_coming_in_for_today != "" && how_long_have_the_problem_been_going_on != "" && 
+                    tick_and_flea_tx != "" && endoctocide != "" &&
+                    what_does_your_pet_eat != "" && when_did_your_pet_last_eat != ""
+                ){
+                    if(is_your_pet_taking_any_medications == "Yes"){
+                        if(if_so_please_list_medication_and_doses != ""){
+                            $('#error').html("");
+                            return true;
+                        }else{
+                            $('#error').html('<div class = "alert alert-danger">Some Fields must be filled up</div>');
+                            return false;
+                        }
+                    }
+                    $('#error').html("");
+                    return true;
+                }else{
+                    $('#error').html('<div class = "alert alert-danger">Some Fields must be filled up</div>');
+                    return false;
+                }
+            }
+        }
+        function enable_if_so_field(){
+            document.querySelector('#if_so_please_list_medication_and_doses').setAttribute("style","pointer-events:auto");
+        }
+        function disable_if_so_field(){
+            document.querySelector('#if_so_please_list_medication_and_doses').setAttribute("style","pointer-events:none");
+            $('#if_so_please_list_medication_and_doses').val("");
+        }
+    </script>
+{% endblock %}

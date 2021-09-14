@@ -119,4 +119,9 @@ urlpatterns = [
         views.view_checkup_result_history_view,
         name="view_checkup_result_history_view",
     ),
+    path(
+        "update_checkup_result_history/",
+        views.update_checkup_result_history_view,
+        name="update_checkup_result_history_view",
+    ),
 ]
