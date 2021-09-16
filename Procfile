@@ -1,0 +1,1 @@
+web: gunicorn Veterinary_Project.wsgi
