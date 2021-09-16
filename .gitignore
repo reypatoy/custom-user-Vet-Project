@@ -1,6 +1,6 @@
-db.sqlite3
-Veterinary_Project/settings.py
-*.cfg
-media
-static
-.vscode
+# db.sqlite3
+# Veterinary_Project/settings.py
+# *.cfg
+# media
+# static
+# .vscode
