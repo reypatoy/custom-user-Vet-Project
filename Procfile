@@ -1,1 +1,1 @@
-web: gunicorn Veterinary_Project.wsgi
+web: gunicorn Veterinary_Project.wsgi --log-file -

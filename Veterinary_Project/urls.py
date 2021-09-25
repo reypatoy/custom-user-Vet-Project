@@ -18,11 +18,16 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 
+from . import views
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('customers.urls', namespace='customers')),
-    path('staff/', include('staff.urls', namespace='staff')),
-    path('doctors/', include('doctors.urls', namespace="doctors")),
+    path("admin/", admin.site.urls),
+    path("", include("customers.urls", namespace="customers")),
+    path("staff/", include("staff.urls", namespace="staff")),
+    path("doctors/", include("doctors.urls", namespace="doctors")),
+    path("flutter_login/", views.login_view, name="login_view"),
+    path("api/", include("api.urls", namespace="api")),
+    path("api-token-auth/", views.obtain_auth_token, name="api-token-auth"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
