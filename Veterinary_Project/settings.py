@@ -55,8 +55,8 @@ INSTALLED_APPS = [
     "appointments",
     "checkup",
     "api",
-    "rest_framework",
-    "rest_framework.authtoken",
+    # "rest_framework",
+    # "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
@@ -69,14 +69,14 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
-    ),
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-    ],
-}
+# REST_FRAMEWORK = {
+#     "DEFAULT_AUTHENTICATION_CLASSES": (
+#         "rest_framework.authentication.TokenAuthentication",
+#     ),
+#     "DEFAULT_PERMISSION_CLASSES": [
+#         "rest_framework.permissions.IsAuthenticated",
+#     ],
+# }
 
 ROOT_URLCONF = "Veterinary_Project.urls"
 
@@ -168,4 +168,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.User"
 # Activate Django-Heroku.
+# django_heroku.settings(locals())
+# STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
 # django_heroku.settings(locals())

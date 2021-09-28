@@ -14,6 +14,7 @@ from appointments.models import Appointment as customers_appointment
 from django.http import HttpResponse
 from django.utils.dateparse import parse_datetime
 from datetime import datetime
+from pets.models import pets
 
 
 def login_view(request):
@@ -39,7 +40,7 @@ def login_view(request):
                 else:
                     if user.user_type == 3:
                         login(request, user)
-                        return redirect("customers:dashboard_view")
+                        return redirect("customers:profile_view")
                     else:
                         invalid_login_error = "Invalid Account"
 
@@ -85,7 +86,7 @@ def signup_view(request):
 
             user = authenticate(username=email, password=raw_password)
             login(request, user)
-            return redirect("customers:dashboard_view")
+            return redirect("customers:profile_view")
         else:
             errors = form.errors
     else:
@@ -95,10 +96,15 @@ def signup_view(request):
     return render(request, "auth/signup.html", context)
 
 
-def dashboard_view(request):
+def profile_view(request):
     if request.user.is_authenticated:
         if request.user.user_type == 3:
-            return render(request, "pages/customers_dashboard.html")
+            id = request.GET.get("id")
+            context = None
+            customer = customer_user.objects.get(auth_user_id=id)
+            pet = pets.objects.filter(owner_id=customer.id).count()
+            context = {"customer": customer, "pets": pet}
+            return render(request, "pages/customers_profile.html", context)
         else:
             return redirect("customers:login_view")
     else:
